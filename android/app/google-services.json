@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "446630269981",
+    "project_id": "affirmation-lguktd",
+    "storage_bucket": "affirmation-lguktd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446630269981:android:7c501fd64f1e14869f62f4",
+        "android_client_info": {
+          "package_name": "com.mycompany.affirmation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKqj_bgXIAzJVeyqxWAiUrbaeWG2j48PY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
