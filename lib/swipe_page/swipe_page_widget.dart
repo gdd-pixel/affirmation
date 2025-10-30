@@ -3,6 +3,7 @@ import '/components/avantsettings_widget.dart';
 import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'swipe_page_model.dart';
@@ -208,10 +209,21 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                               ),
                               Align(
                                 alignment: AlignmentDirectional(0.0, 1.0),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: Color(0xFF3C1E4C),
-                                  size: 30.0,
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    await actions.updateAffirmationWidget(
+                                      swipeableStackAffirmationRecord.text,
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.favorite_border,
+                                    color: Color(0xFF3C1E4C),
+                                    size: 30.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -302,10 +314,21 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                           ],
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Icon(
-                          Icons.format_paint_outlined,
-                          color: Color(0xFF3C1E4C),
-                          size: 24.0,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            await actions.updateAffirmationWidget(
+                              'mange mon zboub',
+                            );
+                          },
+                          child: Icon(
+                            Icons.format_paint_outlined,
+                            color: Color(0xFF3C1E4C),
+                            size: 24.0,
+                          ),
                         ),
                       ),
                     ],
