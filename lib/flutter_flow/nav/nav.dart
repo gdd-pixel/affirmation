@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '/backend/schema/enums/enums.dart';
+
 import '/auth/base_auth_user_provider.dart';
 
-import '/flutter_flow/flutter_flow_theme.dart';
+import '/backend/push_notifications/push_notifications_handler.dart'
+    show PushNotificationsHandler;
 import '/flutter_flow/flutter_flow_util.dart';
 
 import '/index.dart';
@@ -76,13 +79,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       refreshListenable: appStateNotifier,
       navigatorKey: appNavigatorKey,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? SwipePageWidget() : Login1Widget(),
+          appStateNotifier.loggedIn ? SwipePageWidget() : InscriptionWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) =>
-              appStateNotifier.loggedIn ? SwipePageWidget() : Login1Widget(),
+          builder: (context, _) => appStateNotifier.loggedIn
+              ? SwipePageWidget()
+              : InscriptionWidget(),
         ),
         FFRoute(
           name: HomePageWidget.routeName,
@@ -113,6 +117,60 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: LolWidget.routeName,
           path: LolWidget.routePath,
           builder: (context, params) => LolWidget(),
+        ),
+        FFRoute(
+          name: ListingWidget.routeName,
+          path: ListingWidget.routePath,
+          builder: (context, params) => ListingWidget(),
+        ),
+        FFRoute(
+          name: SwipePageCatWidget.routeName,
+          path: SwipePageCatWidget.routePath,
+          builder: (context, params) => SwipePageCatWidget(
+            cate: params.getParam<Category>(
+              'cate',
+              ParamType.Enum,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: PartiqueWidget.routeName,
+          path: PartiqueWidget.routePath,
+          builder: (context, params) => PartiqueWidget(),
+        ),
+        FFRoute(
+          name: InscriptionWidget.routeName,
+          path: InscriptionWidget.routePath,
+          builder: (context, params) => InscriptionWidget(),
+        ),
+        FFRoute(
+          name: NotifpageWidget.routeName,
+          path: NotifpageWidget.routePath,
+          builder: (context, params) => NotifpageWidget(),
+        ),
+        FFRoute(
+          name: PratiqueWidget.routeName,
+          path: PratiqueWidget.routePath,
+          builder: (context, params) => PratiqueWidget(),
+        ),
+        FFRoute(
+          name: SwipePagecategoryWidget.routeName,
+          path: SwipePagecategoryWidget.routePath,
+          builder: (context, params) => SwipePagecategoryWidget(
+            catname: params.getParam(
+              'catname',
+              ParamType.String,
+            ),
+            cate: params.getParam<Category>(
+              'cate',
+              ParamType.Enum,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: SwipePageFavWidget.routeName,
+          path: SwipePageFavWidget.routePath,
+          builder: (context, params) => SwipePageFavWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -283,7 +341,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
-            return '/login1';
+            return '/inscription';
           }
           return null;
         },
@@ -297,23 +355,20 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+              ? Container(
+                  color: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/#fff1ef_(1).gif',
+                    fit: BoxFit.cover,
                   ),
                 )
-              : page;
+              : PushNotificationsHandler(child: page);
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,
+                  name: state.name,
                   child: child,
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
@@ -331,7 +386,8 @@ class FFRoute {
                     child,
                   ),
                 )
-              : MaterialPage(key: state.pageKey, child: child);
+              : MaterialPage(
+                  key: state.pageKey, name: state.name, child: child);
         },
         routes: routes,
       );

@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'settings_model.dart';
@@ -168,27 +169,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'Sniglet',
                                           color: Color(0xB3FFFFFF),
                                           fontSize: 14.0,
                                           letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
                                           lineHeight: 1.4,
                                         ),
                                   ),
@@ -717,22 +701,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyLarge
                                                 .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
+                                                  fontFamily: 'Sniglet',
                                                   color: Color(0xFF333333),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
                                                 ),
                                           ),
                                         ].divide(SizedBox(width: 16.0)),
@@ -775,22 +747,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyLarge
                                                 .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
+                                                  fontFamily: 'Sniglet',
                                                   color: Color(0xFF333333),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
                                                 ),
                                           ),
                                         ].divide(SizedBox(width: 16.0)),
@@ -833,22 +793,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyLarge
                                                 .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
+                                                  fontFamily: 'Sniglet',
                                                   color: Color(0xFF333333),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
                                                 ),
                                           ),
                                         ].divide(SizedBox(width: 16.0)),
@@ -872,51 +820,50 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     20.0, 16.0, 20.0, 16.0),
-                                child: Container(
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Icon(
-                                            Icons.notifications_rounded,
-                                            color: Color(0xFF7C6CF2),
-                                            size: 20.0,
-                                          ),
-                                          Text(
-                                            'Reminders',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  font: GoogleFonts.inter(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context
+                                        .pushNamed(NotifpageWidget.routeName);
+                                  },
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Icon(
+                                              Icons.notifications_rounded,
+                                              color: Color(0xFF7C6CF2),
+                                              size: 20.0,
+                                            ),
+                                            Text(
+                                              'Notifs',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyLarge
+                                                  .override(
+                                                    fontFamily: 'Sniglet',
+                                                    color: Color(0xFF333333),
+                                                    letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
                                                   ),
-                                                  color: Color(0xFF333333),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ].divide(SizedBox(width: 16.0)),
-                                      ),
-                                      Icon(
-                                        Icons.chevron_right_rounded,
-                                        color: Color(0xFF999999),
-                                        size: 20.0,
-                                      ),
-                                    ],
+                                            ),
+                                          ].divide(SizedBox(width: 16.0)),
+                                        ),
+                                        Icon(
+                                          Icons.chevron_right_rounded,
+                                          color: Color(0xFF999999),
+                                          size: 20.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -949,22 +896,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyLarge
                                                 .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
+                                                  fontFamily: 'Sniglet',
                                                   color: Color(0xFF333333),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
                                                 ),
                                           ),
                                         ].divide(SizedBox(width: 16.0)),
@@ -1007,22 +942,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyLarge
                                                 .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
+                                                  fontFamily: 'Sniglet',
                                                   color: Color(0xFF333333),
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
                                                 ),
                                           ),
                                         ].divide(SizedBox(width: 16.0)),

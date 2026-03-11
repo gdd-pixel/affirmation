@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -25,9 +26,23 @@ class CategoryRecord extends FirestoreRecord {
   String get icon => _icon ?? '';
   bool hasIcon() => _icon != null;
 
+  // "categorytype" field.
+  Category? _categorytype;
+  Category? get categorytype => _categorytype;
+  bool hasCategorytype() => _categorytype != null;
+
+  // "premium" field.
+  bool? _premium;
+  bool get premium => _premium ?? false;
+  bool hasPremium() => _premium != null;
+
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _icon = snapshotData['icon'] as String?;
+    _categorytype = snapshotData['categorytype'] is Category
+        ? snapshotData['categorytype']
+        : deserializeEnum<Category>(snapshotData['categorytype']);
+    _premium = snapshotData['premium'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -67,11 +82,15 @@ class CategoryRecord extends FirestoreRecord {
 Map<String, dynamic> createCategoryRecordData({
   String? name,
   String? icon,
+  Category? categorytype,
+  bool? premium,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'name': name,
       'icon': icon,
+      'categorytype': categorytype,
+      'premium': premium,
     }.withoutNulls,
   );
 
@@ -83,11 +102,15 @@ class CategoryRecordDocumentEquality implements Equality<CategoryRecord> {
 
   @override
   bool equals(CategoryRecord? e1, CategoryRecord? e2) {
-    return e1?.name == e2?.name && e1?.icon == e2?.icon;
+    return e1?.name == e2?.name &&
+        e1?.icon == e2?.icon &&
+        e1?.categorytype == e2?.categorytype &&
+        e1?.premium == e2?.premium;
   }
 
   @override
-  int hash(CategoryRecord? e) => const ListEquality().hash([e?.name, e?.icon]);
+  int hash(CategoryRecord? e) => const ListEquality()
+      .hash([e?.name, e?.icon, e?.categorytype, e?.premium]);
 
   @override
   bool isValidKey(Object? o) => o is CategoryRecord;

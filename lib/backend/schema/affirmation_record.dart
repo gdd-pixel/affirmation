@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -35,11 +36,25 @@ class AffirmationRecord extends FirestoreRecord {
   DocumentReference? get creator => _creator;
   bool hasCreator() => _creator != null;
 
+  // "category" field.
+  Category? _category;
+  Category? get category => _category;
+  bool hasCategory() => _category != null;
+
+  // "aid" field.
+  String? _aid;
+  String get aid => _aid ?? '';
+  bool hasAid() => _aid != null;
+
   void _initializeFields() {
     _text = snapshotData['text'] as String?;
     _lang = snapshotData['lang'] as String?;
     _likeCount = castToType<int>(snapshotData['likeCount']);
     _creator = snapshotData['creator'] as DocumentReference?;
+    _category = snapshotData['category'] is Category
+        ? snapshotData['category']
+        : deserializeEnum<Category>(snapshotData['category']);
+    _aid = snapshotData['aid'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -81,6 +96,8 @@ Map<String, dynamic> createAffirmationRecordData({
   String? lang,
   int? likeCount,
   DocumentReference? creator,
+  Category? category,
+  String? aid,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -88,6 +105,8 @@ Map<String, dynamic> createAffirmationRecordData({
       'lang': lang,
       'likeCount': likeCount,
       'creator': creator,
+      'category': category,
+      'aid': aid,
     }.withoutNulls,
   );
 
@@ -102,12 +121,14 @@ class AffirmationRecordDocumentEquality implements Equality<AffirmationRecord> {
     return e1?.text == e2?.text &&
         e1?.lang == e2?.lang &&
         e1?.likeCount == e2?.likeCount &&
-        e1?.creator == e2?.creator;
+        e1?.creator == e2?.creator &&
+        e1?.category == e2?.category &&
+        e1?.aid == e2?.aid;
   }
 
   @override
-  int hash(AffirmationRecord? e) =>
-      const ListEquality().hash([e?.text, e?.lang, e?.likeCount, e?.creator]);
+  int hash(AffirmationRecord? e) => const ListEquality()
+      .hash([e?.text, e?.lang, e?.likeCount, e?.creator, e?.category, e?.aid]);
 
   @override
   bool isValidKey(Object? o) => o is AffirmationRecord;

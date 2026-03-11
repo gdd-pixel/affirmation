@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>affirmation</string>
+	<string>Phil\'O</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>affirmation</string>
+	<string>PhilO</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 
@@ -37,10 +37,10 @@
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLName</key>
-        <string>affirmation.com</string>
+        <string>philo.com</string>
         <key>CFBundleURLSchemes</key>
         <array>
-        <string>affirmation</string>
+        <string>philo</string>
         </array>
         </dict>
     </array>
@@ -54,7 +54,13 @@
 	<true/>
 
 
-
+	<key>PermissionGroupNotification</key>
+    <string>Activer vos notifications</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
 
 
 

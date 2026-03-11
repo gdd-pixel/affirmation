@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -45,6 +46,36 @@ class UsersRecord extends FirestoreRecord {
   String get phoneNumber => _phoneNumber ?? '';
   bool hasPhoneNumber() => _phoneNumber != null;
 
+  // "accountfinished" field.
+  bool? _accountfinished;
+  bool get accountfinished => _accountfinished ?? false;
+  bool hasAccountfinished() => _accountfinished != null;
+
+  // "currentheme" field.
+  String? _currentheme;
+  String get currentheme => _currentheme ?? '';
+  bool hasCurrentheme() => _currentheme != null;
+
+  // "currentstreak" field.
+  int? _currentstreak;
+  int get currentstreak => _currentstreak ?? 0;
+  bool hasCurrentstreak() => _currentstreak != null;
+
+  // "beststreak" field.
+  int? _beststreak;
+  int get beststreak => _beststreak ?? 0;
+  bool hasBeststreak() => _beststreak != null;
+
+  // "lastCheckinDate" field.
+  DateTime? _lastCheckinDate;
+  DateTime? get lastCheckinDate => _lastCheckinDate;
+  bool hasLastCheckinDate() => _lastCheckinDate != null;
+
+  // "weeklyCheckins" field.
+  List<bool>? _weeklyCheckins;
+  List<bool> get weeklyCheckins => _weeklyCheckins ?? const [];
+  bool hasWeeklyCheckins() => _weeklyCheckins != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -52,6 +83,12 @@ class UsersRecord extends FirestoreRecord {
     _uid = snapshotData['uid'] as String?;
     _createdTime = snapshotData['created_time'] as DateTime?;
     _phoneNumber = snapshotData['phone_number'] as String?;
+    _accountfinished = snapshotData['accountfinished'] as bool?;
+    _currentheme = snapshotData['currentheme'] as String?;
+    _currentstreak = castToType<int>(snapshotData['currentstreak']);
+    _beststreak = castToType<int>(snapshotData['beststreak']);
+    _lastCheckinDate = snapshotData['lastCheckinDate'] as DateTime?;
+    _weeklyCheckins = getDataList(snapshotData['weeklyCheckins']);
   }
 
   static CollectionReference get collection =>
@@ -94,6 +131,11 @@ Map<String, dynamic> createUsersRecordData({
   String? uid,
   DateTime? createdTime,
   String? phoneNumber,
+  bool? accountfinished,
+  String? currentheme,
+  int? currentstreak,
+  int? beststreak,
+  DateTime? lastCheckinDate,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -103,6 +145,11 @@ Map<String, dynamic> createUsersRecordData({
       'uid': uid,
       'created_time': createdTime,
       'phone_number': phoneNumber,
+      'accountfinished': accountfinished,
+      'currentheme': currentheme,
+      'currentstreak': currentstreak,
+      'beststreak': beststreak,
+      'lastCheckinDate': lastCheckinDate,
     }.withoutNulls,
   );
 
@@ -114,12 +161,19 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
 
   @override
   bool equals(UsersRecord? e1, UsersRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.email == e2?.email &&
         e1?.displayName == e2?.displayName &&
         e1?.photoUrl == e2?.photoUrl &&
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
-        e1?.phoneNumber == e2?.phoneNumber;
+        e1?.phoneNumber == e2?.phoneNumber &&
+        e1?.accountfinished == e2?.accountfinished &&
+        e1?.currentheme == e2?.currentheme &&
+        e1?.currentstreak == e2?.currentstreak &&
+        e1?.beststreak == e2?.beststreak &&
+        e1?.lastCheckinDate == e2?.lastCheckinDate &&
+        listEquality.equals(e1?.weeklyCheckins, e2?.weeklyCheckins);
   }
 
   @override
@@ -129,7 +183,13 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.photoUrl,
         e?.uid,
         e?.createdTime,
-        e?.phoneNumber
+        e?.phoneNumber,
+        e?.accountfinished,
+        e?.currentheme,
+        e?.currentstreak,
+        e?.beststreak,
+        e?.lastCheckinDate,
+        e?.weeklyCheckins
       ]);
 
   @override
