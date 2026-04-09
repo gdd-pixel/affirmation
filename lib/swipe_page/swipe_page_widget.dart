@@ -8,6 +8,7 @@ import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -37,10 +38,20 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
     super.initState();
     _model = createModel(context, () => SwipePageModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'swipePage'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('SWIPE_PAGE_PAGE_swipePage_ON_INIT_STATE');
+      logFirebaseEvent('swipePage_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
+      logFirebaseEvent('swipePage_backend_call');
+
+      await currentUserReference!.update(createUsersRecordData(
+        nextNotificationAt: functions.nextday8AM(),
+        nextNotificationType: 'daily',
+        lastOpenAt: getCurrentTimestamp,
+      ));
     });
   }
 
@@ -180,6 +191,9 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'SWIPE_Container_22amloub_ON_TAP');
+                                logFirebaseEvent('Container_bottom_sheet');
                                 await showModalBottomSheet(
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
@@ -247,6 +261,9 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'SWIPE_PAGE_PAGE_Icon_1iy0cv4r_ON_TAP');
+                                    logFirebaseEvent('Icon_bottom_sheet');
                                     await showModalBottomSheet(
                                       isScrollControlled: true,
                                       backgroundColor: Colors.transparent,
@@ -283,6 +300,12 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'SWIPE_Container_h8ynjz14_ON_TAP');
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent('premiumevent');
+                                logFirebaseEvent('Container_bottom_sheet');
                                 await showModalBottomSheet(
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
@@ -358,9 +381,13 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
 
                           return FlutterFlowSwipeableStack(
                             onSwipeFn: (swipeableStackIndex) async {
+                              logFirebaseEvent(
+                                  'SWIPE_SwipeableStack_r4cmp3d1_ON_WIDGET_');
                               final swipeableStackAffirmationRecord =
                                   swipeableStackAffirmationRecordList[
                                       swipeableStackIndex];
+                              logFirebaseEvent(
+                                  'SwipeableStack_update_page_state');
                               _model.isliked = false;
                               safeSetState(() {});
                             },
@@ -394,29 +421,65 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                         .headlineLarge
                                                         .fontStyle,
                                               ),
-                                              color: () {
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base1') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondary;
-                                                } else if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base2') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary;
-                                                } else {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground;
-                                                }
-                                              }(),
+                                              color: valueOrDefault<Color>(
+                                                () {
+                                                  if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base1') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base2') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'beach') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'canyon') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'fall') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'soir') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  }
+                                                }(),
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                              ),
                                               fontSize: 25.0,
                                               letterSpacing: 0.0,
                                               fontWeight:
@@ -439,6 +502,10 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                             onPressed: () async {
                                               safeSetState(() => _model
                                                   .isliked = !_model.isliked);
+                                              logFirebaseEvent(
+                                                  'SWIPE_ToggleIcon_o6o48bo1_ON_TOGGLE');
+                                              logFirebaseEvent(
+                                                  'ToggleIcon_backend_call');
 
                                               await FavoritesRecord.createDoc(
                                                       currentUserReference!)
@@ -456,56 +523,128 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                             value: _model.isliked,
                                             onIcon: Icon(
                                               Icons.favorite,
-                                              color: () {
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base1') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondary;
-                                                } else if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base2') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary;
-                                                } else {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground;
-                                                }
-                                              }(),
+                                              color: valueOrDefault<Color>(
+                                                () {
+                                                  if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base1') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base2') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'beach') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'canyon') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'fall') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'soir') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  }
+                                                }(),
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                              ),
                                               size: 30.0,
                                             ),
                                             offIcon: Icon(
                                               Icons.favorite_border,
-                                              color: () {
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base1') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondary;
-                                                } else if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.currentheme,
-                                                        '') ==
-                                                    'base2') {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary;
-                                                } else {
-                                                  return FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground;
-                                                }
-                                              }(),
+                                              color: valueOrDefault<Color>(
+                                                () {
+                                                  if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base1') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'base2') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'beach') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'canyon') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'fall') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else if (valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.currentheme,
+                                                          '') ==
+                                                      'soir') {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground;
+                                                  } else {
+                                                    return FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary;
+                                                  }
+                                                }(),
+                                                FlutterFlowTheme.of(context)
+                                                    .secondary,
+                                              ),
                                               size: 30.0,
                                             ),
                                           ),
@@ -544,6 +683,9 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'SWIPE_Container_206pg0fc_ON_TAP');
+                                logFirebaseEvent('Container_bottom_sheet');
                                 await showModalBottomSheet(
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
@@ -625,6 +767,10 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'SWIPE_Container_eotlhdtx_ON_TAP');
+                                logFirebaseEvent('Container_navigate_to');
+
                                 context.pushNamed(
                                   PratiqueWidget.routeName,
                                   extra: <String, dynamic>{

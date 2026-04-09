@@ -130,6 +130,8 @@ final parametersBuilderMap =
         },
       ),
   'swipePageFav': ParameterData.none(),
+  'pratiqueCopy': ParameterData.none(),
+  'paywallpromo': ParameterData.none(),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

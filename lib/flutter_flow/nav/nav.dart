@@ -171,6 +171,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: SwipePageFavWidget.routeName,
           path: SwipePageFavWidget.routePath,
           builder: (context, params) => SwipePageFavWidget(),
+        ),
+        FFRoute(
+          name: PratiqueCopyWidget.routeName,
+          path: PratiqueCopyWidget.routePath,
+          builder: (context, params) => PratiqueCopyWidget(),
+        ),
+        FFRoute(
+          name: PaywallpromoWidget.routeName,
+          path: PaywallpromoWidget.routePath,
+          builder: (context, params) => PaywallpromoWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

@@ -11,6 +11,6 @@ import 'package:flutter/material.dart';
 
 import '/custom_code/appsflyer_manager.dart';
 
-Future initAppsFlyer() async {
-  await AppsFlyerManager().init();
+Future trackOnboardingCompleted() async {
+  await AppsFlyerManager().trackOnboardingCompleted();
 }

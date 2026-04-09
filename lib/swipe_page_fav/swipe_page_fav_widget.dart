@@ -34,8 +34,12 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
     super.initState();
     _model = createModel(context, () => SwipePageFavModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'swipePageFav'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('SWIPE_FAV_swipePageFav_ON_INIT_STATE');
+      logFirebaseEvent('swipePageFav_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
     });
@@ -140,6 +144,9 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'SWIPE_PAGE_FAV_PAGE_Icon_ydzh2kt7_ON_TAP');
+                              logFirebaseEvent('Icon_navigate_back');
                               context.safePop();
                             },
                             child: Icon(
@@ -229,9 +236,12 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
 
                       return FlutterFlowSwipeableStack(
                         onSwipeFn: (swipeableStackIndex) async {
+                          logFirebaseEvent(
+                              'SWIPE_FAV_SwipeableStack_t3fdpwi3_ON_WID');
                           final swipeableStackFavoritesRecord =
                               swipeableStackFavoritesRecordList[
                                   swipeableStackIndex];
+                          logFirebaseEvent('SwipeableStack_update_page_state');
                           _model.isliked = false;
                           safeSetState(() {});
                         },
@@ -415,6 +425,9 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'SWIPE_FAV_Container_5twep43g_ON_TAP');
+                            logFirebaseEvent('Container_bottom_sheet');
                             await showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
@@ -483,6 +496,10 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'SWIPE_FAV_Container_4s4cpbcs_ON_TAP');
+                            logFirebaseEvent('Container_navigate_to');
+
                             context.pushNamed(PratiqueWidget.routeName);
                           },
                           child: Material(

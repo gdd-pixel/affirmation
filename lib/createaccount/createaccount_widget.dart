@@ -1,5 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -66,6 +64,8 @@ class _CreateaccountWidgetState extends State<CreateaccountWidget> {
     super.initState();
     _model = createModel(context, () => CreateaccountModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'createaccount'});
     _model.textFieldnomTextController ??= TextEditingController();
     _model.textFieldnomFocusNode ??= FocusNode();
 
@@ -498,41 +498,8 @@ class _CreateaccountWidgetState extends State<CreateaccountWidget> {
                         ),
                       ),
                       FFButtonWidget(
-                        onPressed: () async {
-                          GoRouter.of(context).prepareAuthEvent();
-                          if (_model.textFieldMDP1TextController.text !=
-                              _model.textFieldMDP2TextController.text) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Passwords don\'t match!',
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-
-                          final user = await authManager.createAccountWithEmail(
-                            context,
-                            _model.textFieldmailTextController.text,
-                            _model.textFieldMDP1TextController.text,
-                          );
-                          if (user == null) {
-                            return;
-                          }
-
-                          await UsersRecord.collection
-                              .doc(user.uid)
-                              .update(createUsersRecordData(
-                                createdTime: getCurrentTimestamp,
-                                displayName:
-                                    _model.textFieldnomTextController.text,
-                                email: _model.textFieldmailTextController.text,
-                                photoUrl: '',
-                              ));
-
-                          context.pushNamedAuth(
-                              SwipePageWidget.routeName, context.mounted);
+                        onPressed: () {
+                          print('Button pressed ...');
                         },
                         text: 'Create Account',
                         options: FFButtonOptions(
@@ -665,6 +632,10 @@ class _CreateaccountWidgetState extends State<CreateaccountWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'CREATEACCOUNT_PAGE_Text_tykbfu8g_ON_TAP');
+                              logFirebaseEvent('Text_navigate_to');
+
                               context.pushNamed(Login1Widget.routeName);
                             },
                             child: Text(

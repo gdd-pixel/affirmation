@@ -24,6 +24,8 @@ class _LolWidgetState extends State<LolWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => LolModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'lol'});
   }
 
   @override

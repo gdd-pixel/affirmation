@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_count_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/permissions_util.dart';
@@ -43,8 +44,11 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
     super.initState();
     _model = createModel(context, () => InscriptionModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'inscription'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('INSCRIPTION_inscription_ON_INIT_STATE');
+      logFirebaseEvent('inscription_custom_action');
       await actions.initAppsFlyer();
     });
 
@@ -451,8 +455,13 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
+                          logFirebaseEvent(
+                              'INSCRIPTION_Container_gpqr4fp3_ON_TAP');
+                          logFirebaseEvent('Container_update_page_state');
                           _model.etape = _model.etape! + 1;
+                          _model.isclick = false;
                           safeSetState(() {});
+                          logFirebaseEvent('Container_page_view');
                           await _model.paywallyController?.nextPage(
                             duration: Duration(milliseconds: 300),
                             curve: Curves.ease,
@@ -632,45 +641,761 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                           children: [
                             Container(
                               decoration: BoxDecoration(),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 100.0,
-                                    height: 100.0,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: Image.asset(
-                                          'assets/images/Untitled_design_(64).png',
-                                        ).image,
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    30.0, 0.0, 30.0, 0.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: 100.0,
+                                      height: 100.0,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.asset(
+                                            'assets/images/Untitled_design_(64).png',
+                                          ).image,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Comment tu t\'appelles ?',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.raleway(
+                                    Text(
+                                      'Quel est ton genre ?',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight: FontWeight.w800,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                            fontSize: 25.0,
+                                            letterSpacing: 0.0,
                                             fontWeight: FontWeight.w800,
                                             fontStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
                                                     .fontStyle,
                                           ),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondary,
-                                          fontSize: 25.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w800,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
+                                    ),
+                                    Text(
+                                      'Pour t’envoyer des affirmations qui te correspondent vraiment',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ].divide(SizedBox(height: 16.0)),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_x0n1mnc4_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q3 = 1;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q3 == 1
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
                                         ),
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'Je suis une fille en or',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q3 == 1
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_bjxajh6u_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q3 = 2;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q3 == 2
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            'Je suis un mec super',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q3 == 2
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ].divide(SizedBox(height: 30.0)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    30.0, 0.0, 30.0, 0.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: 100.0,
+                                      height: 100.0,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.asset(
+                                            'assets/images/Untitled_design_(64).png',
+                                          ).image,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Tu as quel âge ?',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight: FontWeight.w800,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                            fontSize: 25.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w800,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    Text(
+                                      'Pour te proposer des affirmations adaptées \nà ta période de vie',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ].divide(SizedBox(height: 16.0)),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_lfvu5xib_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q4 = 1;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q4 == 1
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            '13 - 24 ans',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q4 == 1
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_pxln6xn6_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q4 = 2;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q4 == 2
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            '25 - 34 ans',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q4 == 2
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_shdkjfjb_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q4 = 3;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q4 == 3
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            '35 -49 ans',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q4 == 3
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'INSCRIPTION_Container_pm5475jq_ON_TAP');
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.q4 = 4;
+                                        safeSetState(() {});
+                                        logFirebaseEvent(
+                                            'Container_update_page_state');
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.7,
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: valueOrDefault<Color>(
+                                            _model.q4 == 4
+                                                ? FlutterFlowTheme.of(context)
+                                                    .secondary
+                                                : FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                          border: Border.all(
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Text(
+                                            '50 ans et +',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.raleway(
+                                                    fontWeight:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: valueOrDefault<Color>(
+                                                    _model.q4 == 4
+                                                        ? FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary
+                                                        : FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ].divide(SizedBox(height: 16.0)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    30.0, 0.0, 30.0, 0.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: 100.0,
+                                      height: 100.0,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.asset(
+                                            'assets/images/Untitled_design_(64).png',
+                                          ).image,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Comment veux-tu être appelé?',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight: FontWeight.w800,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                            fontSize: 25.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w800,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                    Text(
+                                      'Ton nom apparaîtra dans les affirmations',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.raleway(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ].divide(SizedBox(height: 16.0)),
+                                ),
                               ),
                             ),
                             Expanded(
@@ -706,6 +1431,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                   '_model.textFieldprenomTextController',
                                                   Duration(milliseconds: 2000),
                                                   () async {
+                                                    logFirebaseEvent(
+                                                        'INSCRIPTION_TextFieldprenom_ON_TEXTFIELD');
+                                                    logFirebaseEvent(
+                                                        'TextFieldprenom_update_page_state');
                                                     _model.isclick = true;
                                                     safeSetState(() {});
                                                   },
@@ -749,7 +1478,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                 .labelMedium
                                                                 .fontStyle,
                                                       ),
-                                                  hintText: 'Prénom',
+                                                  hintText: 'Nom',
                                                   hintStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .labelMedium
@@ -890,644 +1619,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                           ],
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 100.0,
-                                    height: 100.0,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: Image.asset(
-                                          'assets/images/Untitled_design_(64).png',
-                                        ).image,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Quel est ton genre ?',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.raleway(
-                                            fontWeight: FontWeight.w800,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondary,
-                                          fontSize: 25.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w800,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                  Text(
-                                    'Choisis ce qui te correspond',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.raleway(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q3 = 1;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q3 == 1
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'Je suis une fille en or',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q3 == 1
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q3 = 2;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q3 == 2
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'Je suis un mec super',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q3 == 2
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ].divide(SizedBox(height: 30.0)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 100.0,
-                                    height: 100.0,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: Image.asset(
-                                          'assets/images/Untitled_design_(64).png',
-                                        ).image,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Tu as quel âge ?',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.raleway(
-                                            fontWeight: FontWeight.w800,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondary,
-                                          fontSize: 25.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w800,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                  Text(
-                                    'Permet de personnaliser ton expérience',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          font: GoogleFonts.raleway(
-                                            fontWeight: FontWeight.w500,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ].divide(SizedBox(height: 8.0)),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q4 = 1;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q4 == 1
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            '13 - 24 ans',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q4 == 1
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q4 = 2;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q4 == 2
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            '25 - 34 ans',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q4 == 2
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q4 = 3;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q4 == 3
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            '35 -49 ans',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q4 == 3
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.q4 = 4;
-                                        safeSetState(() {});
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.7,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: valueOrDefault<Color>(
-                                            _model.q4 == 4
-                                                ? FlutterFlowTheme.of(context)
-                                                    .secondary
-                                                : FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
-                                          border: Border.all(
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            '50 ans et +',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: valueOrDefault<Color>(
-                                                    _model.q4 == 4
-                                                        ? FlutterFlowTheme.of(
-                                                                context)
-                                                            .primary
-                                                        : FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                  ),
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ].divide(SizedBox(height: 16.0)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -1646,6 +1737,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_t1fbmehw_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q6 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -1727,6 +1822,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_moyslsc7_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q6 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -1808,6 +1907,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_osq48bl2_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q6 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -1976,6 +2079,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_itta710e_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q7 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2057,6 +2164,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_vk85i8dd_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q7 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2138,6 +2249,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_7jn82ta7_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q7 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2339,6 +2454,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_709e37vu_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q9 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2420,6 +2539,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_59v61uwz_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q9 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2501,6 +2624,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_16syc36z_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q9 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2582,6 +2709,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_79um6jvu_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q9 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2730,6 +2861,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_5e0vfjpg_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q10 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2811,6 +2946,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_wcickrxr_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q10 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2892,6 +3031,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_8a1tv0w6_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q10 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -2973,6 +3116,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_je2xeji1_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q10 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3502,6 +3649,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_r094o71o_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q14 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3585,6 +3736,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_mw5pxlpg_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q14 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3668,6 +3823,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_ucdrhdxz_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q14 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3751,6 +3910,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_r8u0xf8l_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q14 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3905,6 +4068,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_mq38r87x_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q15 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -3988,6 +4155,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_d7sir4i9_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q15 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4071,6 +4242,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_l9d8zaaj_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q15 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4227,6 +4402,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_x0oshzah_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q16 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4310,6 +4489,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_e6nlloub_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q16 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4393,6 +4576,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_kvecrr4m_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q16 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4476,6 +4663,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_etutjy5m_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q16 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4559,6 +4750,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_pn3yzia2_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q16 = 5;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4715,6 +4910,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_9rs1umqn_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q17 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4798,6 +4997,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_govw3kmi_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q17 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4881,6 +5084,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_dn2lmkfv_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q17 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -4964,6 +5171,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_bph0lgyx_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q17 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -5120,6 +5331,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_4xa7ox37_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q18 = 1;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -5203,6 +5418,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_yl8pxxnz_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q18 = 2;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -5286,6 +5505,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_yqqbe9q9_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q18 = 3;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -5369,6 +5592,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_6e7wh54y_ON_TAP');
+                                          logFirebaseEvent(
+                                              'Container_update_page_state');
                                           _model.q18 = 4;
                                           _model.isclick = true;
                                           safeSetState(() {});
@@ -5462,37 +5689,73 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              width: 100.0,
-                              height: 100.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: Image.asset(
-                                    'assets/images/Untitled_design_(74).png',
-                                  ).image,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'Quels sujet t\'intéressent ?',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.raleway(
-                                      fontWeight: FontWeight.w800,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
+                              decoration: BoxDecoration(),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Container(
+                                    width: 100.0,
+                                    height: 100.0,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: Image.asset(
+                                          'assets/images/Untitled_design_(74).png',
+                                        ).image,
+                                      ),
                                     ),
-                                    color:
-                                        FlutterFlowTheme.of(context).secondary,
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w800,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
                                   ),
+                                  Text(
+                                    'Quels sujet t\'intéressent ?',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.raleway(
+                                            fontWeight: FontWeight.w800,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          fontSize: 20.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w800,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  Text(
+                                    'Tu peux en sélectionner plusieurs',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.raleway(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ].divide(SizedBox(height: 16.0)),
+                              ),
                             ),
                             Expanded(
                               child: Padding(
@@ -5519,13 +5782,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_olejerqm_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.confiance)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.confiance);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.confiance);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -5604,12 +5873,18 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_whebnda6_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.amour)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(Soujets.amour);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.amour);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -5687,13 +5962,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_e23mvwdq_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.motivation)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.motivation);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.motivation);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -5772,13 +6053,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_avjvckow_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.objectif)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.objectif);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.objectif);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -5857,13 +6144,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_0ydumwbg_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.reussite)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.reussite);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.reussite);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -5942,13 +6235,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_1lrxc6ni_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.relation)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.relation);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.relation);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -6027,13 +6326,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_kbqepahy_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.positif)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model
                                                 .removeFromQ19(Soujets.positif);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.positif);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -6112,13 +6417,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_1e5yaoyn_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.serein)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model
                                                 .removeFromQ19(Soujets.serein);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.serein);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -6197,13 +6508,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_cc5o6lk9_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.apaisement)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.apaisement);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.apaisement);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -6282,13 +6599,19 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_Container_iq33zkj7_ON_TAP');
                                           if (_model.q19
                                               .contains(Soujets.ambition)) {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.removeFromQ19(
                                                 Soujets.ambition);
                                             _model.isclick = true;
                                             safeSetState(() {});
                                           } else {
+                                            logFirebaseEvent(
+                                                'Container_update_page_state');
                                             _model.addToQ19(Soujets.ambition);
                                             _model.isclick = true;
                                             safeSetState(() {});
@@ -6442,8 +6765,12 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
+                                              logFirebaseEvent(
+                                                  'INSCRIPTION_Container_g9yxdxr8_ON_TAP');
                                               if (_model.themeselected !=
                                                   'base1') {
+                                                logFirebaseEvent(
+                                                    'Container_update_page_state');
                                                 _model.themeselected = 'base1';
                                                 safeSetState(() {});
                                               }
@@ -6499,7 +6826,11 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'INSCRIPTION_PAGE_Stack_6ipydfmw_ON_TAP');
                                           if (_model.themeselected != 'base2') {
+                                            logFirebaseEvent(
+                                                'Stack_update_page_state');
                                             _model.themeselected = 'base2';
                                             safeSetState(() {});
                                           }
@@ -6906,6 +7237,8 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                 _model.countControllerValue =
                                                                     count),
                                                         stepSize: 1,
+                                                        minimum: 0,
+                                                        maximum: 20,
                                                         contentPadding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
@@ -6972,6 +7305,11 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                           highlightColor: Colors
                                                               .transparent,
                                                           onTap: () async {
+                                                            logFirebaseEvent(
+                                                                'INSCRIPTION_Container_kn2zpeb0_ON_TAP');
+                                                            logFirebaseEvent(
+                                                                'Container_date_time_picker');
+
                                                             final _datePicked1Time =
                                                                 await showTimePicker(
                                                               context: context,
@@ -7182,6 +7520,11 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                           highlightColor: Colors
                                                               .transparent,
                                                           onTap: () async {
+                                                            logFirebaseEvent(
+                                                                'INSCRIPTION_Container_3vyfc1ev_ON_TAP');
+                                                            logFirebaseEvent(
+                                                                'Container_date_time_picker');
+
                                                             final _datePicked2Time =
                                                                 await showTimePicker(
                                                               context: context,
@@ -8508,6 +8851,10 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                   highlightColor:
                                                       Colors.transparent,
                                                   onTap: () async {
+                                                    logFirebaseEvent(
+                                                        'INSCRIPTION_PAGE_Icon_lp13acq4_ON_TAP');
+                                                    logFirebaseEvent(
+                                                        'Icon_alert_dialog');
                                                     var confirmDialogResponse =
                                                         await showDialog<bool>(
                                                               context: context,
@@ -8539,10 +8886,14 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                             ) ??
                                                             false;
                                                     if (confirmDialogResponse) {
+                                                      logFirebaseEvent(
+                                                          'Icon_update_page_state');
                                                       _model.etape =
                                                           _model.etape! + 1;
                                                       _model.isclick = false;
                                                       safeSetState(() {});
+                                                      logFirebaseEvent(
+                                                          'Icon_page_view');
                                                       await _model
                                                           .paywallyController
                                                           ?.nextPage(
@@ -8550,13 +8901,27 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                             milliseconds: 300),
                                                         curve: Curves.ease,
                                                       );
+                                                      logFirebaseEvent(
+                                                          'Icon_wait__delay');
                                                       await Future.delayed(
                                                         Duration(
                                                           milliseconds: 3000,
                                                         ),
                                                       );
+                                                      logFirebaseEvent(
+                                                          'Icon_update_page_state');
                                                       _model.isclick = true;
                                                       safeSetState(() {});
+                                                      logFirebaseEvent(
+                                                          'Icon_google_analytics_event');
+                                                      logFirebaseEvent(
+                                                        'onboarding_step',
+                                                        parameters: {
+                                                          'step': '25',
+                                                          'step_name':
+                                                              'paywall',
+                                                        },
+                                                      );
                                                     }
                                                   },
                                                   child: Icon(
@@ -9401,326 +9766,576 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            if (_model.etape == 1) {
-                              GoRouter.of(context).prepareAuthEvent();
-                              final user =
-                                  await authManager.signInAnonymously(context);
-                              if (user == null) {
-                                return;
-                              }
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              _model.isclick = false;
-                              _model.etapereach = 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 2) {
-                              await actions.hideKeyboard();
-                              _model.etape = _model.etape! + 1;
-                              _model.prenom =
-                                  _model.textFieldprenomTextController.text;
-                              safeSetState(() {});
-                              _model.isclick = false;
-                              _model.etapereach = 2;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 3) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              _model.isclick = false;
-                              _model.etapereach = 3;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 3000,
-                                ),
-                              );
-                              _model.isclick = true;
-                              safeSetState(() {});
-                            } else if (_model.etape == 4) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              _model.isclick = false;
-                              _model.etapereach = 4;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 5) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 6) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 7) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 3000,
-                                ),
-                              );
-                              _model.isclick = true;
-                              safeSetState(() {});
-                            } else if (_model.etape == 8) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 9) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 10) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 3000,
-                                ),
-                              );
-                              _model.isclick = true;
-                              safeSetState(() {});
-                            } else if (_model.etape == 11) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 6000,
-                                ),
-                              );
-                              _model.isclick = true;
-                              safeSetState(() {});
-                            } else if (_model.etape == 12) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 60000,
-                                ),
-                              );
-                              _model.isclick = true;
-                              safeSetState(() {});
-                              if (animationsMap[
-                                      'containerOnActionTriggerAnimation'] !=
-                                  null) {
-                                await animationsMap[
-                                        'containerOnActionTriggerAnimation']!
-                                    .controller
-                                    .forward(from: 0.0);
-                              }
-                            } else if (_model.etape == 13) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 14) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 15) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 16) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 17) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 18) {
-                              _model.etape = _model.etape! + 1;
-                              _model.isclick = false;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 19) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 20) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-
-                              await currentUserReference!
-                                  .update(createUsersRecordData(
-                                createdTime: getCurrentTimestamp,
-                                accountfinished: true,
-                                currentheme: _model.themeselected,
-                              ));
-                            } else if (_model.etape == 21) {
-                              await NotifpreferenceRecord.createDoc(
-                                      currentUserReference!)
-                                  .set(createNotifpreferenceRecordData(
-                                dailycount: _model.countControllerValue,
-                                startHour: _model.datePicked1,
-                                endHour: _model.datePicked2,
-                                timezone: 'Europe/Paris',
-                                notifenable: true,
-                              ));
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Notif mis à jour !',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 2200),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              );
-                            } else if (_model.etape == 22) {
-                              await requestPermission(notificationsPermission);
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 23) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-
-                              await currentUserReference!
-                                  .update(createUsersRecordData(
-                                currentstreak: 1,
-                              ));
-                            } else if (_model.etape == 24) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else if (_model.etape == 25) {
-                              _model.dadpurchase = await revenue_cat
-                                  .purchasePackage('\$rc_annual');
-                              if (_model.dadpurchase!) {
+                            logFirebaseEvent(
+                                'INSCRIPTION_Container_dpkngqg9_ON_TAP');
+                            if (_model.isclick!) {
+                              if (_model.etape == 1) {
+                                logFirebaseEvent('Container_auth');
+                                GoRouter.of(context).prepareAuthEvent();
+                                final user = await authManager
+                                    .signInAnonymously(context);
+                                if (user == null) {
+                                  return;
+                                }
+                                logFirebaseEvent('Container_update_page_state');
                                 _model.etape = _model.etape! + 1;
-                                _model.isclick = false;
                                 safeSetState(() {});
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = false;
+                                _model.etapereach = 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
                                 await _model.paywallyController?.nextPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.ease,
                                 );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '1',
+                                    'step_name': 'welcome',
+                                  },
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent('firstep');
+                              } else if (_model.etape == 4) {
+                                logFirebaseEvent('Container_custom_action');
+                                await actions.hideKeyboard();
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.prenom =
+                                    _model.textFieldprenomTextController.text;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = false;
+                                _model.etapereach = 2;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '2',
+                                    'step_name': 'prenom',
+                                  },
+                                );
+                              } else if (_model.etape == 2) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = false;
+                                _model.etapereach = 3;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '3',
+                                    'step_name': 'genre',
+                                  },
+                                );
+                              } else if (_model.etape == 3) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = false;
+                                _model.etapereach = 4;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_wait__delay');
                                 await Future.delayed(
                                   Duration(
-                                    milliseconds: 2000,
+                                    milliseconds: 3000,
                                   ),
                                 );
+                                logFirebaseEvent('Container_update_page_state');
                                 _model.isclick = true;
                                 safeSetState(() {});
-                              }
-                            } else if (_model.etape == 26) {
-                              _model.etape = _model.etape! + 1;
-                              safeSetState(() {});
-                              await _model.paywallyController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-
-                              context.pushNamedAuth(
-                                SwipePageWidget.routeName,
-                                context.mounted,
-                                extra: <String, dynamic>{
-                                  '__transition_info__': TransitionInfo(
-                                    hasTransition: true,
-                                    transitionType: PageTransitionType.fade,
-                                    duration: Duration(milliseconds: 0),
+                              } else if (_model.etape == 5) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '5',
+                                    'step_name': 'bienvenu',
+                                  },
+                                );
+                              } else if (_model.etape == 6) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '6',
+                                    'step_name': 'avancer',
+                                  },
+                                );
+                              } else if (_model.etape == 7) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_wait__delay');
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 3000,
                                   ),
-                                },
-                              );
+                                );
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = true;
+                                safeSetState(() {});
+                              } else if (_model.etape == 8) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '8',
+                                    'step_name': 'vision',
+                                  },
+                                );
+                              } else if (_model.etape == 9) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '9',
+                                    'step_name': 'sentir',
+                                  },
+                                );
+                              } else if (_model.etape == 10) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_wait__delay');
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 3000,
+                                  ),
+                                );
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = true;
+                                safeSetState(() {});
+                              } else if (_model.etape == 11) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_wait__delay');
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 6000,
+                                  ),
+                                );
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = true;
+                                safeSetState(() {});
+                              } else if (_model.etape == 12) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_wait__delay');
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 60000,
+                                  ),
+                                );
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = true;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_widget_animation');
+                                if (animationsMap[
+                                        'containerOnActionTriggerAnimation'] !=
+                                    null) {
+                                  await animationsMap[
+                                          'containerOnActionTriggerAnimation']!
+                                      .controller
+                                      .forward(from: 0.0);
+                                }
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '12',
+                                    'step_name': 'consigne',
+                                  },
+                                );
+                              } else if (_model.etape == 13) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              } else if (_model.etape == 14) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '14',
+                                    'step_name': 'senstu',
+                                  },
+                                );
+                              } else if (_model.etape == 15) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              } else if (_model.etape == 16) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              } else if (_model.etape == 17) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              } else if (_model.etape == 18) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                _model.isclick = false;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '18',
+                                    'step_name': 'philo',
+                                  },
+                                );
+                              } else if (_model.etape == 19) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                              } else if (_model.etape == 20) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_backend_call');
+
+                                await currentUserReference!
+                                    .update(createUsersRecordData(
+                                  createdTime: getCurrentTimestamp,
+                                  accountfinished: true,
+                                  currentheme: _model.themeselected,
+                                ));
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '20',
+                                    'step_name': 'theme',
+                                  },
+                                );
+                              } else if (_model.etape == 21) {
+                                logFirebaseEvent('Container_backend_call');
+
+                                await NotifpreferenceRecord.createDoc(
+                                        currentUserReference!)
+                                    .set(createNotifpreferenceRecordData(
+                                  dailycount: _model.countControllerValue,
+                                  startHour: _model.datePicked1,
+                                  endHour: _model.datePicked2,
+                                  timezone: 'Europe/Paris',
+                                  notifenable: true,
+                                ));
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_show_snack_bar');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Notif mis à jour !',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 2200),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                  ),
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '21',
+                                    'step_name': 'notifs',
+                                  },
+                                );
+                              } else if (_model.etape == 22) {
+                                logFirebaseEvent(
+                                    'Container_request_permissions');
+                                await requestPermission(
+                                    notificationsPermission);
+                                if (await getPermissionStatus(
+                                    notificationsPermission)) {
+                                  logFirebaseEvent('Container_backend_call');
+
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    notificationsEnabled: true,
+                                  ));
+                                } else {
+                                  logFirebaseEvent('Container_backend_call');
+
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    notificationsEnabled: false,
+                                  ));
+                                }
+
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '22',
+                                    'step_name': 'autorise',
+                                  },
+                                );
+                              } else if (_model.etape == 23) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent('Container_backend_call');
+
+                                await currentUserReference!
+                                    .update(createUsersRecordData(
+                                  currentstreak: 1,
+                                ));
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '23',
+                                    'step_name': 'streaky',
+                                  },
+                                );
+                              } else if (_model.etape == 24) {
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.etape = _model.etape! + 1;
+                                safeSetState(() {});
+                                logFirebaseEvent('Container_page_view');
+                                await _model.paywallyController?.nextPage(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.ease,
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '24',
+                                    'step_name': 'pub',
+                                  },
+                                );
+                              } else if (_model.etape == 25) {
+                                logFirebaseEvent('Container_revenue_cat');
+                                _model.dadpurchase = await revenue_cat
+                                    .purchasePackage('\$rc_annual');
+                                if (_model.dadpurchase!) {
+                                  logFirebaseEvent(
+                                      'Container_update_page_state');
+                                  _model.etape = _model.etape! + 1;
+                                  _model.isclick = false;
+                                  safeSetState(() {});
+                                  logFirebaseEvent('Container_page_view');
+                                  await _model.paywallyController?.nextPage(
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                  logFirebaseEvent('Container_wait__delay');
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 2000,
+                                    ),
+                                  );
+                                  logFirebaseEvent(
+                                      'Container_update_page_state');
+                                  _model.isclick = true;
+                                  safeSetState(() {});
+                                }
+                              } else if (_model.etape == 26) {
+                                logFirebaseEvent('Container_custom_action');
+                                unawaited(
+                                  () async {
+                                    await actions.trackOnboardingCompleted();
+                                  }(),
+                                );
+                                logFirebaseEvent(
+                                    'Container_google_analytics_event');
+                                logFirebaseEvent(
+                                  'onboarding_step',
+                                  parameters: {
+                                    'step': '26',
+                                    'step_name': 'last',
+                                  },
+                                );
+                                logFirebaseEvent('Container_navigate_to');
+
+                                context.pushNamedAuth(
+                                  SwipePageWidget.routeName,
+                                  context.mounted,
+                                  extra: <String, dynamic>{
+                                    '__transition_info__': TransitionInfo(
+                                      hasTransition: true,
+                                      transitionType: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 0),
+                                    ),
+                                  },
+                                );
+                              }
                             }
 
                             safeSetState(() {});

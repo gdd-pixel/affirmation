@@ -85,6 +85,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'CATEGORY_COMP_Icon_1dew0wqg_ON_TAP');
+                            logFirebaseEvent('Icon_bottom_sheet');
                             Navigator.pop(context);
                           },
                           child: Icon(
@@ -129,7 +132,10 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               hoverColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () async {
+                logFirebaseEvent('CATEGORY_COMP_Container_6nyr0mmq_ON_TAP');
+                logFirebaseEvent('Container_bottom_sheet');
                 Navigator.pop(context);
+                logFirebaseEvent('Container_bottom_sheet');
                 await showModalBottomSheet(
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
@@ -264,6 +270,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_mq6cyyes_ON_TAP');
+                        logFirebaseEvent('Stack_navigate_to');
+
                         context.pushNamed(
                           SwipePagecategoryWidget.routeName,
                           queryParameters: {
@@ -352,6 +361,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_ttr14nmx_ON_TAP');
+                        logFirebaseEvent('Stack_navigate_to');
+
                         context.pushNamed(
                           SwipePageFavWidget.routeName,
                           extra: <String, dynamic>{
@@ -430,8 +442,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_2883fei5_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -452,6 +467,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -512,18 +541,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -533,8 +564,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_l04luufa_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -555,6 +589,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -615,18 +663,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -636,8 +686,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_1llali1y_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -658,6 +711,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -718,18 +785,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -739,8 +808,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_nwq8zemt_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -761,6 +833,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -821,18 +907,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -842,8 +930,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_4tdq5ym9_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -864,6 +955,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -924,18 +1029,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -945,8 +1052,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent('CATEGORY_COMP_Stack_m67rutqz_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
+                          logFirebaseEvent('Stack_navigate_to');
+
                           context.pushNamed(
                             SwipePagecategoryWidget.routeName,
                             queryParameters: {
@@ -967,6 +1077,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             },
                           );
+                        } else {
+                          logFirebaseEvent('Stack_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaywallWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -1027,18 +1151,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(1.0, -1.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 6.0, 6.0, 0.0),
-                              child: FaIcon(
-                                FontAwesomeIcons.crown,
-                                color: Color(0xFFE2AB85),
-                                size: 15.0,
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 6.0, 6.0, 0.0),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  color: Color(0xFFE2AB85),
+                                  size: 15.0,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),

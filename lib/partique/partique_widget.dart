@@ -31,8 +31,11 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
     super.initState();
     _model = createModel(context, () => PartiqueModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'partique'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('PARTIQUE_PAGE_partique_ON_INIT_STATE');
+      logFirebaseEvent('partique_firestore_query');
       _model.output = await queryAffirmationRecordOnce();
       for (int loop1Index = 0;
           loop1Index <=
@@ -42,11 +45,13 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
               );
           loop1Index++) {
         final currentLoop1Item = _model.output![loop1Index];
+        logFirebaseEvent('partique_update_page_state');
         _model.currentext = valueOrDefault<String>(
           currentLoop1Item.text,
           'text',
         );
         safeSetState(() {});
+        logFirebaseEvent('partique_wait__delay');
         await Future.delayed(
           Duration(
             milliseconds: 5000,
@@ -154,6 +159,9 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'PARTIQUE_PAGE_Icon_3q1tit0k_ON_TAP');
+                                    logFirebaseEvent('Icon_bottom_sheet');
                                     await showModalBottomSheet(
                                       isScrollControlled: true,
                                       backgroundColor: Colors.transparent,
@@ -272,6 +280,9 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'PARTIQUE_PAGE_Container_7lbu26ce_ON_TAP');
+                              logFirebaseEvent('Container_bottom_sheet');
                               await showModalBottomSheet(
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
@@ -341,6 +352,10 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'PARTIQUE_PAGE_Icon_nv0n5bvc_ON_TAP');
+                                logFirebaseEvent('Icon_navigate_to');
+
                                 context.pushNamed(ListingWidget.routeName);
                               },
                               child: Icon(
@@ -374,6 +389,9 @@ class _PartiqueWidgetState extends State<PartiqueWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'PARTIQUE_PAGE_Icon_8haqfmvs_ON_TAP');
+                                logFirebaseEvent('Icon_custom_action');
                                 await actions.updateAffirmationWidget(
                                   'mange mon zboub',
                                 );

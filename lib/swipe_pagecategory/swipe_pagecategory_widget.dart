@@ -43,8 +43,12 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
     super.initState();
     _model = createModel(context, () => SwipePagecategoryModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'swipePagecategory'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('SWIPE_PAGECATEGORY_swipePagecategory_ON_');
+      logFirebaseEvent('swipePagecategory_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
     });
@@ -149,6 +153,9 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'SWIPE_PAGECATEGORY_Icon_imit6wq2_ON_TAP');
+                              logFirebaseEvent('Icon_navigate_back');
                               context.safePop();
                             },
                             child: Icon(
@@ -242,9 +249,12 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
 
                       return FlutterFlowSwipeableStack(
                         onSwipeFn: (swipeableStackIndex) async {
+                          logFirebaseEvent(
+                              'SWIPE_PAGECATEGORY_SwipeableStack_rrb63e');
                           final swipeableStackAffirmationRecord =
                               swipeableStackAffirmationRecordList[
                                   swipeableStackIndex];
+                          logFirebaseEvent('SwipeableStack_update_page_state');
                           _model.isliked = false;
                           safeSetState(() {});
                         },
@@ -428,6 +438,9 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'SWIPE_PAGECATEGORY_Container_rlmveluw_ON');
+                            logFirebaseEvent('Container_bottom_sheet');
                             await showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
@@ -496,6 +509,10 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'SWIPE_PAGECATEGORY_Container_cv8mylou_ON');
+                            logFirebaseEvent('Container_navigate_to');
+
                             context.pushNamed(PratiqueWidget.routeName);
                           },
                           child: Material(

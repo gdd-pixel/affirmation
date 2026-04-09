@@ -11,6 +11,14 @@ import 'package:flutter/material.dart';
 
 import '/custom_code/appsflyer_manager.dart';
 
-Future initAppsFlyer() async {
-  await AppsFlyerManager().init();
+Future trackOnboardingStep(
+  int step,
+  String stepName,
+) async {
+  await AppsFlyerManager().trackOnboardingStep(
+    step: step,
+    stepName: stepName,
+  );
 }
+// Set your action name, define your arguments and return parameter,
+// and then add the boilerplate code using the green button on the right!

@@ -63,3 +63,10 @@ DateTime? dateplus5() {
   return DateTime.now()
       .add(Duration(days: 5)); // Add 5 days to the current date
 }
+
+DateTime? nextday8AM() {
+  // from current datetime to next day at 8 AM
+  return DateTime.now().add(Duration(days: 1)).subtract(Duration(
+      hours: DateTime.now().hour - 8,
+      minutes: DateTime.now().minute)); // Calculate next day at 8 AM
+}

@@ -14,3 +14,5 @@ export '/pratique/pratique_widget.dart' show PratiqueWidget;
 export '/swipe_pagecategory/swipe_pagecategory_widget.dart'
     show SwipePagecategoryWidget;
 export '/swipe_page_fav/swipe_page_fav_widget.dart' show SwipePageFavWidget;
+export '/pratique_copy/pratique_copy_widget.dart' show PratiqueCopyWidget;
+export '/paywallpromo/paywallpromo_widget.dart' show PaywallpromoWidget;

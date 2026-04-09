@@ -21,11 +21,6 @@ class UsersRecord extends FirestoreRecord {
   String get email => _email ?? '';
   bool hasEmail() => _email != null;
 
-  // "display_name" field.
-  String? _displayName;
-  String get displayName => _displayName ?? '';
-  bool hasDisplayName() => _displayName != null;
-
   // "photo_url" field.
   String? _photoUrl;
   String get photoUrl => _photoUrl ?? '';
@@ -76,9 +71,33 @@ class UsersRecord extends FirestoreRecord {
   List<bool> get weeklyCheckins => _weeklyCheckins ?? const [];
   bool hasWeeklyCheckins() => _weeklyCheckins != null;
 
+  // "notificationsEnabled" field.
+  bool? _notificationsEnabled;
+  bool get notificationsEnabled => _notificationsEnabled ?? false;
+  bool hasNotificationsEnabled() => _notificationsEnabled != null;
+
+  // "nextNotificationAt" field.
+  DateTime? _nextNotificationAt;
+  DateTime? get nextNotificationAt => _nextNotificationAt;
+  bool hasNextNotificationAt() => _nextNotificationAt != null;
+
+  // "nextNotificationType" field.
+  String? _nextNotificationType;
+  String get nextNotificationType => _nextNotificationType ?? '';
+  bool hasNextNotificationType() => _nextNotificationType != null;
+
+  // "lastOpenAt" field.
+  DateTime? _lastOpenAt;
+  DateTime? get lastOpenAt => _lastOpenAt;
+  bool hasLastOpenAt() => _lastOpenAt != null;
+
+  // "display_name" field.
+  String? _displayName;
+  String get displayName => _displayName ?? '';
+  bool hasDisplayName() => _displayName != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
-    _displayName = snapshotData['display_name'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
     _uid = snapshotData['uid'] as String?;
     _createdTime = snapshotData['created_time'] as DateTime?;
@@ -89,6 +108,11 @@ class UsersRecord extends FirestoreRecord {
     _beststreak = castToType<int>(snapshotData['beststreak']);
     _lastCheckinDate = snapshotData['lastCheckinDate'] as DateTime?;
     _weeklyCheckins = getDataList(snapshotData['weeklyCheckins']);
+    _notificationsEnabled = snapshotData['notificationsEnabled'] as bool?;
+    _nextNotificationAt = snapshotData['nextNotificationAt'] as DateTime?;
+    _nextNotificationType = snapshotData['nextNotificationType'] as String?;
+    _lastOpenAt = snapshotData['lastOpenAt'] as DateTime?;
+    _displayName = snapshotData['display_name'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -126,7 +150,6 @@ class UsersRecord extends FirestoreRecord {
 
 Map<String, dynamic> createUsersRecordData({
   String? email,
-  String? displayName,
   String? photoUrl,
   String? uid,
   DateTime? createdTime,
@@ -136,11 +159,15 @@ Map<String, dynamic> createUsersRecordData({
   int? currentstreak,
   int? beststreak,
   DateTime? lastCheckinDate,
+  bool? notificationsEnabled,
+  DateTime? nextNotificationAt,
+  String? nextNotificationType,
+  DateTime? lastOpenAt,
+  String? displayName,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'email': email,
-      'display_name': displayName,
       'photo_url': photoUrl,
       'uid': uid,
       'created_time': createdTime,
@@ -150,6 +177,11 @@ Map<String, dynamic> createUsersRecordData({
       'currentstreak': currentstreak,
       'beststreak': beststreak,
       'lastCheckinDate': lastCheckinDate,
+      'notificationsEnabled': notificationsEnabled,
+      'nextNotificationAt': nextNotificationAt,
+      'nextNotificationType': nextNotificationType,
+      'lastOpenAt': lastOpenAt,
+      'display_name': displayName,
     }.withoutNulls,
   );
 
@@ -163,7 +195,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
   bool equals(UsersRecord? e1, UsersRecord? e2) {
     const listEquality = ListEquality();
     return e1?.email == e2?.email &&
-        e1?.displayName == e2?.displayName &&
         e1?.photoUrl == e2?.photoUrl &&
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
@@ -173,13 +204,17 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.currentstreak == e2?.currentstreak &&
         e1?.beststreak == e2?.beststreak &&
         e1?.lastCheckinDate == e2?.lastCheckinDate &&
-        listEquality.equals(e1?.weeklyCheckins, e2?.weeklyCheckins);
+        listEquality.equals(e1?.weeklyCheckins, e2?.weeklyCheckins) &&
+        e1?.notificationsEnabled == e2?.notificationsEnabled &&
+        e1?.nextNotificationAt == e2?.nextNotificationAt &&
+        e1?.nextNotificationType == e2?.nextNotificationType &&
+        e1?.lastOpenAt == e2?.lastOpenAt &&
+        e1?.displayName == e2?.displayName;
   }
 
   @override
   int hash(UsersRecord? e) => const ListEquality().hash([
         e?.email,
-        e?.displayName,
         e?.photoUrl,
         e?.uid,
         e?.createdTime,
@@ -189,7 +224,12 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.currentstreak,
         e?.beststreak,
         e?.lastCheckinDate,
-        e?.weeklyCheckins
+        e?.weeklyCheckins,
+        e?.notificationsEnabled,
+        e?.nextNotificationAt,
+        e?.nextNotificationType,
+        e?.lastOpenAt,
+        e?.displayName
       ]);
 
   @override

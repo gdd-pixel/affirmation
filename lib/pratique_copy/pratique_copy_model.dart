@@ -1,10 +1,10 @@
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
-import 'pratique_widget.dart' show PratiqueWidget;
+import 'pratique_copy_widget.dart' show PratiqueCopyWidget;
 import 'package:flutter/material.dart';
 
-class PratiqueModel extends FlutterFlowModel<PratiqueWidget> {
+class PratiqueCopyModel extends FlutterFlowModel<PratiqueCopyWidget> {
   ///  Local state fields for this page.
 
   List<String> affirlist = ['Hello World', 'Hello World', 'Hello World'];
@@ -18,18 +18,10 @@ class PratiqueModel extends FlutterFlowModel<PratiqueWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Firestore Query - Query a collection] action in pratique widget.
+  // Stores action output result for [Firestore Query - Query a collection] action in pratiqueCopy widget.
   List<AffirmationRecord>? affi;
-  // Stores action output result for [Firestore Query - Query a collection] action in pratique widget.
+  // Stores action output result for [Firestore Query - Query a collection] action in pratiqueCopy widget.
   CheckinsRecord? dato;
-  // State field(s) for PageView widget.
-  PageController? pageViewController;
-
-  int get pageViewCurrentIndex => pageViewController != null &&
-          pageViewController!.hasClients &&
-          pageViewController!.page != null
-      ? pageViewController!.page!.round()
-      : 0;
 
   @override
   void initState(BuildContext context) {}

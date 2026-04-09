@@ -47,6 +47,7 @@ class _ListingWidgetState extends State<ListingWidget>
     super.initState();
     _model = createModel(context, () => ListingModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'listing'});
     _model.tabBarController = TabController(
       vsync: this,
       length: 2,
@@ -140,6 +141,10 @@ class _ListingWidgetState extends State<ListingWidget>
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
+                                      logFirebaseEvent(
+                                          'LISTING_PAGE_Text_fmog9xsq_ON_TAP');
+                                      logFirebaseEvent('Text_navigate_to');
+
                                       context
                                           .pushNamed(SwipePageWidget.routeName);
                                     },
@@ -168,6 +173,9 @@ class _ListingWidgetState extends State<ListingWidget>
                                   ),
                                   FFButtonWidget(
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'LISTING_PAGE__NEW_PLAYLIST_BTN_ON_TAP');
+                                      logFirebaseEvent('Button_bottom_sheet');
                                       await showModalBottomSheet(
                                         isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
