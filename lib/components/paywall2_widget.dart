@@ -1,3 +1,5 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/revenue_cat_util.dart' as revenue_cat;
@@ -497,7 +499,14 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                       logFirebaseEvent('Container_revenue_cat');
                       _model.dodopurchase =
                           await revenue_cat.purchasePackage('promo');
-                      if (!_model.dodopurchase!) {
+                      if (_model.dodopurchase!) {
+                        logFirebaseEvent('Container_backend_call');
+
+                        await currentUserReference!
+                            .update(createUsersRecordData(
+                          hasPurchased: true,
+                        ));
+                      } else {
                         logFirebaseEvent('Container_show_snack_bar');
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

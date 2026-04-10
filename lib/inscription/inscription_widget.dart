@@ -10285,6 +10285,12 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                 _model.dadpurchase = await revenue_cat
                                     .purchasePackage('\$rc_annual');
                                 if (_model.dadpurchase!) {
+                                  logFirebaseEvent('Container_backend_call');
+
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    hasPurchased: true,
+                                  ));
                                   logFirebaseEvent(
                                       'Container_update_page_state');
                                   _model.etape = _model.etape! + 1;

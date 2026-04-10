@@ -1,3 +1,5 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -807,7 +809,14 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                             logFirebaseEvent('Container_revenue_cat');
                             _model.dadopurchase = await revenue_cat
                                 .purchasePackage('\$rc_annual');
-                            if (!_model.dadopurchase!) {
+                            if (_model.dadopurchase!) {
+                              logFirebaseEvent('Container_backend_call');
+
+                              await currentUserReference!
+                                  .update(createUsersRecordData(
+                                hasPurchased: true,
+                              ));
+                            } else {
                               logFirebaseEvent('Container_show_snack_bar');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

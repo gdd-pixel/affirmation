@@ -96,6 +96,11 @@ class UsersRecord extends FirestoreRecord {
   String get displayName => _displayName ?? '';
   bool hasDisplayName() => _displayName != null;
 
+  // "hasPurchased" field.
+  bool? _hasPurchased;
+  bool get hasPurchased => _hasPurchased ?? false;
+  bool hasHasPurchased() => _hasPurchased != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
@@ -113,6 +118,7 @@ class UsersRecord extends FirestoreRecord {
     _nextNotificationType = snapshotData['nextNotificationType'] as String?;
     _lastOpenAt = snapshotData['lastOpenAt'] as DateTime?;
     _displayName = snapshotData['display_name'] as String?;
+    _hasPurchased = snapshotData['hasPurchased'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -164,6 +170,7 @@ Map<String, dynamic> createUsersRecordData({
   String? nextNotificationType,
   DateTime? lastOpenAt,
   String? displayName,
+  bool? hasPurchased,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -182,6 +189,7 @@ Map<String, dynamic> createUsersRecordData({
       'nextNotificationType': nextNotificationType,
       'lastOpenAt': lastOpenAt,
       'display_name': displayName,
+      'hasPurchased': hasPurchased,
     }.withoutNulls,
   );
 
@@ -209,7 +217,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.nextNotificationAt == e2?.nextNotificationAt &&
         e1?.nextNotificationType == e2?.nextNotificationType &&
         e1?.lastOpenAt == e2?.lastOpenAt &&
-        e1?.displayName == e2?.displayName;
+        e1?.displayName == e2?.displayName &&
+        e1?.hasPurchased == e2?.hasPurchased;
   }
 
   @override
@@ -229,7 +238,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.nextNotificationAt,
         e?.nextNotificationType,
         e?.lastOpenAt,
-        e?.displayName
+        e?.displayName,
+        e?.hasPurchased
       ]);
 
   @override
