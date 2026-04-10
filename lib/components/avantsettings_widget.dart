@@ -320,12 +320,9 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                             onTap: () async {
                               logFirebaseEvent(
                                   'AVANTSETTINGS_COMP_Text_90dcp14i_ON_TAP');
-                              logFirebaseEvent('Text_backend_call');
+                              logFirebaseEvent('Text_navigate_to');
 
-                              await currentUserReference!
-                                  .update(createUsersRecordData(
-                                notificationsEnabled: true,
-                              ));
+                              context.pushNamed(NotifpageWidget.routeName);
                             },
                             child: Text(
                               'Votre série d\'exercices',

@@ -9811,7 +9811,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_update_page_state');
                                 _model.isclick = false;
-                                _model.etapereach = 2;
+                                _model.etapereach = 4;
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_page_view');
                                 await _model.paywallyController?.nextPage(
@@ -9827,13 +9827,22 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                     'step_name': 'prenom',
                                   },
                                 );
+                                logFirebaseEvent('Container_wait__delay');
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 2000,
+                                  ),
+                                );
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.isclick = true;
+                                safeSetState(() {});
                               } else if (_model.etape == 2) {
                                 logFirebaseEvent('Container_update_page_state');
                                 _model.etape = _model.etape! + 1;
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_update_page_state');
                                 _model.isclick = false;
-                                _model.etapereach = 3;
+                                _model.etapereach = 2;
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_page_view');
                                 await _model.paywallyController?.nextPage(
@@ -9855,22 +9864,13 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_update_page_state');
                                 _model.isclick = false;
-                                _model.etapereach = 4;
+                                _model.etapereach = 3;
                                 safeSetState(() {});
                                 logFirebaseEvent('Container_page_view');
                                 await _model.paywallyController?.nextPage(
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.ease,
                                 );
-                                logFirebaseEvent('Container_wait__delay');
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 3000,
-                                  ),
-                                );
-                                logFirebaseEvent('Container_update_page_state');
-                                _model.isclick = true;
-                                safeSetState(() {});
                               } else if (_model.etape == 5) {
                                 logFirebaseEvent('Container_update_page_state');
                                 _model.etape = _model.etape! + 1;
