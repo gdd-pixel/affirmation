@@ -7238,7 +7238,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                     count),
                                                         stepSize: 1,
                                                         minimum: 0,
-                                                        maximum: 20,
+                                                        maximum: 10,
                                                         contentPadding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(

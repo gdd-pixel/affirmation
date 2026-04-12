@@ -8,6 +8,7 @@ import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,23 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
         nextNotificationType: 'daily',
         lastOpenAt: getCurrentTimestamp,
       ));
+      logFirebaseEvent('swipePage_custom_action');
+      await actions.handlePushNavigation(
+        context,
+      );
+      logFirebaseEvent('swipePage_show_snack_bar');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'handlepushnotif ok !',
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).secondaryBackground,
+            ),
+          ),
+          duration: Duration(milliseconds: 2200),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
     });
   }
 
