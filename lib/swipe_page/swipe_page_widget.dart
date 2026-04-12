@@ -43,6 +43,10 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       logFirebaseEvent('SWIPE_PAGE_PAGE_swipePage_ON_INIT_STATE');
+      logFirebaseEvent('swipePage_custom_action');
+      await actions.handlePushNavigation(
+        context,
+      );
       logFirebaseEvent('swipePage_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
@@ -53,10 +57,6 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
         nextNotificationType: 'daily',
         lastOpenAt: getCurrentTimestamp,
       ));
-      logFirebaseEvent('swipePage_custom_action');
-      await actions.handlePushNavigation(
-        context,
-      );
       logFirebaseEvent('swipePage_show_snack_bar');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
