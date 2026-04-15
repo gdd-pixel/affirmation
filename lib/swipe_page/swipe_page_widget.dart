@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/components/avantsettings_widget.dart';
 import '/components/category_widget.dart';
 import '/components/paywall_widget.dart';
+import '/components/popupexo_widget.dart';
 import '/components/themepop_widget.dart';
 import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -50,6 +51,39 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
       logFirebaseEvent('swipePage_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
+      if (dateTimeFormat(
+            "d/M/y",
+            currentUserDocument?.lastOpenAt,
+            locale: FFLocalizations.of(context).languageCode,
+          ) !=
+          dateTimeFormat(
+            "d/M/y",
+            getCurrentTimestamp,
+            locale: FFLocalizations.of(context).languageCode,
+          )) {
+        logFirebaseEvent('swipePage_bottom_sheet');
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          enableDrag: false,
+          context: context,
+          builder: (context) {
+            return GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: Padding(
+                padding: MediaQuery.viewInsetsOf(context),
+                child: Container(
+                  height: double.infinity,
+                  child: PopupexoWidget(),
+                ),
+              ),
+            );
+          },
+        ).then((value) => safeSetState(() {}));
+      }
       logFirebaseEvent('swipePage_backend_call');
 
       await currentUserReference!.update(createUsersRecordData(
@@ -57,19 +91,6 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
         nextNotificationType: 'daily',
         lastOpenAt: getCurrentTimestamp,
       ));
-      logFirebaseEvent('swipePage_show_snack_bar');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'handlepushnotif ok !',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-            ),
-          ),
-          duration: Duration(milliseconds: 2200),
-          backgroundColor: FlutterFlowTheme.of(context).secondary,
-        ),
-      );
     });
   }
 

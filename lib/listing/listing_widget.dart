@@ -521,8 +521,16 @@ class _ListingWidgetState extends State<ListingWidget>
                                                                       .of(context)
                                                                   .bodyLarge
                                                                   .override(
-                                                                    fontFamily:
-                                                                        'Sniglet',
+                                                                    font: GoogleFonts
+                                                                        .poppins(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyLarge
+                                                                          .fontStyle,
+                                                                    ),
                                                                     color: Color(
                                                                         0xFF1F2937),
                                                                     fontSize:
@@ -532,6 +540,10 @@ class _ListingWidgetState extends State<ListingWidget>
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyLarge
+                                                                        .fontStyle,
                                                                     lineHeight:
                                                                         1.4,
                                                                   ),

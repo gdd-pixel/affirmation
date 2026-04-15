@@ -2,6 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/paywall2_widget.dart';
 import '/components/paywall_widget.dart';
+import '/components/widgetconfigu_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -161,6 +162,9 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                       );
                     },
                   ).then((value) => safeSetState(() {}));
+
+                  logFirebaseEvent('Container_google_analytics_event');
+                  logFirebaseEvent('buyInterest');
                 },
                 child: Container(
                   width: double.infinity,
@@ -420,12 +424,33 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    'jours',
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelSmall
-                                        .override(
-                                          font: GoogleFonts.inter(
+                                  AuthUserStreamWidget(
+                                    builder: (context) => Text(
+                                      valueOrDefault<String>(
+                                        valueOrDefault(
+                                                    currentUserDocument
+                                                        ?.currentstreak,
+                                                    0) >
+                                                1
+                                            ? 'jours'
+                                            : 'jour',
+                                        'jour',
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .override(
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelSmall
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelSmall
+                                                      .fontStyle,
+                                            ),
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .labelSmall
@@ -435,17 +460,7 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                                     .labelSmall
                                                     .fontStyle,
                                           ),
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelSmall
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelSmall
-                                                  .fontStyle,
-                                        ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -804,8 +819,25 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         onTap: () async {
                           logFirebaseEvent(
                               'AVANTSETTINGS_Container_izfx9q5w_ON_TAP');
+                          logFirebaseEvent('Container_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: Container(
+                                  height: double.infinity,
+                                  child: WidgetconfiguWidget(),
+                                ),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
+
                           logFirebaseEvent('Container_google_analytics_event');
-                          logFirebaseEvent('wantwidget');
+                          logFirebaseEvent('wantwidget2');
                         },
                         child: Container(
                           width: double.infinity,
@@ -878,12 +910,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.crown,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondary,
-                                        size: 20.0,
-                                      ),
                                       Icon(
                                         Icons.chevron_right,
                                         color: Color(0xFF57636C),

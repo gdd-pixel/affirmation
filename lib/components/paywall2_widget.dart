@@ -47,7 +47,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(30.0, 50.0, 30.0, 40.0),
+        padding: EdgeInsetsDirectional.fromSTEB(30.0, 60.0, 30.0, 40.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,6 +72,8 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                                 'PAYWALL2_COMP_Icon_epw9xsnh_ON_TAP');
                             logFirebaseEvent('Icon_bottom_sheet');
                             Navigator.pop(context);
+                            logFirebaseEvent('Icon_google_analytics_event');
+                            logFirebaseEvent('closepopromo');
                           },
                           child: Icon(
                             Icons.close,
@@ -80,7 +82,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                           ),
                         ),
                         Text(
-                          'Dernière chance !  - 50%',
+                          'Offre à durée limitée ! - 50%',
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
@@ -119,7 +121,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
-                          width: 120.0,
+                          width: 250.0,
                           height: 120.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
@@ -127,7 +129,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                             image: DecorationImage(
                               fit: BoxFit.cover,
                               image: Image.asset(
-                                'assets/images/Untitled_design_(79).png',
+                                'assets/images/-_50_%_(1).png',
                               ).image,
                             ),
                           ),
@@ -337,7 +339,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                                 ),
                                 decoration: BoxDecoration(),
                                 child: AutoSizeText(
-                                  'Seulement 2,08 €/mois, facturés annuellment',
+                                  'Seulement le prix d\'un café ☕ par mois, 2,08 €/mois',
                                   maxLines: 2,
                                   minFontSize: 8.0,
                                   style: FlutterFlowTheme.of(context)
@@ -506,23 +508,9 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                             .update(createUsersRecordData(
                           hasPurchased: true,
                         ));
-                      } else {
-                        logFirebaseEvent('Container_show_snack_bar');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Achat annulé',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 2000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
                       }
+                      logFirebaseEvent('Container_google_analytics_event');
+                      logFirebaseEvent('PromoInterest');
 
                       safeSetState(() {});
                     },

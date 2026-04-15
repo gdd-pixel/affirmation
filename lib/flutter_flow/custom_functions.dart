@@ -70,3 +70,21 @@ DateTime? nextday8AM() {
       hours: DateTime.now().hour - 8,
       minutes: DateTime.now().minute)); // Calculate next day at 8 AM
 }
+
+DateTime? currentat8AM() {
+  return DateTime.now().copyWith(
+      hour: 8,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0); // Set current date to 8 AM
+}
+
+DateTime? currentat9PM() {
+  return DateTime.now().copyWith(
+      hour: 21,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0); // Set current date to 9 PM
+}

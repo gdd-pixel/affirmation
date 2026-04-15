@@ -302,7 +302,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                 decoration: BoxDecoration(),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      4.0, 8.0, 0.0, 0.0),
+                                      6.0, 8.0, 0.0, 0.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -320,7 +320,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 24.0,
+                                              size: 20.0,
                                             ),
                                             Container(
                                               decoration: BoxDecoration(),
@@ -410,7 +410,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 24.0,
+                                              size: 20.0,
                                             ),
                                             Container(
                                               decoration: BoxDecoration(),
@@ -497,7 +497,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 24.0,
+                                              size: 20.0,
                                             ),
                                             Container(
                                               decoration: BoxDecoration(),
@@ -599,7 +599,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 20.0,
+                                              size: 16.0,
                                             ),
                                             Container(
                                               decoration: BoxDecoration(),

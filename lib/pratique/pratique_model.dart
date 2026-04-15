@@ -7,7 +7,13 @@ import 'package:flutter/material.dart';
 class PratiqueModel extends FlutterFlowModel<PratiqueWidget> {
   ///  Local state fields for this page.
 
-  List<String> affirlist = ['Hello World', 'Hello World', 'Hello World'];
+  List<String> affirlist = [
+    'Hello World',
+    'Hello World',
+    'Hello World',
+    'Hello World',
+    'Hello World'
+  ];
   void addToAffirlist(String item) => affirlist.add(item);
   void removeFromAffirlist(String item) => affirlist.remove(item);
   void removeAtIndexFromAffirlist(int index) => affirlist.removeAt(index);
@@ -15,6 +21,8 @@ class PratiqueModel extends FlutterFlowModel<PratiqueWidget> {
       affirlist.insert(index, item);
   void updateAffirlistAtIndex(int index, Function(String) updateFn) =>
       affirlist[index] = updateFn(affirlist[index]);
+
+  bool exostrat = false;
 
   ///  State fields for stateful widgets in this page.
 
