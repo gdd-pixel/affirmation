@@ -11,6 +11,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'pratique_model.dart';
@@ -42,19 +43,14 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'pratique'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('PRATIQUE_PAGE_pratique_ON_INIT_STATE');
-      logFirebaseEvent('pratique_backend_call');
-
       await currentUserReference!.update(createUsersRecordData(
         nextNotificationAt: functions.nextday8AM(),
         nextNotificationType: 'daily',
         lastOpenAt: getCurrentTimestamp,
       ));
-      logFirebaseEvent('pratique_firestore_query');
       _model.affi = await queryAffirmationRecordOnce(
         limit: 50,
       );
-      logFirebaseEvent('pratique_update_page_state');
       _model.updateAffirlistAtIndex(
         0,
         (_) => valueOrDefault<String>(
@@ -68,7 +64,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratique_update_page_state');
       _model.updateAffirlistAtIndex(
         1,
         (_) => valueOrDefault<String>(
@@ -82,7 +77,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratique_update_page_state');
       _model.updateAffirlistAtIndex(
         2,
         (_) => valueOrDefault<String>(
@@ -96,7 +90,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratique_update_page_state');
       _model.updateAffirlistAtIndex(
         3,
         (_) => valueOrDefault<String>(
@@ -110,7 +103,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratique_update_page_state');
       _model.updateAffirlistAtIndex(
         4,
         (_) => valueOrDefault<String>(
@@ -124,7 +116,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratique_firestore_query');
       _model.dato = await queryCheckinsRecordOnce(
         parent: currentUserReference,
         queryBuilder: (checkinsRecord) => checkinsRecord.where(
@@ -142,8 +133,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
       ).then((s) => s.firstOrNull);
       if (!(_model.dato?.reference.id != null &&
           _model.dato?.reference.id != '')) {
-        logFirebaseEvent('pratique_backend_call');
-
         await CheckinsRecord.createDoc(currentUserReference!)
             .set(createCheckinsRecordData(
           completed: false,
@@ -167,8 +156,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
               currentUserDocument?.lastCheckinDate,
               locale: FFLocalizations.of(context).languageCode,
             )) {
-          logFirebaseEvent('pratique_backend_call');
-
           await currentUserReference!.update({
             ...createUsersRecordData(
               lastCheckinDate: getCurrentTimestamp,
@@ -180,8 +167,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
             ),
           });
         } else {
-          logFirebaseEvent('pratique_backend_call');
-
           await currentUserReference!.update(createUsersRecordData(
             currentstreak: 1,
             lastCheckinDate: getCurrentTimestamp,
@@ -191,6 +176,19 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
     });
 
     animationsMap.addAll({
+      'containerOnPageLoadAnimation1': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 1.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 1000.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+        ],
+      ),
       'textOnPageLoadAnimation': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
@@ -203,7 +201,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation1': AnimationInfo(
+      'containerOnPageLoadAnimation2': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 800.ms),
@@ -216,7 +214,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation2': AnimationInfo(
+      'containerOnPageLoadAnimation3': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 1.ms),
@@ -236,7 +234,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation3': AnimationInfo(
+      'containerOnPageLoadAnimation4': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 7000.ms),
@@ -256,7 +254,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation4': AnimationInfo(
+      'containerOnPageLoadAnimation5': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 14000.ms),
@@ -276,7 +274,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation5': AnimationInfo(
+      'containerOnPageLoadAnimation6': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 21000.ms),
@@ -296,7 +294,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation6': AnimationInfo(
+      'containerOnPageLoadAnimation7': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 25000.ms),
@@ -316,7 +314,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation7': AnimationInfo(
+      'containerOnPageLoadAnimation8': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 31000.ms),
@@ -336,7 +334,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation8': AnimationInfo(
+      'containerOnPageLoadAnimation9': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 35000.ms),
@@ -356,7 +354,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation9': AnimationInfo(
+      'containerOnPageLoadAnimation10': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 41000.ms),
@@ -376,7 +374,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation10': AnimationInfo(
+      'containerOnPageLoadAnimation11': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 50000.ms),
@@ -396,7 +394,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation11': AnimationInfo(
+      'containerOnPageLoadAnimation12': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 56000.ms),
@@ -416,7 +414,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation12': AnimationInfo(
+      'containerOnPageLoadAnimation13': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 62000.ms),
@@ -436,7 +434,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation13': AnimationInfo(
+      'containerOnPageLoadAnimation14': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 68000.ms),
@@ -456,7 +454,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation14': AnimationInfo(
+      'containerOnPageLoadAnimation15': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 74000.ms),
@@ -476,7 +474,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation15': AnimationInfo(
+      'containerOnPageLoadAnimation16': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 21000.ms),
@@ -580,7 +578,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation16': AnimationInfo(
+      'containerOnPageLoadAnimation17': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
           VisibilityEffect(duration: 82000.ms),
@@ -668,9 +666,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'PRATIQUE_PAGE_Icon_48i5492z_ON_TAP');
-                            logFirebaseEvent('Icon_navigate_to');
+                            HapticFeedback.mediumImpact();
 
                             context.pushNamed(
                               SwipePageWidget.routeName,
@@ -685,7 +681,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                           },
                           child: Icon(
                             Icons.arrow_back,
-                            color: Color(0xFFAAA19D),
+                            color: Color(0xFF88949D),
                             size: 30.0,
                           ),
                         ),
@@ -708,635 +704,558 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      30.0, 0.0, 30.0, 0.0),
+                                      30.0, 42.0, 30.0, 32.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Ta séance est prête',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.raleway(
-                                                fontWeight: FontWeight.w800,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                              fontFamily: 'Motter Corpus',
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondary,
                                               fontSize: 23.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w800,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
+                                              fontWeight: FontWeight.normal,
                                             ),
                                       ),
                                       Container(
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              blurRadius: 8.0,
-                                              color: Color(0x1A7C6CF2),
-                                              offset: Offset(
-                                                0.0,
-                                                2.0,
+                                        decoration: BoxDecoration(),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              width: 150.0,
+                                              height: 150.0,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: Image.asset(
+                                                    'assets/images/Untitled_design_(58).png',
+                                                  ).image,
+                                                ),
                                               ),
-                                              spreadRadius: 0.0,
-                                            )
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(32.0),
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 16.0, 16.0, 16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    constraints: BoxConstraints(
-                                                      maxWidth: 300.0,
+                                            ).animateOnPageLoad(animationsMap[
+                                                'containerOnPageLoadAnimation1']!),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 8.0,
+                                                    color: Color(0x1A7C6CF2),
+                                                    offset: Offset(
+                                                      0.0,
+                                                      2.0,
                                                     ),
-                                                    decoration: BoxDecoration(),
-                                                    child: AuthUserStreamWidget(
-                                                      builder: (context) =>
-                                                          AutoSizeText(
-                                                        valueOrDefault<String>(
-                                                          valueOrDefault(
-                                                                      currentUserDocument
-                                                                          ?.currentstreak,
-                                                                      0) >=
-                                                                  2
-                                                              ? 'Continue ta belle série en cours !'
-                                                              : 'Commence une nouvelle série',
-                                                          'Commence une nouvelle série',
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        maxLines: 2,
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .interTight(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleMedium
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleMedium
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                      ).animateOnPageLoad(
-                                                              animationsMap[
-                                                                  'textOnPageLoadAnimation']!),
-                                                    ),
-                                                  ),
+                                                    spreadRadius: 0.0,
+                                                  )
                                                 ],
+                                                borderRadius:
+                                                    BorderRadius.circular(32.0),
                                               ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFFDDA48B),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100.0),
-                                                      shape: BoxShape.rectangle,
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  16.0,
-                                                                  16.0,
-                                                                  16.0,
-                                                                  16.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          AuthUserStreamWidget(
-                                                            builder:
-                                                                (context) =>
-                                                                    InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                logFirebaseEvent(
-                                                                    'PRATIQUE_PAGE_Text_b97i0oyi_ON_TAP');
-                                                                logFirebaseEvent(
-                                                                    'Text_navigate_to');
-
-                                                                context.pushNamed(
-                                                                    NotifpageWidget
-                                                                        .routeName);
-                                                              },
-                                                              child: Text(
-                                                                valueOrDefault<
-                                                                    String>(
-                                                                  valueOrDefault(
-                                                                          currentUserDocument
-                                                                              ?.currentstreak,
-                                                                          0)
-                                                                      .toString(),
-                                                                  '1',
-                                                                ),
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .displaySmall
-                                                                    .override(
-                                                                      font: GoogleFonts
-                                                                          .interTight(
-                                                                        fontWeight: FlutterFlowTheme.of(context)
-                                                                            .displaySmall
-                                                                            .fontWeight,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .displaySmall
-                                                                            .fontStyle,
-                                                                      ),
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          25.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .displaySmall
-                                                                          .fontWeight,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .displaySmall
-                                                                          .fontStyle,
-                                                                    ),
-                                                              ),
-                                                            ),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        16.0, 16.0, 16.0, 16.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            maxWidth: 300.0,
                                                           ),
-                                                          AuthUserStreamWidget(
-                                                            builder:
-                                                                (context) =>
-                                                                    Text(
+                                                          decoration:
+                                                              BoxDecoration(),
+                                                          child:
+                                                              AuthUserStreamWidget(
+                                                            builder: (context) =>
+                                                                AutoSizeText(
                                                               valueOrDefault<
                                                                   String>(
                                                                 valueOrDefault(
                                                                             currentUserDocument?.currentstreak,
-                                                                            0) >
-                                                                        1
-                                                                    ? 'jours'
-                                                                    : 'jour',
-                                                                'jour',
+                                                                            0) >=
+                                                                        2
+                                                                    ? 'Continue ta belle série en cours !'
+                                                                    : 'Commence une nouvelle série',
+                                                                'Commence une nouvelle série',
                                                               ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              maxLines: 2,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .labelSmall
+                                                                  .titleMedium
                                                                   .override(
                                                                     font: GoogleFonts
-                                                                        .inter(
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .fontWeight,
+                                                                        .interTight(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
                                                                       fontStyle: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .labelSmall
+                                                                          .titleMedium
                                                                           .fontStyle,
                                                                     ),
-                                                                    color: Colors
-                                                                        .white,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondary,
                                                                     letterSpacing:
                                                                         0.0,
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelSmall
-                                                                        .fontWeight,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
                                                                     fontStyle: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .labelSmall
+                                                                        .titleMedium
                                                                         .fontStyle,
                                                                   ),
+                                                            ).animateOnPageLoad(
+                                                                    animationsMap[
+                                                                        'textOnPageLoadAnimation']!),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0xFFD6A996),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100.0),
+                                                            shape: BoxShape
+                                                                .rectangle,
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        16.0,
+                                                                        16.0,
+                                                                        16.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                AuthUserStreamWidget(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          InkWell(
+                                                                    splashColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      context.pushNamed(
+                                                                          NotifpageWidget
+                                                                              .routeName);
+                                                                    },
+                                                                    child: Text(
+                                                                      valueOrDefault<
+                                                                          String>(
+                                                                        valueOrDefault(currentUserDocument?.currentstreak,
+                                                                                0)
+                                                                            .toString(),
+                                                                        '1',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .displaySmall
+                                                                          .override(
+                                                                            font:
+                                                                                GoogleFonts.interTight(
+                                                                              fontWeight: FlutterFlowTheme.of(context).displaySmall.fontWeight,
+                                                                              fontStyle: FlutterFlowTheme.of(context).displaySmall.fontStyle,
+                                                                            ),
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize:
+                                                                                25.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).displaySmall.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).displaySmall.fontStyle,
+                                                                          ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                AuthUserStreamWidget(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          Text(
+                                                                    valueOrDefault<
+                                                                        String>(
+                                                                      valueOrDefault(currentUserDocument?.currentstreak, 0) >
+                                                                              1
+                                                                          ? 'jours'
+                                                                          : 'jour',
+                                                                      'jour',
+                                                                    ),
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelSmall
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              Colors.white,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelSmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelSmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16.0),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceEvenly,
-                                                            children: [
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
+                                                        ),
+                                                        Expanded(
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16.0),
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Row(
                                                                   mainAxisSize:
                                                                       MainAxisSize
                                                                           .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
                                                                   children: [
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        dateTimeFormat(
-                                                                          "E",
-                                                                          functions
-                                                                              .currentdatelessone(),
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
-                                                                        ),
-                                                                        'Lun',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondary,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                    Stack(
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              32.0,
-                                                                          height:
-                                                                              32.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Color(0xFFE0E3E7),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(16.0),
-                                                                          ),
-                                                                        ),
-                                                                        if (valueOrDefault(currentUserDocument?.currentstreak,
-                                                                                0) >=
-                                                                            2)
-                                                                          AuthUserStreamWidget(
-                                                                            builder: (context) =>
-                                                                                Container(
-                                                                              width: 32.0,
-                                                                              height: 32.0,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xFFDDA48B),
-                                                                                borderRadius: BorderRadius.circular(16.0),
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children:
+                                                                            [
+                                                                          Text(
+                                                                            valueOrDefault<String>(
+                                                                              dateTimeFormat(
+                                                                                "E",
+                                                                                functions.currentdatelessone(),
+                                                                                locale: FFLocalizations.of(context).languageCode,
                                                                               ),
-                                                                              child: Icon(
-                                                                                Icons.check,
-                                                                                color: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                                size: 16.0,
+                                                                              'Lun',
+                                                                            ),
+                                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondary,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                ),
+                                                                          ),
+                                                                          Stack(
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 32.0,
+                                                                                height: 32.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color(0xFFE0E3E7),
+                                                                                  borderRadius: BorderRadius.circular(16.0),
+                                                                                ),
                                                                               ),
-                                                                            ),
+                                                                              if (valueOrDefault(currentUserDocument?.currentstreak, 0) >= 2)
+                                                                                AuthUserStreamWidget(
+                                                                                  builder: (context) => Container(
+                                                                                    width: 32.0,
+                                                                                    height: 32.0,
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Color(0xFFD6A996),
+                                                                                      borderRadius: BorderRadius.circular(16.0),
+                                                                                    ),
+                                                                                    child: Icon(
+                                                                                      Icons.check,
+                                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                                      size: 16.0,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                            ],
                                                                           ),
-                                                                      ],
-                                                                    ),
-                                                                  ].divide(SizedBox(
-                                                                      height:
-                                                                          5.0)),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        dateTimeFormat(
-                                                                          "E",
-                                                                          getCurrentTimestamp,
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
-                                                                        ),
-                                                                        'Mardi',
+                                                                        ].divide(SizedBox(height: 5.0)),
                                                                       ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondary,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                    Stack(
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              32.0,
-                                                                          height:
-                                                                              32.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Color(0xFFE0E3E7),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(16.0),
-                                                                          ),
-                                                                        ),
-                                                                        Container(
-                                                                          width:
-                                                                              32.0,
-                                                                          height:
-                                                                              32.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Color(0xFFDDA48B),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(16.0),
-                                                                          ),
-                                                                          child:
-                                                                              Icon(
-                                                                            Icons.check,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primary,
-                                                                            size:
-                                                                                16.0,
-                                                                          ),
-                                                                        ).animateOnPageLoad(
-                                                                            animationsMap['containerOnPageLoadAnimation1']!),
-                                                                      ],
-                                                                    ),
-                                                                  ].divide(SizedBox(
-                                                                      height:
-                                                                          5.0)),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        dateTimeFormat(
-                                                                          "E",
-                                                                          functions
-                                                                              .currentdayplus1(),
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
-                                                                        ),
-                                                                        'Mer',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondary,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
-                                                                          ),
                                                                     ),
                                                                     Container(
-                                                                      width:
-                                                                          32.0,
-                                                                      height:
-                                                                          32.0,
                                                                       decoration:
-                                                                          BoxDecoration(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .alternate,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(16.0),
-                                                                      ),
-                                                                    ),
-                                                                  ].divide(SizedBox(
-                                                                      height:
-                                                                          5.0)),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        dateTimeFormat(
-                                                                          "E",
-                                                                          functions
-                                                                              .currentdateplus2(),
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
-                                                                        ),
-                                                                        'Jeu',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                          BoxDecoration(),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children:
+                                                                            [
+                                                                          Text(
+                                                                            valueOrDefault<String>(
+                                                                              dateTimeFormat(
+                                                                                "E",
+                                                                                getCurrentTimestamp,
+                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                              ),
+                                                                              'Mardi',
                                                                             ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondary,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondary,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                ),
                                                                           ),
+                                                                          Stack(
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 32.0,
+                                                                                height: 32.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color(0xFFE0E3E7),
+                                                                                  borderRadius: BorderRadius.circular(16.0),
+                                                                                ),
+                                                                              ),
+                                                                              Container(
+                                                                                width: 32.0,
+                                                                                height: 32.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color(0xFFD6A996),
+                                                                                  borderRadius: BorderRadius.circular(16.0),
+                                                                                ),
+                                                                                child: Icon(
+                                                                                  Icons.check,
+                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                  size: 16.0,
+                                                                                ),
+                                                                              ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation2']!),
+                                                                            ],
+                                                                          ),
+                                                                        ].divide(SizedBox(height: 5.0)),
+                                                                      ),
                                                                     ),
                                                                     Container(
-                                                                      width:
-                                                                          32.0,
-                                                                      height:
-                                                                          32.0,
                                                                       decoration:
-                                                                          BoxDecoration(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .alternate,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(16.0),
-                                                                      ),
-                                                                    ),
-                                                                  ].divide(SizedBox(
-                                                                      height:
-                                                                          5.0)),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        dateTimeFormat(
-                                                                          "E",
-                                                                          functions
-                                                                              .currentdateplus2(),
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
-                                                                        ),
-                                                                        'Jeu',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelSmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                          BoxDecoration(),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children:
+                                                                            [
+                                                                          Text(
+                                                                            valueOrDefault<String>(
+                                                                              dateTimeFormat(
+                                                                                "E",
+                                                                                functions.currentdayplus1(),
+                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                              ),
+                                                                              'Mer',
                                                                             ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondary,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondary,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                ),
                                                                           ),
+                                                                          Container(
+                                                                            width:
+                                                                                32.0,
+                                                                            height:
+                                                                                32.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: FlutterFlowTheme.of(context).alternate,
+                                                                              borderRadius: BorderRadius.circular(16.0),
+                                                                            ),
+                                                                          ),
+                                                                        ].divide(SizedBox(height: 5.0)),
+                                                                      ),
                                                                     ),
                                                                     Container(
-                                                                      width:
-                                                                          32.0,
-                                                                      height:
-                                                                          32.0,
                                                                       decoration:
-                                                                          BoxDecoration(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .alternate,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(16.0),
+                                                                          BoxDecoration(),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children:
+                                                                            [
+                                                                          Text(
+                                                                            valueOrDefault<String>(
+                                                                              dateTimeFormat(
+                                                                                "E",
+                                                                                functions.currentdateplus2(),
+                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                              ),
+                                                                              'Jeu',
+                                                                            ),
+                                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondary,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                ),
+                                                                          ),
+                                                                          Container(
+                                                                            width:
+                                                                                32.0,
+                                                                            height:
+                                                                                32.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: FlutterFlowTheme.of(context).alternate,
+                                                                              borderRadius: BorderRadius.circular(16.0),
+                                                                            ),
+                                                                          ),
+                                                                        ].divide(SizedBox(height: 5.0)),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children:
+                                                                            [
+                                                                          Text(
+                                                                            valueOrDefault<String>(
+                                                                              dateTimeFormat(
+                                                                                "E",
+                                                                                functions.currentdateplus2(),
+                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                              ),
+                                                                              'Jeu',
+                                                                            ),
+                                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondary,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelSmall.fontStyle,
+                                                                                ),
+                                                                          ),
+                                                                          Container(
+                                                                            width:
+                                                                                32.0,
+                                                                            height:
+                                                                                32.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: FlutterFlowTheme.of(context).alternate,
+                                                                              borderRadius: BorderRadius.circular(16.0),
+                                                                            ),
+                                                                          ),
+                                                                        ].divide(SizedBox(height: 5.0)),
                                                                       ),
                                                                     ),
                                                                   ].divide(SizedBox(
-                                                                      height:
-                                                                          5.0)),
+                                                                      width:
+                                                                          8.0)),
                                                                 ),
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                width: 8.0)),
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ].divide(SizedBox(
+                                                          width: 12.0)),
                                                     ),
-                                                  ),
-                                                ].divide(SizedBox(width: 12.0)),
+                                                  ].divide(
+                                                      SizedBox(height: 16.0)),
+                                                ),
                                               ),
-                                            ].divide(SizedBox(height: 16.0)),
-                                          ),
+                                            ),
+                                          ].divide(SizedBox(height: 36.0)),
                                         ),
                                       ),
                                       InkWell(
@@ -1345,18 +1264,13 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
-                                          logFirebaseEvent(
-                                              'PRATIQUE_PAGE_Container_mvlskj1d_ON_TAP');
-                                          logFirebaseEvent(
-                                              'Container_page_view');
+                                          HapticFeedback.heavyImpact();
                                           await _model.pageViewController
                                               ?.nextPage(
                                             duration:
                                                 Duration(milliseconds: 300),
                                             curve: Curves.ease,
                                           );
-                                          logFirebaseEvent(
-                                              'Container_widget_animation');
                                           if (animationsMap[
                                                   'containerOnActionTriggerAnimation'] !=
                                               null) {
@@ -1365,8 +1279,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                 .controller
                                                 .forward(from: 0.0);
                                           }
-                                          logFirebaseEvent(
-                                              'Container_google_analytics_event');
                                           logFirebaseEvent('PratiqueStart');
                                         },
                                         child: Container(
@@ -1379,6 +1291,12 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                 .secondary,
                                             borderRadius:
                                                 BorderRadius.circular(100.0),
+                                            border: Border.all(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2.0,
+                                            ),
                                           ),
                                           alignment:
                                               AlignmentDirectional(0.0, 0.0),
@@ -1387,8 +1305,8 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
-                                                  font: GoogleFonts.raleway(
-                                                    fontWeight: FontWeight.w600,
+                                                  font: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.bold,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -1397,10 +1315,10 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                   ),
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                                   fontSize: 18.0,
                                                   letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.bold,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -1473,7 +1391,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation2']!),
+                                                    'containerOnPageLoadAnimation3']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1518,7 +1436,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation3']!),
+                                                    'containerOnPageLoadAnimation4']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1563,51 +1481,6 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation4']!),
-                                                Container(
-                                                  width:
-                                                      MediaQuery.sizeOf(context)
-                                                              .width *
-                                                          0.8,
-                                                  decoration: BoxDecoration(),
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Text(
-                                                      'Inspire profondément',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .raleway(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: Color(
-                                                                0xFFF89A65),
-                                                            fontSize: 20.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ).animateOnPageLoad(animationsMap[
                                                     'containerOnPageLoadAnimation5']!),
                                                 Container(
                                                   width:
@@ -1620,7 +1493,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Relâche',
+                                                      'Inspire profondément',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -1665,7 +1538,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Inspire profondément',
+                                                      'Relâche',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -1710,7 +1583,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Relâche tout',
+                                                      'Inspire profondément',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -1755,7 +1628,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Lis. Respire.\nLaisse infuser.',
+                                                      'Relâche tout',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: FlutterFlowTheme
@@ -1789,6 +1662,51 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
                                                     'containerOnPageLoadAnimation9']!),
+                                                Container(
+                                                  width:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          0.8,
+                                                  decoration: BoxDecoration(),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Text(
+                                                      'Lis. Respire.\nLaisse infuser.',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .raleway(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
+                                                            color: Color(
+                                                                0xFFF89A65),
+                                                            fontSize: 20.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ).animateOnPageLoad(animationsMap[
+                                                    'containerOnPageLoadAnimation10']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1837,7 +1755,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation10']!),
+                                                    'containerOnPageLoadAnimation11']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1879,7 +1797,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                         ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation11']!),
+                                                    'containerOnPageLoadAnimation12']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1928,7 +1846,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation12']!),
+                                                    'containerOnPageLoadAnimation13']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -1977,7 +1895,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation13']!),
+                                                    'containerOnPageLoadAnimation14']!),
                                                 Container(
                                                   width:
                                                       MediaQuery.sizeOf(context)
@@ -2026,7 +1944,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                     ),
                                                   ),
                                                 ).animateOnPageLoad(animationsMap[
-                                                    'containerOnPageLoadAnimation14']!),
+                                                    'containerOnPageLoadAnimation15']!),
                                               ],
                                             ),
                                           ),
@@ -2038,7 +1956,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                               shape: BoxShape.circle,
                                             ),
                                           ).animateOnPageLoad(animationsMap[
-                                              'containerOnPageLoadAnimation15']!),
+                                              'containerOnPageLoadAnimation16']!),
                                         ],
                                       ),
                                     ),
@@ -2181,22 +2099,15 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                       highlightColor:
                                                           Colors.transparent,
                                                       onTap: () async {
-                                                        logFirebaseEvent(
-                                                            'PRATIQUE_PAGE_Container_3vb95a7a_ON_TAP');
                                                         if (valueOrDefault<
                                                                 bool>(
                                                             currentUserDocument
                                                                 ?.hasPurchased,
                                                             false)) {
-                                                          logFirebaseEvent(
-                                                              'Container_navigate_to');
-
                                                           context.pushNamed(
                                                               SwipePageWidget
                                                                   .routeName);
                                                         } else {
-                                                          logFirebaseEvent(
-                                                              'Container_bottom_sheet');
                                                           await showModalBottomSheet(
                                                             isScrollControlled:
                                                                 true,
@@ -2235,16 +2146,11 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                                               safeSetState(
                                                                   () {}));
 
-                                                          logFirebaseEvent(
-                                                              'Container_navigate_to');
-
                                                           context.pushNamed(
                                                               SwipePageWidget
                                                                   .routeName);
                                                         }
 
-                                                        logFirebaseEvent(
-                                                            'Container_google_analytics_event');
                                                         logFirebaseEvent(
                                                             'PratiqueFinish');
                                                       },
@@ -2310,7 +2216,7 @@ class _PratiqueWidgetState extends State<PratiqueWidget>
                                             ),
                                           ),
                                         ).animateOnPageLoad(animationsMap[
-                                            'containerOnPageLoadAnimation16']!),
+                                            'containerOnPageLoadAnimation17']!),
                                       ),
                                     ),
                                   ],

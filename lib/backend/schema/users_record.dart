@@ -101,6 +101,26 @@ class UsersRecord extends FirestoreRecord {
   bool get hasPurchased => _hasPurchased ?? false;
   bool hasHasPurchased() => _hasPurchased != null;
 
+  // "onboardstep" field.
+  int? _onboardstep;
+  int get onboardstep => _onboardstep ?? 0;
+  bool hasOnboardstep() => _onboardstep != null;
+
+  // "comptefini" field.
+  bool? _comptefini;
+  bool get comptefini => _comptefini ?? false;
+  bool hasComptefini() => _comptefini != null;
+
+  // "objectifss" field.
+  String? _objectifss;
+  String get objectifss => _objectifss ?? '';
+  bool hasObjectifss() => _objectifss != null;
+
+  // "determin" field.
+  double? _determin;
+  double get determin => _determin ?? 0.0;
+  bool hasDetermin() => _determin != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
@@ -119,6 +139,10 @@ class UsersRecord extends FirestoreRecord {
     _lastOpenAt = snapshotData['lastOpenAt'] as DateTime?;
     _displayName = snapshotData['display_name'] as String?;
     _hasPurchased = snapshotData['hasPurchased'] as bool?;
+    _onboardstep = castToType<int>(snapshotData['onboardstep']);
+    _comptefini = snapshotData['comptefini'] as bool?;
+    _objectifss = snapshotData['objectifss'] as String?;
+    _determin = castToType<double>(snapshotData['determin']);
   }
 
   static CollectionReference get collection =>
@@ -171,6 +195,10 @@ Map<String, dynamic> createUsersRecordData({
   DateTime? lastOpenAt,
   String? displayName,
   bool? hasPurchased,
+  int? onboardstep,
+  bool? comptefini,
+  String? objectifss,
+  double? determin,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -190,6 +218,10 @@ Map<String, dynamic> createUsersRecordData({
       'lastOpenAt': lastOpenAt,
       'display_name': displayName,
       'hasPurchased': hasPurchased,
+      'onboardstep': onboardstep,
+      'comptefini': comptefini,
+      'objectifss': objectifss,
+      'determin': determin,
     }.withoutNulls,
   );
 
@@ -218,7 +250,11 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.nextNotificationType == e2?.nextNotificationType &&
         e1?.lastOpenAt == e2?.lastOpenAt &&
         e1?.displayName == e2?.displayName &&
-        e1?.hasPurchased == e2?.hasPurchased;
+        e1?.hasPurchased == e2?.hasPurchased &&
+        e1?.onboardstep == e2?.onboardstep &&
+        e1?.comptefini == e2?.comptefini &&
+        e1?.objectifss == e2?.objectifss &&
+        e1?.determin == e2?.determin;
   }
 
   @override
@@ -239,7 +275,11 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.nextNotificationType,
         e?.lastOpenAt,
         e?.displayName,
-        e?.hasPurchased
+        e?.hasPurchased,
+        e?.onboardstep,
+        e?.comptefini,
+        e?.objectifss,
+        e?.determin
       ]);
 
   @override

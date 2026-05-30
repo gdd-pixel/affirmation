@@ -49,8 +49,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
         parameters: {'screen_name': 'swipePageCat'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SWIPE_CAT_swipePageCat_ON_INIT_STATE');
-      logFirebaseEvent('swipePageCat_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
     });
@@ -140,9 +138,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'SWIPE_PAGE_CAT_PAGE_Icon_lpgscc1x_ON_TAP');
-                            logFirebaseEvent('Icon_bottom_sheet');
                             await showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
@@ -227,12 +222,9 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
 
                     return FlutterFlowSwipeableStack(
                       onSwipeFn: (swipeableStackIndex) async {
-                        logFirebaseEvent(
-                            'SWIPE_CAT_SwipeableStack_2vm0oa5s_ON_WID');
                         final swipeableStackAffirmationRecord =
                             swipeableStackAffirmationRecordList[
                                 swipeableStackIndex];
-                        logFirebaseEvent('SwipeableStack_update_page_state');
                         _model.isliked = false;
                         safeSetState(() {});
                       },
@@ -284,14 +276,8 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
-                                          logFirebaseEvent(
-                                              'SWIPE_PAGE_CAT_PAGE_Icon_0pljh3wp_ON_TAP');
-                                          logFirebaseEvent(
-                                              'Icon_update_page_state');
                                           _model.isliked = true;
                                           safeSetState(() {});
-                                          logFirebaseEvent(
-                                              'Icon_widget_animation');
                                           if (animationsMap[
                                                   'iconOnActionTriggerAnimation'] !=
                                               null) {
@@ -300,7 +286,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                                                 .controller
                                                 .forward(from: 0.0);
                                           }
-                                          logFirebaseEvent('Icon_backend_call');
 
                                           await FavoritesRecord.createDoc(
                                                   currentUserReference!)
@@ -361,9 +346,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
-                          logFirebaseEvent(
-                              'SWIPE_CAT_Container_i39qft0l_ON_TAP');
-                          logFirebaseEvent('Container_bottom_sheet');
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
@@ -432,10 +414,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'SWIPE_PAGE_CAT_PAGE_Icon_xzunsx37_ON_TAP');
-                            logFirebaseEvent('Icon_navigate_to');
-
                             context.pushNamed(ListingWidget.routeName);
                           },
                           child: Icon(
@@ -469,9 +447,6 @@ class _SwipePageCatWidgetState extends State<SwipePageCatWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'SWIPE_PAGE_CAT_PAGE_Icon_bablnhfq_ON_TAP');
-                            logFirebaseEvent('Icon_custom_action');
                             await actions.updateAffirmationWidget(
                               'mange mon zboub',
                             );

@@ -181,6 +181,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: PaywallpromoWidget.routeName,
           path: PaywallpromoWidget.routePath,
           builder: (context, params) => PaywallpromoWidget(),
+        ),
+        FFRoute(
+          name: InscriptionCopyWidget.routeName,
+          path: InscriptionCopyWidget.routePath,
+          builder: (context, params) => InscriptionCopyWidget(),
+        ),
+        FFRoute(
+          name: SwipePageOwnWidget.routeName,
+          path: SwipePageOwnWidget.routePath,
+          builder: (context, params) => SwipePageOwnWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

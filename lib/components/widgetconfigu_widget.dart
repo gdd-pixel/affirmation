@@ -56,8 +56,6 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   onTap: () async {
-                    logFirebaseEvent('WIDGETCONFIGU_COMP_Icon_rj6n7eq3_ON_TAP');
-                    logFirebaseEvent('Icon_bottom_sheet');
                     Navigator.pop(context);
                   },
                   child: Icon(

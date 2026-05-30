@@ -3,11 +3,12 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'inscription_widget.dart' show InscriptionWidget;
 import 'package:flutter/material.dart';
+import 'package:signature/signature.dart';
 
 class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   ///  Local state fields for this page.
 
-  int? etape = 1;
+  int? etape = 0;
 
   String? themeselected = 'base1';
 
@@ -49,6 +50,22 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   void updateQ19AtIndex(int index, Function(Soujets) updateFn) =>
       q19[index] = updateFn(q19[index]);
 
+  int? q2 = 0;
+
+  int? q40 = 0;
+
+  int? q41 = 0;
+
+  int? q42 = 0;
+
+  int? q43 = 0;
+
+  int? q44 = 0;
+
+  bool? canclickas = false;
+
+  double? planevol = 0.0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Paywally widget.
@@ -68,6 +85,14 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   int? countControllerValue;
   DateTime? datePicked1;
   DateTime? datePicked2;
+  // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
+  TextEditingController? textController2;
+  String? Function(BuildContext, String?)? textController2Validator;
+  // State field(s) for Slider widget.
+  double? sliderValue;
+  // State field(s) for Signature widget.
+  SignatureController? signatureController;
   // State field(s) for Switch widget.
   bool? switchValue;
   // Stores action output result for [RevenueCat - Purchase] action in Container widget.
@@ -80,5 +105,10 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   void dispose() {
     textFieldprenomFocusNode?.dispose();
     textFieldprenomTextController?.dispose();
+
+    textFieldFocusNode?.dispose();
+    textController2?.dispose();
+
+    signatureController?.dispose();
   }
 }

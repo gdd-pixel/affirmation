@@ -13,6 +13,14 @@ enum Category {
   soir,
   sarca,
   detend,
+  peine,
+  dev,
+  foi,
+  coup,
+  carriere,
+  depression,
+  attirer,
+  calme,
 }
 
 enum Soujets {

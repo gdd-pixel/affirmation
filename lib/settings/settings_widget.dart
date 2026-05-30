@@ -881,10 +881,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
-                                    logFirebaseEvent(
-                                        'SETTINGS_PAGE_Container_2xwd11mm_ON_TAP');
-                                    logFirebaseEvent('Container_navigate_to');
-
                                     context
                                         .pushNamed(NotifpageWidget.routeName);
                                   },

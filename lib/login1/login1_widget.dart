@@ -398,9 +398,6 @@ class _Login1WidgetState extends State<Login1Widget> {
                             ),
                             FFButtonWidget(
                               onPressed: () async {
-                                logFirebaseEvent(
-                                    'LOGIN1_PAGE_SE_CONNECTER_BTN_ON_TAP');
-                                logFirebaseEvent('Button_auth');
                                 GoRouter.of(context).prepareAuthEvent();
 
                                 final user = await authManager.signInWithEmail(
@@ -581,9 +578,6 @@ class _Login1WidgetState extends State<Login1Widget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      logFirebaseEvent('LOGIN1_PAGE_RichText_6feoqxym_ON_TAP');
-                      logFirebaseEvent('RichText_navigate_to');
-
                       context.pushNamed(CreateaccountWidget.routeName);
                     },
                     child: RichText(

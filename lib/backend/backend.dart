@@ -15,6 +15,7 @@ import 'schema/notifpreference_record.dart';
 import 'schema/notification_jobs_record.dart';
 import 'schema/themes_record.dart';
 import 'schema/checkins_record.dart';
+import 'schema/myaffirmation_record.dart';
 
 export 'dart:async' show StreamSubscription;
 export 'package:cloud_firestore/cloud_firestore.dart' hide Order;
@@ -33,6 +34,7 @@ export 'schema/notifpreference_record.dart';
 export 'schema/notification_jobs_record.dart';
 export 'schema/themes_record.dart';
 export 'schema/checkins_record.dart';
+export 'schema/myaffirmation_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Future<int> queryUsersRecordCount({
@@ -411,6 +413,46 @@ Future<List<CheckinsRecord>> queryCheckinsRecordOnce({
     queryCollectionOnce(
       CheckinsRecord.collection(parent),
       CheckinsRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+/// Functions to query MyaffirmationRecords (as a Stream and as a Future).
+Future<int> queryMyaffirmationRecordCount({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      MyaffirmationRecord.collection(parent),
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<MyaffirmationRecord>> queryMyaffirmationRecord({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      MyaffirmationRecord.collection(parent),
+      MyaffirmationRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<MyaffirmationRecord>> queryMyaffirmationRecordOnce({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      MyaffirmationRecord.collection(parent),
+      MyaffirmationRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,

@@ -69,9 +69,6 @@ class _NotifpageWidgetState extends State<NotifpageWidget> {
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
-                          logFirebaseEvent(
-                              'NOTIFPAGE_PAGE_Icon_x6b5ik6v_ON_TAP');
-                          logFirebaseEvent('Icon_navigate_back');
                           context.safePop();
                         },
                         child: Icon(
@@ -252,11 +249,6 @@ class _NotifpageWidgetState extends State<NotifpageWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
-                                  logFirebaseEvent(
-                                      'NOTIFPAGE_PAGE_Container_1vp4x116_ON_TAP');
-                                  logFirebaseEvent(
-                                      'Container_date_time_picker');
-
                                   final _datePicked1Time = await showTimePicker(
                                     context: context,
                                     initialTime: TimeOfDay.fromDateTime(
@@ -409,11 +401,6 @@ class _NotifpageWidgetState extends State<NotifpageWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
-                                  logFirebaseEvent(
-                                      'NOTIFPAGE_PAGE_Container_nniz1n1i_ON_TAP');
-                                  logFirebaseEvent(
-                                      'Container_date_time_picker');
-
                                   final _datePicked2Time = await showTimePicker(
                                     context: context,
                                     initialTime: TimeOfDay.fromDateTime(
@@ -536,10 +523,6 @@ class _NotifpageWidgetState extends State<NotifpageWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent(
-                            'NOTIFPAGE_PAGE_Container_xhssozhj_ON_TAP');
-                        logFirebaseEvent('Container_backend_call');
-
                         await NotifpreferenceRecord.createDoc(
                                 currentUserReference!)
                             .set(createNotifpreferenceRecordData(
@@ -549,7 +532,6 @@ class _NotifpageWidgetState extends State<NotifpageWidget> {
                           timezone: 'Europe/Paris',
                           notifenable: true,
                         ));
-                        logFirebaseEvent('Container_show_snack_bar');
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(

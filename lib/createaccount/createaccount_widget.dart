@@ -827,10 +827,6 @@ class _CreateaccountWidgetState extends State<CreateaccountWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              logFirebaseEvent(
-                                  'CREATEACCOUNT_PAGE_Text_tykbfu8g_ON_TAP');
-                              logFirebaseEvent('Text_navigate_to');
-
                               context.pushNamed(Login1Widget.routeName);
                             },
                             child: Text(

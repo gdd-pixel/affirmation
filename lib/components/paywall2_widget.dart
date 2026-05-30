@@ -68,11 +68,7 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'PAYWALL2_COMP_Icon_epw9xsnh_ON_TAP');
-                            logFirebaseEvent('Icon_bottom_sheet');
                             Navigator.pop(context);
-                            logFirebaseEvent('Icon_google_analytics_event');
                             logFirebaseEvent('closepopromo');
                           },
                           child: Icon(
@@ -496,20 +492,14 @@ class _Paywall2WidgetState extends State<Paywall2Widget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      logFirebaseEvent(
-                          'PAYWALL2_COMP_Container_nb7jkway_ON_TAP');
-                      logFirebaseEvent('Container_revenue_cat');
                       _model.dodopurchase =
                           await revenue_cat.purchasePackage('promo');
                       if (_model.dodopurchase!) {
-                        logFirebaseEvent('Container_backend_call');
-
                         await currentUserReference!
                             .update(createUsersRecordData(
                           hasPurchased: true,
                         ));
                       }
-                      logFirebaseEvent('Container_google_analytics_event');
                       logFirebaseEvent('PromoInterest');
 
                       safeSetState(() {});

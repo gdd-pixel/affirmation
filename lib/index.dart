@@ -16,3 +16,6 @@ export '/swipe_pagecategory/swipe_pagecategory_widget.dart'
 export '/swipe_page_fav/swipe_page_fav_widget.dart' show SwipePageFavWidget;
 export '/pratique_copy/pratique_copy_widget.dart' show PratiqueCopyWidget;
 export '/paywallpromo/paywallpromo_widget.dart' show PaywallpromoWidget;
+export '/inscription_copy/inscription_copy_widget.dart'
+    show InscriptionCopyWidget;
+export '/swipe_page_own/swipe_page_own_widget.dart' show SwipePageOwnWidget;

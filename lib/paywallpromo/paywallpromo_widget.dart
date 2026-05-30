@@ -85,10 +85,6 @@ class _PaywallpromoWidgetState extends State<PaywallpromoWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
-                                  logFirebaseEvent(
-                                      'PAYWALLPROMO_PAGE_Icon_i83vy1zu_ON_TAP');
-                                  logFirebaseEvent('Icon_navigate_to');
-
                                   context.pushNamed(
                                     SwipePageWidget.routeName,
                                     extra: <String, dynamic>{
@@ -100,8 +96,6 @@ class _PaywallpromoWidgetState extends State<PaywallpromoWidget> {
                                     },
                                   );
 
-                                  logFirebaseEvent(
-                                      'Icon_google_analytics_event');
                                   logFirebaseEvent('Closepagepromo');
                                 },
                                 child: Icon(
@@ -554,21 +548,14 @@ class _PaywallpromoWidgetState extends State<PaywallpromoWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'PAYWALLPROMO_Container_upvpu170_ON_TAP');
-                            logFirebaseEvent('Container_revenue_cat');
                             _model.dodopurchase =
                                 await revenue_cat.purchasePackage('promo');
                             if (_model.dodopurchase!) {
-                              logFirebaseEvent('Container_backend_call');
-
                               await currentUserReference!
                                   .update(createUsersRecordData(
                                 hasPurchased: true,
                               ));
                             }
-                            logFirebaseEvent(
-                                'Container_google_analytics_event');
                             logFirebaseEvent('PromoInterest');
 
                             safeSetState(() {});

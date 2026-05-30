@@ -1,16 +1,14 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
-import '/components/category_widget.dart';
 import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'swipe_pagecategory_model.dart';
 export 'swipe_pagecategory_model.dart';
@@ -47,8 +45,6 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
         parameters: {'screen_name': 'swipePagecategory'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SWIPE_PAGECATEGORY_swipePagecategory_ON_');
-      logFirebaseEvent('swipePagecategory_update_page_state');
       _model.isliked = false;
       safeSetState(() {});
     });
@@ -153,9 +149,6 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              logFirebaseEvent(
-                                  'SWIPE_PAGECATEGORY_Icon_imit6wq2_ON_TAP');
-                              logFirebaseEvent('Icon_navigate_back');
                               context.safePop();
                             },
                             child: Icon(
@@ -171,8 +164,23 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                                   } else if (valueOrDefault(
                                           currentUserDocument?.currentheme,
                                           '') ==
-                                      'base2') {
-                                    return FlutterFlowTheme.of(context).primary;
+                                      'ble') {
+                                    return Color(0xFF14301D);
+                                  } else if (valueOrDefault(
+                                          currentUserDocument?.currentheme,
+                                          '') ==
+                                      'abstrait1') {
+                                    return Color(0xFF370924);
+                                  } else if (valueOrDefault(
+                                          currentUserDocument?.currentheme,
+                                          '') ==
+                                      'abstrait2') {
+                                    return Color(0xFF370924);
+                                  } else if (valueOrDefault(
+                                          currentUserDocument?.currentheme,
+                                          '') ==
+                                      'fleur') {
+                                    return Color(0xFF370924);
                                   } else {
                                     return FlutterFlowTheme.of(context)
                                         .secondaryBackground;
@@ -180,7 +188,7 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                                 }(),
                                 FlutterFlowTheme.of(context).secondary,
                               ),
-                              size: 24.0,
+                              size: 30.0,
                             ),
                           ),
                         ),
@@ -189,12 +197,7 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                font: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
+                                fontFamily: 'Motter Corpus',
                                 color: valueOrDefault<Color>(
                                   () {
                                     if (valueOrDefault(
@@ -206,9 +209,23 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                                     } else if (valueOrDefault(
                                             currentUserDocument?.currentheme,
                                             '') ==
-                                        'base2') {
-                                      return FlutterFlowTheme.of(context)
-                                          .primary;
+                                        'ble') {
+                                      return Color(0xFF14301D);
+                                    } else if (valueOrDefault(
+                                            currentUserDocument?.currentheme,
+                                            '') ==
+                                        'abstrait1') {
+                                      return Color(0xFF370924);
+                                    } else if (valueOrDefault(
+                                            currentUserDocument?.currentheme,
+                                            '') ==
+                                        'abstrait2') {
+                                      return Color(0xFF370924);
+                                    } else if (valueOrDefault(
+                                            currentUserDocument?.currentheme,
+                                            '') ==
+                                        'fleur') {
+                                      return Color(0xFF370924);
                                     } else {
                                       return FlutterFlowTheme.of(context)
                                           .secondaryBackground;
@@ -218,13 +235,10 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                                 ),
                                 fontSize: 20.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
+                                fontWeight: FontWeight.normal,
                               ),
                         ),
-                      ].divide(SizedBox(width: 40.0)),
+                      ].divide(SizedBox(width: 12.0)),
                     ),
                   ),
                 ),
@@ -258,12 +272,9 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
 
                       return FlutterFlowSwipeableStack(
                         onSwipeFn: (swipeableStackIndex) async {
-                          logFirebaseEvent(
-                              'SWIPE_PAGECATEGORY_SwipeableStack_rrb63e');
                           final swipeableStackAffirmationRecord =
                               swipeableStackAffirmationRecordList[
                                   swipeableStackIndex];
-                          logFirebaseEvent('SwipeableStack_update_page_state');
                           _model.isliked = false;
                           safeSetState(() {});
                         },
@@ -275,149 +286,506 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                           final swipeableStackAffirmationRecord =
                               swipeableStackAffirmationRecordList[
                                   swipeableStackIndex];
-                          return Container(
-                            decoration: BoxDecoration(),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Text(
-                                    valueOrDefault<String>(
-                                      swipeableStackAffirmationRecord.text,
-                                      'text',
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .headlineLarge
-                                        .override(
-                                          font: GoogleFonts.interTight(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineLarge
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineLarge
-                                                    .fontStyle,
-                                          ),
-                                          color: valueOrDefault<Color>(
-                                            () {
-                                              if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base1') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondary;
-                                              } else if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base2') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .primary;
-                                              } else {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondaryBackground;
-                                              }
-                                            }(),
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                          ),
-                                          fontSize: 25.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineLarge
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineLarge
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ),
-                                Stack(
+                          return Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(),
+                                child: Stack(
                                   children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 1.0),
-                                      child: ToggleIcon(
-                                        onPressed: () async {
-                                          safeSetState(() =>
-                                              _model.isliked = !_model.isliked);
-                                        },
-                                        value: _model.isliked,
-                                        onIcon: Icon(
-                                          Icons.favorite,
-                                          color: valueOrDefault<Color>(
-                                            () {
-                                              if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base1') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondary;
-                                              } else if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base2') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .primary;
-                                              } else {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondaryBackground;
-                                              }
-                                            }(),
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                          ),
-                                          size: 30.0,
-                                        ),
-                                        offIcon: Icon(
-                                          Icons.favorite_border,
-                                          color: valueOrDefault<Color>(
-                                            () {
-                                              if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base1') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondary;
-                                              } else if (valueOrDefault(
-                                                      currentUserDocument
-                                                          ?.currentheme,
-                                                      '') ==
-                                                  'base2') {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .primary;
-                                              } else {
-                                                return FlutterFlowTheme.of(
-                                                        context)
-                                                    .secondaryBackground;
-                                              }
-                                            }(),
-                                            FlutterFlowTheme.of(context)
-                                                .secondary,
-                                          ),
-                                          size: 30.0,
+                                    if (!((valueOrDefault(currentUserDocument?.currentheme, '') == 'nuage') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'palmier') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'canyon') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'ble') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'nuage') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'palmier') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'soir') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'fall') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'abstrait1') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'abstrait2') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'fleur')))
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Text(
+                                          swipeableStackAffirmationRecord.text,
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineLarge
+                                              .override(
+                                                fontFamily: 'Motter Corpus',
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                fontSize: 20.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.normal,
+                                              ),
                                         ),
                                       ),
+                                    Stack(
+                                      children: [
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 1.0),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 150.0),
+                                            child: ToggleIcon(
+                                              onPressed: () async {
+                                                safeSetState(() => _model
+                                                    .isliked = !_model.isliked);
+                                                HapticFeedback.heavyImpact();
+
+                                                await FavoritesRecord.createDoc(
+                                                        currentUserReference!)
+                                                    .set(
+                                                        createFavoritesRecordData(
+                                                  affirmationRef:
+                                                      swipeableStackAffirmationRecord
+                                                          .reference,
+                                                  createdAt:
+                                                      getCurrentTimestamp,
+                                                  text:
+                                                      swipeableStackAffirmationRecord
+                                                          .text,
+                                                ));
+                                              },
+                                              value: _model.isliked,
+                                              onIcon: Icon(
+                                                Icons.favorite,
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                size: 35.0,
+                                              ),
+                                              offIcon: Icon(
+                                                Icons.favorite_border,
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                size: 35.0,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    if ((valueOrDefault(currentUserDocument?.currentheme, '') == 'abstrait1') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'abstrait2') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'soir'))
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Text(
+                                          swipeableStackAffirmationRecord.text,
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineLarge
+                                              .override(
+                                                font: GoogleFonts.lilitaOne(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineLarge
+                                                          .fontStyle,
+                                                ),
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                fontSize: 26.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.normal,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineLarge
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
+                                    if ((valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'ble') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'fleur') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'fall'))
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Text(
+                                          swipeableStackAffirmationRecord.text,
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineLarge
+                                              .override(
+                                                font: GoogleFonts.abrilFatface(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineLarge
+                                                          .fontStyle,
+                                                ),
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                fontSize: 23.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.normal,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineLarge
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
+                                    if ((valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'nuage') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'palmier') ||
+                                        (valueOrDefault(
+                                                currentUserDocument
+                                                    ?.currentheme,
+                                                '') ==
+                                            'canyon'))
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Text(
+                                          swipeableStackAffirmationRecord.text,
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineLarge
+                                              .override(
+                                                font: GoogleFonts.bellota(
+                                                  fontWeight: FontWeight.w900,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineLarge
+                                                          .fontStyle,
+                                                ),
+                                                color: valueOrDefault<Color>(
+                                                  () {
+                                                    if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'base1') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondary;
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'ble') {
+                                                      return Color(0xFF14301D);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait1') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'abstrait2') {
+                                                      return Color(0xFF370924);
+                                                    } else if (valueOrDefault(
+                                                            currentUserDocument
+                                                                ?.currentheme,
+                                                            '') ==
+                                                        'fleur') {
+                                                      return Color(0xFF370924);
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground;
+                                                    }
+                                                  }(),
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                                ),
+                                                fontSize: 25.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w900,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineLarge
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           );
                         },
                         itemCount: swipeableStackAffirmationRecordList.length,
@@ -429,165 +797,6 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                             AllowedSwipeDirection.only(up: true),
                       );
                     },
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(32.0, 0.0, 32.0, 32.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'SWIPE_PAGECATEGORY_Container_rlmveluw_ON');
-                            logFirebaseEvent('Container_bottom_sheet');
-                            await showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              enableDrag: false,
-                              context: context,
-                              builder: (context) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  child: Padding(
-                                    padding: MediaQuery.viewInsetsOf(context),
-                                    child: CategoryWidget(),
-                                  ),
-                                );
-                              },
-                            ).then((value) => safeSetState(() {}));
-                          },
-                          child: Material(
-                            color: Colors.transparent,
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(100.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 12.0, 12.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Icon(
-                                      Icons.apps,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      size: 24.0,
-                                    ),
-                                    Text(
-                                      'Catégories',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.raleway(
-                                              fontWeight: FontWeight.normal,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondary,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                    ),
-                                  ].divide(SizedBox(width: 8.0)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'SWIPE_PAGECATEGORY_Container_cv8mylou_ON');
-                            logFirebaseEvent('Container_navigate_to');
-
-                            context.pushNamed(PratiqueWidget.routeName);
-                          },
-                          child: Material(
-                            color: Colors.transparent,
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(100.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 12.0, 12.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.spa,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
-                                      size: 24.0,
-                                    ),
-                                    Text(
-                                      'Pratique',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.raleway(
-                                              fontWeight: FontWeight.normal,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondary,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                          ),
-                                    ),
-                                  ].divide(SizedBox(width: 8.0)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],

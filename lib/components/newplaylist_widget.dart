@@ -234,14 +234,10 @@ class _NewplaylistWidgetState extends State<NewplaylistWidget> {
                   Expanded(
                     child: FFButtonWidget(
                       onPressed: () async {
-                        logFirebaseEvent('NEWPLAYLIST_COMP_CREATE_BTN_ON_TAP');
-                        logFirebaseEvent('Button_backend_call');
-
                         await PlaylistsRecord.createDoc(currentUserReference!)
                             .set(createPlaylistsRecordData(
                           name: _model.textController.text,
                         ));
-                        logFirebaseEvent('Button_bottom_sheet');
                         Navigator.pop(context);
                       },
                       text: 'Create',

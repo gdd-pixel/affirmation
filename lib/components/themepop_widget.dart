@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/components/paywall_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/revenue_cat_util.dart' as revenue_cat;
@@ -34,8 +33,6 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('THEMEPOP_COMP_Themepop_ON_INIT_STATE');
-      logFirebaseEvent('Themepop_update_component_state');
       _model.themeselec = valueOrDefault(currentUserDocument?.currentheme, '');
       safeSetState(() {});
     });
@@ -70,17 +67,26 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      logFirebaseEvent('THEMEPOP_COMP_Icon_g4ozblsh_ON_TAP');
-                      logFirebaseEvent('Icon_bottom_sheet');
                       Navigator.pop(context);
                     },
                     child: Icon(
-                      Icons.arrow_back,
+                      Icons.close,
                       color: FlutterFlowTheme.of(context).secondary,
                       size: 30.0,
                     ),
                   ),
-                ],
+                  Text(
+                    'Mes thèmes',
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Motter Corpus',
+                          color: FlutterFlowTheme.of(context).secondary,
+                          fontSize: 20.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                  ),
+                ].divide(SizedBox(width: 12.0)),
               ),
             ),
             Padding(
@@ -88,30 +94,6 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Mes Thèmes',
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            font: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                            fontSize: 20.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .fontStyle,
-                          ),
-                    ),
-                  ].divide(SizedBox(height: 5.0)),
-                ),
               ),
             ),
             Expanded(
@@ -121,7 +103,19 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                 child: GridView(
                   padding: EdgeInsets.zero,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                    crossAxisCount: () {
+                      if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                        return 2;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointMedium) {
+                        return 2;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointLarge) {
+                        return 2;
+                      } else {
+                        return 3;
+                      }
+                    }(),
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
                     childAspectRatio: 0.7,
@@ -139,13 +133,8 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              logFirebaseEvent(
-                                  'THEMEPOP_COMP_Container_hheolen2_ON_TAP');
-                              logFirebaseEvent(
-                                  'Container_update_component_state');
                               _model.themeselec = 'base1';
                               safeSetState(() {});
-                              logFirebaseEvent('Container_backend_call');
 
                               await currentUserReference!
                                   .update(createUsersRecordData(
@@ -201,13 +190,8 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'THEMEPOP_COMP_Container_6xcia7rm_ON_TAP');
-                            logFirebaseEvent(
-                                'Container_update_component_state');
                             _model.themeselec = 'base2';
                             safeSetState(() {});
-                            logFirebaseEvent('Container_backend_call');
 
                             await currentUserReference!
                                 .update(createUsersRecordData(
@@ -260,46 +244,23 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent('THEMEPOP_COMP_Stack_v2sjclbt_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
-                          logFirebaseEvent('Stack_update_component_state');
                           _model.themeselec = 'soir';
                           safeSetState(() {});
-                          logFirebaseEvent('Stack_backend_call');
 
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
                           ));
-                          logFirebaseEvent('Stack_show_snack_bar');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'yes sir',
-                                style: TextStyle(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                ),
-                              ),
-                              duration: Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
                         } else {
-                          logFirebaseEvent('Stack_bottom_sheet');
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaywallWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'soir';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
                         }
                       },
                       child: Stack(
@@ -326,6 +287,30 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                                 )
                               ],
                               borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.lilitaOne(
+                                        fontWeight: FontWeight.normal,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      fontSize: 23.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
                             ),
                           ),
                           if (!revenue_cat.activeEntitlementIds
@@ -361,32 +346,23 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent('THEMEPOP_COMP_Stack_duf8pqha_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
-                          logFirebaseEvent('Stack_update_component_state');
                           _model.themeselec = 'fall';
                           safeSetState(() {});
-                          logFirebaseEvent('Stack_backend_call');
 
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          logFirebaseEvent('Stack_bottom_sheet');
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaywallWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'fall';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
                         }
                       },
                       child: Stack(
@@ -413,6 +389,34 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                                 )
                               ],
                               borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.abrilFatface(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
                             ),
                           ),
                           if (!revenue_cat.activeEntitlementIds
@@ -448,32 +452,23 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent('THEMEPOP_COMP_Stack_tb5hjym6_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
-                          logFirebaseEvent('Stack_update_component_state');
                           _model.themeselec = 'beach';
                           safeSetState(() {});
-                          logFirebaseEvent('Stack_backend_call');
 
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          logFirebaseEvent('Stack_bottom_sheet');
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaywallWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'beach';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
                         }
                       },
                       child: Stack(
@@ -500,6 +495,21 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                                 )
                               ],
                               borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Motter Corpus',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
                             ),
                           ),
                           if (!revenue_cat.activeEntitlementIds
@@ -535,32 +545,23 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent('THEMEPOP_COMP_Stack_35zswf25_ON_TAP');
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
-                          logFirebaseEvent('Stack_update_component_state');
                           _model.themeselec = 'canyon';
                           safeSetState(() {});
-                          logFirebaseEvent('Stack_backend_call');
 
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          logFirebaseEvent('Stack_bottom_sheet');
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaywallWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'canyon';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
                         }
                       },
                       child: Stack(
@@ -588,6 +589,30 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                               ],
                               borderRadius: BorderRadius.circular(24.0),
                             ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.bellota(
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
                           ),
                           if (!revenue_cat.activeEntitlementIds
                               .contains('accespremium'))
@@ -601,6 +626,812 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                               ),
                             ),
                           if (_model.themeselec == 'canyon')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'lac';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'lac';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/75n71_6.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Motter Corpus',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'lac')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'fleur';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'fleur';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/g2t7j_2.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.abrilFatface(
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF370924),
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'fleur')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'palmier';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'palmier';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/7fbgi_3.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.bellota(
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'palmier')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'ble';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'ble';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/cxi3o_1.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.abrilFatface(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF5B2B17),
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'ble')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'nuage';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'nuage';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/10.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.bellota(
+                                        fontWeight: FontWeight.w900,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w900,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'nuage')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'nuagerose';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'nuagerose';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/11.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Motter Corpus',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'nuagerose')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'abstrait1';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'abstrait1';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/15.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.lilitaOne(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF400A27),
+                                      fontSize: 23.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'abstrait1')
+                            Align(
+                              alignment: AlignmentDirectional(1.0, -1.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 10.0, 10.0, 0.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF4ED821),
+                                  size: 24.0,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        if (revenue_cat.activeEntitlementIds
+                            .contains('accespremium')) {
+                          _model.themeselec = 'abstrait2';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        } else {
+                          _model.themeselec = 'abstrait2';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                          ));
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primary,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: Image.asset(
+                                  'assets/images/14.jpg',
+                                ).image,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(
+                                    2.0,
+                                    2.0,
+                                  ),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                'Phil\'O',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.lilitaOne(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF370924),
+                                      fontSize: 23.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          if (!revenue_cat.activeEntitlementIds
+                              .contains('accespremium'))
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 10.0, 0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.crown,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 15.0,
+                              ),
+                            ),
+                          if (_model.themeselec == 'abstrait2')
                             Align(
                               alignment: AlignmentDirectional(1.0, -1.0),
                               child: Padding(

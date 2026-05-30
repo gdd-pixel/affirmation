@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/components/paywall2_widget.dart';
 import '/components/paywall_widget.dart';
 import '/components/widgetconfigu_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -56,8 +55,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('AVANTSETTINGS_avantsettings_ON_INIT_STAT');
-      logFirebaseEvent('avantsettings_firestore_query');
       _model.today = await queryCheckinsRecordOnce(
         parent: currentUserReference,
         queryBuilder: (checkinsRecord) => checkinsRecord.where(
@@ -73,7 +70,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
         ),
         singleRecord: true,
       ).then((s) => s.firstOrNull);
-      logFirebaseEvent('avantsettings_firestore_query');
       _model.hier = await queryCheckinsRecordOnce(
         parent: currentUserReference,
         queryBuilder: (checkinsRecord) => checkinsRecord.where(
@@ -89,7 +85,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
         ),
         singleRecord: true,
       ).then((s) => s.firstOrNull);
-      logFirebaseEvent('avantsettings_update_component_state');
       _model.visitoday = _model.today?.idstring;
       _model.visihier = _model.hier?.idstring;
       safeSetState(() {});
@@ -127,14 +122,11 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      logFirebaseEvent(
-                          'AVANTSETTINGS_COMP_Icon_prljkq17_ON_TAP');
-                      logFirebaseEvent('Icon_bottom_sheet');
                       Navigator.pop(context);
                     },
                     child: Icon(
                       Icons.close,
-                      color: FlutterFlowTheme.of(context).primaryText,
+                      color: FlutterFlowTheme.of(context).secondary,
                       size: 30.0,
                     ),
                   ),
@@ -146,10 +138,7 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
-                  logFirebaseEvent('AVANTSETTINGS_Container_er77plvu_ON_TAP');
-                  logFirebaseEvent('Container_bottom_sheet');
                   Navigator.pop(context);
-                  logFirebaseEvent('Container_bottom_sheet');
                   await showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
@@ -163,12 +152,12 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                     },
                   ).then((value) => safeSetState(() {}));
 
-                  logFirebaseEvent('Container_google_analytics_event');
                   logFirebaseEvent('buyInterest');
                 },
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondary,
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 12.0,
@@ -180,12 +169,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         spreadRadius: 0.0,
                       )
                     ],
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFBC987A), Color(0xFFBC9B80)],
-                      stops: [0.0, 1.0],
-                      begin: AlignmentDirectional(-0.34, 1.0),
-                      end: AlignmentDirectional(0.34, -1.0),
-                    ),
                     borderRadius: BorderRadius.circular(24.0),
                   ),
                   child: Padding(
@@ -200,7 +183,7 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                           children: [
                             Expanded(
                               child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   AutoSizeText(
@@ -209,27 +192,11 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .override(
-                                          font: GoogleFonts.interTight(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleMedium
-                                                    .fontStyle,
-                                          ),
+                                          fontFamily: 'Motter Corpus',
                                           color: Colors.white,
-                                          fontSize: 16.0,
+                                          fontSize: 20.0,
                                           letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleMedium
-                                                  .fontStyle,
+                                          fontWeight: FontWeight.normal,
                                         ),
                                   ),
                                   Text(
@@ -248,6 +215,7 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                                     .fontStyle,
                                           ),
                                           color: Color(0xCCFFFFFF),
+                                          fontSize: 12.0,
                                           letterSpacing: 0.0,
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
@@ -263,15 +231,17 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                               ),
                             ),
                             Container(
-                              width: 60.0,
-                              height: 60.0,
+                              width: 35.0,
+                              height: 35.0,
                               decoration: BoxDecoration(
+                                color: Color(0x33FFF1EF),
                                 image: DecorationImage(
                                   fit: BoxFit.contain,
                                   image: Image.network(
                                     '',
                                   ).image,
                                 ),
+                                shape: BoxShape.circle,
                               ),
                               child: Align(
                                 alignment: AlignmentDirectional(0.0, 0.0),
@@ -279,7 +249,7 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                   FontAwesomeIcons.crown,
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
-                                  size: 24.0,
+                                  size: 20.0,
                                 ),
                               ),
                             ),
@@ -322,10 +292,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
-                              logFirebaseEvent(
-                                  'AVANTSETTINGS_COMP_Text_90dcp14i_ON_TAP');
-                              logFirebaseEvent('Text_navigate_to');
-
                               context.pushNamed(NotifpageWidget.routeName);
                             },
                             child: Text(
@@ -341,8 +307,8 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                           .titleMedium
                                           .fontStyle,
                                     ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
+                                    color:
+                                        FlutterFlowTheme.of(context).secondary,
                                     letterSpacing: 0.0,
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .titleMedium
@@ -359,47 +325,65 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xFFDFAF9F),
-                              borderRadius: BorderRadius.circular(100.0),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 16.0, 16.0, 16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  AuthUserStreamWidget(
-                                    builder: (context) => InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        logFirebaseEvent(
-                                            'AVANTSETTINGS_COMP_Text_iw1iy1cz_ON_TAP');
-                                        logFirebaseEvent('Text_navigate_to');
-
-                                        context.pushNamed(
-                                            NotifpageWidget.routeName);
-                                      },
-                                      child: Text(
-                                        valueOrDefault<String>(
-                                          valueOrDefault(
-                                                  currentUserDocument
-                                                      ?.currentstreak,
-                                                  0)
-                                              .toString(),
-                                          '1',
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .displaySmall
-                                            .override(
-                                              font: GoogleFonts.interTight(
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              context.pushNamed(InscriptionWidget.routeName);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFFDFAF9F),
+                                borderRadius: BorderRadius.circular(100.0),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 16.0, 16.0, 16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    AuthUserStreamWidget(
+                                      builder: (context) => InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () async {
+                                          context.pushNamed(
+                                              NotifpageWidget.routeName);
+                                        },
+                                        child: Text(
+                                          valueOrDefault<String>(
+                                            valueOrDefault(
+                                                    currentUserDocument
+                                                        ?.currentstreak,
+                                                    0)
+                                                .toString(),
+                                            '1',
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .displaySmall
+                                              .override(
+                                                font: GoogleFonts.interTight(
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .displaySmall
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .displaySmall
+                                                          .fontStyle,
+                                                ),
+                                                color: Colors.white,
+                                                fontSize: 25.0,
+                                                letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .displaySmall
@@ -409,39 +393,38 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                                         .displaySmall
                                                         .fontStyle,
                                               ),
+                                        ),
+                                      ),
+                                    ),
+                                    AuthUserStreamWidget(
+                                      builder: (context) => Text(
+                                        valueOrDefault<String>(
+                                          valueOrDefault(
+                                                      currentUserDocument
+                                                          ?.currentstreak,
+                                                      0) >
+                                                  1
+                                              ? 'jours'
+                                              : 'jour',
+                                          'jour',
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontStyle,
+                                              ),
                                               color: Colors.white,
-                                              fontSize: 25.0,
                                               letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
-                                                      .displaySmall
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .displaySmall
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                  AuthUserStreamWidget(
-                                    builder: (context) => Text(
-                                      valueOrDefault<String>(
-                                        valueOrDefault(
-                                                    currentUserDocument
-                                                        ?.currentstreak,
-                                                    0) >
-                                                1
-                                            ? 'jours'
-                                            : 'jour',
-                                        'jour',
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .labelSmall
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
                                                       .labelSmall
                                                       .fontWeight,
                                               fontStyle:
@@ -449,20 +432,10 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                                       .labelSmall
                                                       .fontStyle,
                                             ),
-                                            color: Colors.white,
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontStyle,
-                                          ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -817,9 +790,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
-                          logFirebaseEvent(
-                              'AVANTSETTINGS_Container_izfx9q5w_ON_TAP');
-                          logFirebaseEvent('Container_bottom_sheet');
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
@@ -836,7 +806,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                             },
                           ).then((value) => safeSetState(() {}));
 
-                          logFirebaseEvent('Container_google_analytics_event');
                           logFirebaseEvent('wantwidget2');
                         },
                         child: Container(
@@ -910,6 +879,11 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.crown,
+                                        color: Color(0xFFBC987A),
+                                        size: 18.0,
+                                      ),
                                       Icon(
                                         Icons.chevron_right,
                                         color: Color(0xFF57636C),
@@ -929,20 +903,13 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
-                          logFirebaseEvent(
-                              'AVANTSETTINGS_Container_whv66wls_ON_TAP');
-                          logFirebaseEvent('Container_navigate_to');
-
-                          context.pushNamed(
-                            InscriptionWidget.routeName,
-                            extra: <String, dynamic>{
-                              '__transition_info__': TransitionInfo(
-                                hasTransition: true,
-                                transitionType: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 0),
-                              ),
-                            },
-                          );
+                          if (isiOS) {
+                            await launchURL(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/a4zk250wyub8/_Conditions_G%C3%A9n%C3%A9rales_d%E2%80%99Utilisation_-_PhilO_Apple_(CGU)_(1).pdf');
+                          } else {
+                            await launchURL(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/rw4o9r6l6ooy/Conditions_G%C3%A9n%C3%A9rales_d%E2%80%99Utilisation_-_PhilO_App_(CGU)_(1).pdf');
+                          }
                         },
                         child: Container(
                           width: double.infinity,
@@ -1023,21 +990,13 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
-                          logFirebaseEvent(
-                              'AVANTSETTINGS_Container_0ckqg6bh_ON_TAP');
-                          logFirebaseEvent('Container_bottom_sheet');
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: Paywall2Widget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          if (isiOS) {
+                            await launchURL(
+                                'https://sites.google.com/view/philo-privacy-policy-french-en/home');
+                          } else {
+                            await launchURL(
+                                'https://sites.google.com/view/philo-privacypolicy-french-eng/home');
+                          }
                         },
                         child: Container(
                           width: double.infinity,

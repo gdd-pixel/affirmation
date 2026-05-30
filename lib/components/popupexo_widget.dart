@@ -42,8 +42,6 @@ class _PopupexoWidgetState extends State<PopupexoWidget> {
       alignment: AlignmentDirectional(0.0, 0.0),
       child: GestureDetector(
         onPanDown: (details) async {
-          logFirebaseEvent('POPUPEXO_Container_ibn0051c_ON_PAN_DOWN');
-          logFirebaseEvent('Container_bottom_sheet');
           Navigator.pop(context);
         },
         child: Material(
@@ -158,13 +156,8 @@ class _PopupexoWidgetState extends State<PopupexoWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent(
-                            'POPUPEXO_COMP_Container_keaeuaa2_ON_TAP');
-                        logFirebaseEvent('Container_google_analytics_event');
                         logFirebaseEvent('Pratiquepopup');
-                        logFirebaseEvent('Container_bottom_sheet');
                         Navigator.pop(context);
-                        logFirebaseEvent('Container_navigate_to');
 
                         context.pushNamed(PratiqueWidget.routeName);
                       },

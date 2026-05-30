@@ -125,9 +125,6 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
-                                      logFirebaseEvent(
-                                          'PAYWALL_COMP_Icon_64g6qsw6_ON_TAP');
-                                      logFirebaseEvent('Icon_alert_dialog');
                                       var confirmDialogResponse =
                                           await showDialog<bool>(
                                                 context: context,
@@ -158,7 +155,6 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                               ) ??
                                               false;
                                       if (confirmDialogResponse) {
-                                        logFirebaseEvent('Icon_bottom_sheet');
                                         Navigator.pop(context);
                                       }
                                     },
@@ -204,7 +200,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                       size: 20.0,
                                     ),
                                     Text(
-                                      'Aucun frais ne te seras facturé aujourd\'hui',
+                                      'Aucun frais ne te seras facturé pendant l\'essai',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -776,7 +772,8 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                     },
                                     activeColor: FlutterFlowTheme.of(context)
                                         .primaryBackground,
-                                    activeTrackColor: Color(0xFF0FD13D),
+                                    activeTrackColor:
+                                        FlutterFlowTheme.of(context).success,
                                     inactiveTrackColor:
                                         FlutterFlowTheme.of(context).alternate,
                                     inactiveThumbColor:
@@ -804,34 +801,13 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            logFirebaseEvent(
-                                'PAYWALL_COMP_Container_q63yskdd_ON_TAP');
-                            logFirebaseEvent('Container_revenue_cat');
                             _model.dadopurchase = await revenue_cat
                                 .purchasePackage('\$rc_annual');
                             if (_model.dadopurchase!) {
-                              logFirebaseEvent('Container_backend_call');
-
                               await currentUserReference!
                                   .update(createUsersRecordData(
                                 hasPurchased: true,
                               ));
-                            } else {
-                              logFirebaseEvent('Container_show_snack_bar');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Achat annulé',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 2000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                ),
-                              );
                             }
 
                             safeSetState(() {});
@@ -840,7 +816,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                             width: MediaQuery.sizeOf(context).width * 0.7,
                             height: 50.0,
                             decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).secondary,
+                              color: FlutterFlowTheme.of(context).success,
                               borderRadius: BorderRadius.circular(100.0),
                             ),
                             child: Align(
@@ -856,8 +832,8 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                             .bodyMedium
                                             .fontStyle,
                                       ),
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       fontSize: 18.0,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.bold,
@@ -894,6 +870,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                                   .fontStyle,
                                         ),
                                         color: Color(0xFF57636C),
+                                        fontSize: 14.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FlutterFlowTheme.of(context)
                                             .labelSmall
@@ -907,12 +884,39 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'CGU',
-                                      style: FlutterFlowTheme.of(context)
-                                          .labelSmall
-                                          .override(
-                                            font: GoogleFonts.inter(
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        if (isiOS) {
+                                          await launchURL(
+                                              'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/a4zk250wyub8/_Conditions_G%C3%A9n%C3%A9rales_d%E2%80%99Utilisation_-_PhilO_Apple_(CGU)_(1).pdf');
+                                        } else {
+                                          await launchURL(
+                                              'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/rw4o9r6l6ooy/Conditions_G%C3%A9n%C3%A9rales_d%E2%80%99Utilisation_-_PhilO_App_(CGU)_(1).pdf');
+                                        }
+                                      },
+                                      child: Text(
+                                        'CGU',
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontStyle,
+                                              ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                              letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelSmall
@@ -922,18 +926,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                                       .labelSmall
                                                       .fontStyle,
                                             ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondary,
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontStyle,
-                                          ),
+                                      ),
                                     ),
                                     Text(
                                       'Restore Purchase',
@@ -963,12 +956,39 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                                     .fontStyle,
                                           ),
                                     ),
-                                    Text(
-                                      'Privacy',
-                                      style: FlutterFlowTheme.of(context)
-                                          .labelSmall
-                                          .override(
-                                            font: GoogleFonts.inter(
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        if (isiOS) {
+                                          await launchURL(
+                                              'https://sites.google.com/view/philo-privacy-policy-french-en/home');
+                                        } else {
+                                          await launchURL(
+                                              'https://sites.google.com/view/philo-privacypolicy-french-eng/home');
+                                        }
+                                      },
+                                      child: Text(
+                                        'Privacy',
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelSmall
+                                                        .fontStyle,
+                                              ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondary,
+                                              letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelSmall
@@ -978,18 +998,7 @@ class _PaywallWidgetState extends State<PaywallWidget> {
                                                       .labelSmall
                                                       .fontStyle,
                                             ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondary,
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelSmall
-                                                    .fontStyle,
-                                          ),
+                                      ),
                                     ),
                                   ].divide(SizedBox(width: 16.0)),
                                 ),

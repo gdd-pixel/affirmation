@@ -41,12 +41,9 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
         parameters: {'screen_name': 'pratiqueCopy'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('PRATIQUE_COPY_pratiqueCopy_ON_INIT_STATE');
-      logFirebaseEvent('pratiqueCopy_firestore_query');
       _model.affi = await queryAffirmationRecordOnce(
         limit: 50,
       );
-      logFirebaseEvent('pratiqueCopy_update_page_state');
       _model.updateAffirlistAtIndex(
         0,
         (_) => valueOrDefault<String>(
@@ -60,7 +57,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratiqueCopy_update_page_state');
       _model.updateAffirlistAtIndex(
         1,
         (_) => valueOrDefault<String>(
@@ -74,7 +70,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratiqueCopy_update_page_state');
       _model.updateAffirlistAtIndex(
         2,
         (_) => valueOrDefault<String>(
@@ -88,7 +83,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
         ),
       );
       safeSetState(() {});
-      logFirebaseEvent('pratiqueCopy_firestore_query');
       _model.dato = await queryCheckinsRecordOnce(
         parent: currentUserReference,
         queryBuilder: (checkinsRecord) => checkinsRecord.where(
@@ -106,8 +100,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
       ).then((s) => s.firstOrNull);
       if (!(_model.dato?.reference.id != null &&
           _model.dato?.reference.id != '')) {
-        logFirebaseEvent('pratiqueCopy_backend_call');
-
         await CheckinsRecord.createDoc(currentUserReference!)
             .set(createCheckinsRecordData(
           completed: false,
@@ -131,8 +123,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
               currentUserDocument?.lastCheckinDate,
               locale: FFLocalizations.of(context).languageCode,
             )) {
-          logFirebaseEvent('pratiqueCopy_backend_call');
-
           await currentUserReference!.update({
             ...createUsersRecordData(
               lastCheckinDate: getCurrentTimestamp,
@@ -144,8 +134,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
             ),
           });
         } else {
-          logFirebaseEvent('pratiqueCopy_backend_call');
-
           await currentUserReference!.update(createUsersRecordData(
             currentstreak: 1,
             lastCheckinDate: getCurrentTimestamp,
@@ -373,10 +361,6 @@ class _PratiqueCopyWidgetState extends State<PratiqueCopyWidget>
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        logFirebaseEvent(
-                            'PRATIQUE_COPY_PAGE_Icon_b2sc7mbf_ON_TAP');
-                        logFirebaseEvent('Icon_navigate_to');
-
                         context.pushNamed(
                           SwipePageWidget.routeName,
                           extra: <String, dynamic>{
