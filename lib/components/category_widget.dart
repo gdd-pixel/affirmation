@@ -1,4 +1,5 @@
 import '/backend/schema/enums/enums.dart';
+import '/components/paypaycompo_widget.dart';
 import '/components/paywall_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -606,27 +607,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Trouver le calme',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.calme,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -757,27 +750,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Confiance en soi',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.confiance,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -908,27 +893,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Attirer l\'amour',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.attirer,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -1059,27 +1036,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Foi',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.foi,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -1219,12 +1188,10 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         return Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
-                                          child: PaywallWidget(),
+                                          child: PaypaycompoWidget(),
                                         );
                                       },
                                     ).then((value) => safeSetState(() {}));
-
-                                    logFirebaseEvent('categoryInterest');
                                   }
                                 },
                                 child: Stack(
@@ -1355,27 +1322,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Réussir sa carrière',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.carriere,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -1507,27 +1466,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Développement personnel',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.dev,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -1757,22 +1708,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         ].divide(SizedBox(height: 8.0)),
                                       ),
                                     ),
-                                    if (!revenue_cat.activeEntitlementIds
-                                        .contains('accespremium'))
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(1.0, -1.0),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
-                                          child: FaIcon(
-                                            FontAwesomeIcons.crown,
-                                            color: Color(0xFFE2AB85),
-                                            size: 15.0,
-                                          ),
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ),
@@ -1810,27 +1745,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Coups durs',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.coup,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(
@@ -1961,27 +1888,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       },
                                     );
                                   } else {
-                                    context.pushNamed(
-                                      SwipePagecategoryWidget.routeName,
-                                      queryParameters: {
-                                        'catname': serializeParam(
-                                          'Combattre la dépression',
-                                          ParamType.String,
-                                        ),
-                                        'cate': serializeParam(
-                                          Category.depression,
-                                          ParamType.Enum,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
-                                        ),
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: PaypaycompoWidget(),
+                                        );
                                       },
-                                    );
+                                    ).then((value) => safeSetState(() {}));
                                   }
                                 },
                                 child: Stack(

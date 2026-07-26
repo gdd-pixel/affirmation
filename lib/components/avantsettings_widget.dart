@@ -879,11 +879,6 @@ class _AvantsettingsWidgetState extends State<AvantsettingsWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.crown,
-                                        color: Color(0xFFBC987A),
-                                        size: 18.0,
-                                      ),
                                       Icon(
                                         Icons.chevron_right,
                                         color: Color(0xFF57636C),

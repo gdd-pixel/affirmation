@@ -19,6 +19,7 @@ class AppsFlyerManager {
 
     final options = AppsFlyerOptions(
       afDevKey: _devKey,
+      appId: '6754841476',
       showDebug: true,
       timeToWaitForATTUserAuthorization: 0,
     );

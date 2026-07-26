@@ -1,10 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/paypaycompo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/revenue_cat_util.dart' as revenue_cat;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'themepop_model.dart';
@@ -133,6 +135,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              HapticFeedback.heavyImpact();
                               _model.themeselec = 'base1';
                               safeSetState(() {});
 
@@ -190,6 +193,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            HapticFeedback.heavyImpact();
                             _model.themeselec = 'base2';
                             safeSetState(() {});
 
@@ -244,6 +248,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'soir';
@@ -254,13 +259,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'soir';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -346,6 +356,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'fall';
@@ -356,13 +367,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'fall';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -452,6 +468,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'beach';
@@ -462,13 +479,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'beach';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -545,6 +567,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'canyon';
@@ -555,13 +578,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'canyon';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -647,6 +675,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'lac';
@@ -657,13 +686,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'lac';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -740,6 +774,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'fleur';
@@ -750,13 +785,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'fleur';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -841,6 +881,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'palmier';
@@ -851,13 +892,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'palmier';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -943,6 +989,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'ble';
@@ -953,13 +1000,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'ble';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -1048,6 +1100,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'nuage';
@@ -1058,13 +1111,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'nuage';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -1150,6 +1208,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'nuagerose';
@@ -1160,13 +1219,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'nuagerose';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -1243,6 +1307,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'abstrait1';
@@ -1253,13 +1318,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'abstrait1';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(
@@ -1348,6 +1418,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        HapticFeedback.heavyImpact();
                         if (revenue_cat.activeEntitlementIds
                             .contains('accespremium')) {
                           _model.themeselec = 'abstrait2';
@@ -1358,13 +1429,18 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             currentheme: _model.themeselec,
                           ));
                         } else {
-                          _model.themeselec = 'abstrait2';
-                          safeSetState(() {});
-
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            currentheme: _model.themeselec,
-                          ));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: PaypaycompoWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
                         }
                       },
                       child: Stack(

@@ -2,7 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/avantsettings_widget.dart';
 import '/components/category_widget.dart';
-import '/components/paywall_widget.dart';
+import '/components/paypaycompo_widget.dart';
 import '/components/popupexo_widget.dart';
 import '/components/themepop_widget.dart';
 import '/flutter_flow/flutter_flow_swipeable_stack.dart';
@@ -409,7 +409,6 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
                                   HapticFeedback.heavyImpact();
-                                  logFirebaseEvent('premiumevent');
                                   await showModalBottomSheet(
                                     isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
@@ -425,7 +424,10 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
-                                          child: PaywallWidget(),
+                                          child: Container(
+                                            height: double.infinity,
+                                            child: PaypaycompoWidget(),
+                                          ),
                                         ),
                                       );
                                     },

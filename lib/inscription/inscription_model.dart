@@ -94,7 +94,9 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   // State field(s) for Signature widget.
   SignatureController? signatureController;
   // State field(s) for Switch widget.
-  bool? switchValue;
+  bool? switchValue1;
+  // State field(s) for Switch widget.
+  bool? switchValue2;
   // Stores action output result for [RevenueCat - Purchase] action in Container widget.
   bool? dadpurchase;
 

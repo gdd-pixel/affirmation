@@ -120,6 +120,38 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                               currentUserDocument?.currentheme, '') ==
                           'base2') {
                         return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/jshrea0307nf/134.png';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'lac') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/g9njo31en21z/6.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'ble') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/w7cpa5v6wmd5/1.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'fleur') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/8wsb4z1aeadj/2.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'nuage') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/jsm8hzlszasy/10.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'nuagerose') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/x92b903ua5il/11.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'palmier') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/flxp0x2swjbq/3.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'abstrait1') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/poot81w7vsr8/15.jpg';
+                      } else if (valueOrDefault(
+                              currentUserDocument?.currentheme, '') ==
+                          'abstrait2') {
+                        return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/evl4ahjw31oa/14.jpg';
                       } else {
                         return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/hubwxgmbeooz/122.png';
                       }
