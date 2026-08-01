@@ -51,6 +51,7 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
         );
         _model.isliked = false;
         safeSetState(() {});
+        await actions.syncFavoriteAffirmationsToWidget();
         if ((dateTimeFormat(
                   "d/M/y",
                   currentUserDocument?.lastOpenAt,
@@ -712,6 +713,8 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                             swipeableStackAffirmationRecord
                                                                 .text,
                                                       ));
+                                                      await actions
+                                                          .syncFavoriteAffirmationsToWidget();
                                                     },
                                                     value: _model.isliked,
                                                     onIcon: Icon(

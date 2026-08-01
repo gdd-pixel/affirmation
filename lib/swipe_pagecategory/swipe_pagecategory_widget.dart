@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -462,6 +463,8 @@ class _SwipePagecategoryWidgetState extends State<SwipePagecategoryWidget> {
                                                       swipeableStackAffirmationRecord
                                                           .text,
                                                 ));
+                                                await actions
+                                                    .syncFavoriteAffirmationsToWidget();
                                               },
                                               value: _model.isliked,
                                               onIcon: Icon(
