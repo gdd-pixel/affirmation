@@ -15831,101 +15831,97 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        if (currentUserEmail ==
-                                                            'antoine')
-                                                          InkWell(
-                                                            splashColor: Colors
-                                                                .transparent,
-                                                            focusColor: Colors
-                                                                .transparent,
-                                                            hoverColor: Colors
-                                                                .transparent,
-                                                            highlightColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            onTap: () async {
-                                                              var confirmDialogResponse =
-                                                                  await showDialog<
-                                                                          bool>(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (alertDialogContext) {
-                                                                          return AlertDialog(
-                                                                            title:
-                                                                                Text('Es tu sûr(e) ?'),
-                                                                            content:
-                                                                                Text('Tes préférences seront ignorées si tu continues en accès limité gratuit.'),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                                child: Text('Retour'),
-                                                                              ),
-                                                                              TextButton(
-                                                                                onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                                child: Text('Oui'),
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      ) ??
-                                                                      false;
-                                                              if (confirmDialogResponse) {
-                                                                _model.etape =
-                                                                    _model.etape! +
-                                                                        1;
-                                                                _model.isclick =
+                                                        InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            var confirmDialogResponse =
+                                                                await showDialog<
+                                                                        bool>(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (alertDialogContext) {
+                                                                        return AlertDialog(
+                                                                          title:
+                                                                              Text('Es tu sûr(e) ?'),
+                                                                          content:
+                                                                              Text('Tes préférences seront ignorées si tu continues en accès limité gratuit.'),
+                                                                          actions: [
+                                                                            TextButton(
+                                                                              onPressed: () => Navigator.pop(alertDialogContext, false),
+                                                                              child: Text('Retour'),
+                                                                            ),
+                                                                            TextButton(
+                                                                              onPressed: () => Navigator.pop(alertDialogContext, true),
+                                                                              child: Text('Oui'),
+                                                                            ),
+                                                                          ],
+                                                                        );
+                                                                      },
+                                                                    ) ??
                                                                     false;
-                                                                safeSetState(
-                                                                    () {});
-                                                                await _model
-                                                                    .paywallyController
-                                                                    ?.nextPage(
-                                                                  duration: Duration(
-                                                                      milliseconds:
-                                                                          300),
-                                                                  curve: Curves
-                                                                      .ease,
-                                                                );
-                                                                unawaited(
-                                                                  () async {
-                                                                    await currentUserReference!
-                                                                        .update(
-                                                                            createUsersRecordData(
-                                                                      onboardstep:
-                                                                          33,
-                                                                    ));
-                                                                  }(),
-                                                                );
-                                                                await Future
-                                                                    .delayed(
-                                                                  Duration(
+                                                            if (confirmDialogResponse) {
+                                                              _model.etape =
+                                                                  _model.etape! +
+                                                                      1;
+                                                              _model.isclick =
+                                                                  false;
+                                                              safeSetState(
+                                                                  () {});
+                                                              await _model
+                                                                  .paywallyController
+                                                                  ?.nextPage(
+                                                                duration: Duration(
                                                                     milliseconds:
-                                                                        3000,
-                                                                  ),
-                                                                );
-                                                                _model.isclick =
-                                                                    true;
-                                                                safeSetState(
-                                                                    () {});
-                                                                logFirebaseEvent(
-                                                                  'onboarding_step',
-                                                                  parameters: {
-                                                                    'step':
-                                                                        '25',
-                                                                    'step_name':
-                                                                        'paywall',
-                                                                  },
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Icon(
-                                                              Icons.close,
-                                                              color: Color(
-                                                                  0xFF9F9287),
-                                                              size: 23.0,
-                                                            ),
+                                                                        300),
+                                                                curve:
+                                                                    Curves.ease,
+                                                              );
+                                                              unawaited(
+                                                                () async {
+                                                                  await currentUserReference!
+                                                                      .update(
+                                                                          createUsersRecordData(
+                                                                    onboardstep:
+                                                                        33,
+                                                                  ));
+                                                                }(),
+                                                              );
+                                                              await Future
+                                                                  .delayed(
+                                                                Duration(
+                                                                  milliseconds:
+                                                                      3000,
+                                                                ),
+                                                              );
+                                                              _model.isclick =
+                                                                  true;
+                                                              safeSetState(
+                                                                  () {});
+                                                              logFirebaseEvent(
+                                                                'onboarding_step',
+                                                                parameters: {
+                                                                  'step': '25',
+                                                                  'step_name':
+                                                                      'paywall',
+                                                                },
+                                                              );
+                                                            }
+                                                          },
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Color(
+                                                                0xFF9F9287),
+                                                            size: 23.0,
                                                           ),
+                                                        ),
                                                       ],
                                                     ),
                                                     Text(
