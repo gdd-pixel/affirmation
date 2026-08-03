@@ -121,6 +121,16 @@ class UsersRecord extends FirestoreRecord {
   double get determin => _determin ?? 0.0;
   bool hasDetermin() => _determin != null;
 
+  // "widgetMode" field.
+  String? _widgetMode;
+  String get widgetMode => _widgetMode ?? '';
+  bool hasWidgetMode() => _widgetMode != null;
+
+  // "widgetCategories" field.
+  List<DocumentReference>? _widgetCategories;
+  List<DocumentReference> get widgetCategories => _widgetCategories ?? const [];
+  bool hasWidgetCategories() => _widgetCategories != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
@@ -143,6 +153,8 @@ class UsersRecord extends FirestoreRecord {
     _comptefini = snapshotData['comptefini'] as bool?;
     _objectifss = snapshotData['objectifss'] as String?;
     _determin = castToType<double>(snapshotData['determin']);
+    _widgetMode = snapshotData['widgetMode'] as String?;
+    _widgetCategories = getDataList(snapshotData['widgetCategories']);
   }
 
   static CollectionReference get collection =>
@@ -199,6 +211,7 @@ Map<String, dynamic> createUsersRecordData({
   bool? comptefini,
   String? objectifss,
   double? determin,
+  String? widgetMode,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -222,6 +235,7 @@ Map<String, dynamic> createUsersRecordData({
       'comptefini': comptefini,
       'objectifss': objectifss,
       'determin': determin,
+      'widgetMode': widgetMode,
     }.withoutNulls,
   );
 
@@ -254,7 +268,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.onboardstep == e2?.onboardstep &&
         e1?.comptefini == e2?.comptefini &&
         e1?.objectifss == e2?.objectifss &&
-        e1?.determin == e2?.determin;
+        e1?.determin == e2?.determin &&
+        e1?.widgetMode == e2?.widgetMode &&
+        listEquality.equals(e1?.widgetCategories, e2?.widgetCategories);
   }
 
   @override
@@ -279,7 +295,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.onboardstep,
         e?.comptefini,
         e?.objectifss,
-        e?.determin
+        e?.determin,
+        e?.widgetMode,
+        e?.widgetCategories
       ]);
 
   @override

@@ -36,6 +36,11 @@ class CategoryRecord extends FirestoreRecord {
   bool get premium => _premium ?? false;
   bool hasPremium() => _premium != null;
 
+  // "slug" field.
+  String? _slug;
+  String get slug => _slug ?? '';
+  bool hasSlug() => _slug != null;
+
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _icon = snapshotData['icon'] as String?;
@@ -43,6 +48,7 @@ class CategoryRecord extends FirestoreRecord {
         ? snapshotData['categorytype']
         : deserializeEnum<Category>(snapshotData['categorytype']);
     _premium = snapshotData['premium'] as bool?;
+    _slug = snapshotData['slug'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -84,6 +90,7 @@ Map<String, dynamic> createCategoryRecordData({
   String? icon,
   Category? categorytype,
   bool? premium,
+  String? slug,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -91,6 +98,7 @@ Map<String, dynamic> createCategoryRecordData({
       'icon': icon,
       'categorytype': categorytype,
       'premium': premium,
+      'slug': slug,
     }.withoutNulls,
   );
 
@@ -105,12 +113,13 @@ class CategoryRecordDocumentEquality implements Equality<CategoryRecord> {
     return e1?.name == e2?.name &&
         e1?.icon == e2?.icon &&
         e1?.categorytype == e2?.categorytype &&
-        e1?.premium == e2?.premium;
+        e1?.premium == e2?.premium &&
+        e1?.slug == e2?.slug;
   }
 
   @override
   int hash(CategoryRecord? e) => const ListEquality()
-      .hash([e?.name, e?.icon, e?.categorytype, e?.premium]);
+      .hash([e?.name, e?.icon, e?.categorytype, e?.premium, e?.slug]);
 
   @override
   bool isValidKey(Object? o) => o is CategoryRecord;

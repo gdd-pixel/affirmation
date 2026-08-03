@@ -46,6 +46,11 @@ class AffirmationRecord extends FirestoreRecord {
   String get aid => _aid ?? '';
   bool hasAid() => _aid != null;
 
+  // "categoryRef" field.
+  DocumentReference? _categoryRef;
+  DocumentReference? get categoryRef => _categoryRef;
+  bool hasCategoryRef() => _categoryRef != null;
+
   void _initializeFields() {
     _text = snapshotData['text'] as String?;
     _lang = snapshotData['lang'] as String?;
@@ -55,6 +60,7 @@ class AffirmationRecord extends FirestoreRecord {
         ? snapshotData['category']
         : deserializeEnum<Category>(snapshotData['category']);
     _aid = snapshotData['aid'] as String?;
+    _categoryRef = snapshotData['categoryRef'] as DocumentReference?;
   }
 
   static CollectionReference get collection =>
@@ -98,6 +104,7 @@ Map<String, dynamic> createAffirmationRecordData({
   DocumentReference? creator,
   Category? category,
   String? aid,
+  DocumentReference? categoryRef,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -107,6 +114,7 @@ Map<String, dynamic> createAffirmationRecordData({
       'creator': creator,
       'category': category,
       'aid': aid,
+      'categoryRef': categoryRef,
     }.withoutNulls,
   );
 
@@ -123,12 +131,20 @@ class AffirmationRecordDocumentEquality implements Equality<AffirmationRecord> {
         e1?.likeCount == e2?.likeCount &&
         e1?.creator == e2?.creator &&
         e1?.category == e2?.category &&
-        e1?.aid == e2?.aid;
+        e1?.aid == e2?.aid &&
+        e1?.categoryRef == e2?.categoryRef;
   }
 
   @override
-  int hash(AffirmationRecord? e) => const ListEquality()
-      .hash([e?.text, e?.lang, e?.likeCount, e?.creator, e?.category, e?.aid]);
+  int hash(AffirmationRecord? e) => const ListEquality().hash([
+        e?.text,
+        e?.lang,
+        e?.likeCount,
+        e?.creator,
+        e?.category,
+        e?.aid,
+        e?.categoryRef
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is AffirmationRecord;

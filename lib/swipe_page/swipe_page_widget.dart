@@ -51,7 +51,7 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
         );
         _model.isliked = false;
         safeSetState(() {});
-        await actions.syncFavoriteAffirmationsToWidget();
+        await actions.syncWidgetContent();
         if ((dateTimeFormat(
                   "d/M/y",
                   currentUserDocument?.lastOpenAt,
@@ -714,7 +714,7 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                                 .text,
                                                       ));
                                                       await actions
-                                                          .syncFavoriteAffirmationsToWidget();
+                                                          .syncWidgetContent();
                                                     },
                                                     value: _model.isliked,
                                                     onIcon: Icon(

@@ -6,3 +6,4 @@ export 'track_onboarding_step.dart' show trackOnboardingStep;
 export 'handle_push_navigation.dart' show handlePushNavigation;
 export 'sync_favorite_affirmations_to_widget.dart'
     show syncFavoriteAffirmationsToWidget;
+export 'sync_widget_content.dart' show syncWidgetContent;
