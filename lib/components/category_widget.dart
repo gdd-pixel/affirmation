@@ -185,11 +185,21 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily: 'Motter Corpus',
+                                              font: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w800,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleMedium
+                                                        .fontStyle,
+                                              ),
                                               color: Colors.white,
                                               fontSize: 16.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.normal,
+                                              fontWeight: FontWeight.w800,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .fontStyle,
                                             ),
                                       ),
                                       Text(
@@ -198,7 +208,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                             .bodySmall
                                             .override(
                                               font: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w800,
+                                                fontWeight: FontWeight.w600,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
                                                         .bodySmall
@@ -209,7 +219,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                       .primary,
                                               fontSize: 11.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w800,
+                                              fontWeight: FontWeight.w600,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodySmall
@@ -291,7 +301,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        'Mes propres affirmations',
+                                        'Mes manifestations',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -305,7 +315,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondary,
-                                              fontSize: 16.0,
+                                              fontSize: 18.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.bold,
                                               fontStyle:
@@ -705,7 +715,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -848,7 +858,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -991,7 +1001,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1134,7 +1144,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1277,7 +1287,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1421,7 +1431,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1565,7 +1575,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1843,7 +1853,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),
@@ -1987,7 +1997,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 12.0, 12.0, 0.0),
+                                                  0.0, 16.0, 16.0, 0.0),
                                           child: FaIcon(
                                             FontAwesomeIcons.crown,
                                             color: Color(0xFFE2AB85),

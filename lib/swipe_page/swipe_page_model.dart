@@ -11,6 +11,8 @@ class SwipePageModel extends FlutterFlowModel<SwipePageWidget> {
 
   int? onboardstep = 1;
 
+  bool showanimation = false;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for SwipeableStack widget.

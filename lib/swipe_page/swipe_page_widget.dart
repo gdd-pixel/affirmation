@@ -4,6 +4,8 @@ import '/components/avantsettings_widget.dart';
 import '/components/category_widget.dart';
 import '/components/paypaycompo_widget.dart';
 import '/components/popupexo_widget.dart';
+import '/components/succeesanimationtwo_widget.dart';
+import '/components/successanimation_widget.dart';
 import '/components/themepop_widget.dart';
 import '/flutter_flow/flutter_flow_swipeable_stack.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -507,6 +509,8 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                   swipeableStackAffirmationRecordList[
                                       swipeableStackIndex];
                               HapticFeedback.mediumImpact();
+                              _model.showanimation = false;
+                              safeSetState(() {});
                               if (valueOrDefault<bool>(
                                       currentUserDocument?.accountfinished,
                                       false) &&
@@ -621,7 +625,15 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                       context)
                                                   .headlineLarge
                                                   .override(
-                                                    fontFamily: 'Motter Corpus',
+                                                    font: GoogleFonts.poppins(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .headlineLarge
+                                                              .fontStyle,
+                                                    ),
                                                     color:
                                                         valueOrDefault<Color>(
                                                       () {
@@ -671,10 +683,14 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                               context)
                                                           .secondary,
                                                     ),
-                                                    fontSize: 20.0,
+                                                    fontSize: 23.0,
                                                     letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FontWeight.normal,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .headlineLarge
+                                                            .fontStyle,
                                                   ),
                                             ),
                                           ),
@@ -698,6 +714,17 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                                               !_model.isliked);
                                                       HapticFeedback
                                                           .heavyImpact();
+                                                      _model.showanimation =
+                                                          true;
+                                                      safeSetState(() {});
+                                                      await Future.delayed(
+                                                        Duration(
+                                                          milliseconds: 2000,
+                                                        ),
+                                                      );
+                                                      _model.showanimation =
+                                                          false;
+                                                      safeSetState(() {});
 
                                                       await FavoritesRecord
                                                               .createDoc(
@@ -1309,6 +1336,40 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                               ),
                                             ].divide(SizedBox(height: 24.0)),
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (_model.showanimation &&
+                                      (valueOrDefault(
+                                              currentUserDocument?.currentheme,
+                                              '') ==
+                                          'base1'))
+                                    Align(
+                                      alignment:
+                                          AlignmentDirectional(0.0, -1.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 50.0, 0.0, 0.0),
+                                        child: SuccessanimationWidget(
+                                          key: Key(
+                                              'Keyuoz_${swipeableStackIndex}_of_${swipeableStackAffirmationRecordList.length}'),
+                                        ),
+                                      ),
+                                    ),
+                                  if (_model.showanimation &&
+                                      (valueOrDefault(
+                                              currentUserDocument?.currentheme,
+                                              '') ==
+                                          'base2'))
+                                    Align(
+                                      alignment:
+                                          AlignmentDirectional(0.0, -1.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 50.0, 0.0, 0.0),
+                                        child: SucceesanimationtwoWidget(
+                                          key: Key(
+                                              'Keyvl8_${swipeableStackIndex}_of_${swipeableStackAffirmationRecordList.length}'),
                                         ),
                                       ),
                                     ),

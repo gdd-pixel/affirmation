@@ -107,7 +107,7 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                 width: double.infinity,
                 decoration: BoxDecoration(),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 30.0, 8.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -201,7 +201,42 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                                 ),
                               ),
                             ),
-                          ],
+                            InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                _model.changeWidgetAffirmation =
+                                    await actions.changeWidgetAffirmation();
+
+                                safeSetState(() {});
+                              },
+                              child: Text(
+                                '🔀 Changer d\'affirmation ',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.poppins(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      fontSize: 20.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                          ].divide(SizedBox(height: 10.0)),
                         ),
                       ),
                       Container(
@@ -241,7 +276,6 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                               ),
                             ),
                             Container(
-                              width: double.infinity,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
@@ -255,7 +289,7 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Affirmations affichées sur ton widget',
+                                      'Choisis ce que ton widget affichera',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -281,179 +315,240 @@ class _WidgetconfiguWidgetState extends State<WidgetconfiguWidget> {
                                                     .fontStyle,
                                           ),
                                     ),
-                                    FlutterFlowRadioButton(
-                                      options: [
-                                        'Affirmations générales',
-                                        'Affirmations favorites ',
-                                        'Affirmations des catégories premiums',
-                                        'Mes manifestions perso'
-                                      ].toList(),
-                                      onChanged: (val) async {
-                                        safeSetState(() {});
-                                        if (_model.radioButtonValue ==
-                                            'Affirmations générales') {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            widgetMode: 'general',
-                                          ));
-                                          await actions.syncWidgetContent();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'changement ok !',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        } else if (_model.radioButtonValue ==
-                                            'Affirmations favorites ') {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            widgetMode: 'favorites',
-                                          ));
-                                          await actions.syncWidgetContent();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'changement ok !',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        } else if (_model.radioButtonValue ==
-                                            'Affirmations des catégories premiums') {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            widgetMode: 'categories',
-                                          ));
-                                          await actions.syncWidgetContent();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'changement ok !',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        } else if (_model.radioButtonValue ==
-                                            'Mes manifestions perso') {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            widgetMode: 'myAffirmations',
-                                          ));
-                                          await actions.syncWidgetContent();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'changement ok !',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      controller:
-                                          _model.radioButtonValueController ??=
-                                              FormFieldController<String>(null),
-                                      optionHeight: 32.0,
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight:
+                                    Container(
+                                      decoration: BoxDecoration(),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          AuthUserStreamWidget(
+                                            builder: (context) =>
+                                                FlutterFlowRadioButton(
+                                              options: [
+                                                'Affirmations générales',
+                                                ' Affirmations favorites  ',
+                                                'Mes catégories',
+                                                'Mes manifestions'
+                                              ].toList(),
+                                              onChanged: (val) async {
+                                                safeSetState(() {});
+                                                if (_model.radioButtonValue ==
+                                                    'Affirmations générales') {
+                                                  await currentUserReference!
+                                                      .update(
+                                                          createUsersRecordData(
+                                                    widgetMode: 'general',
+                                                  ));
+                                                  await actions
+                                                      .syncWidgetContent();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'changement ok !',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                } else if (_model
+                                                        .radioButtonValue ==
+                                                    'Affirmations favorites ') {
+                                                  await currentUserReference!
+                                                      .update(
+                                                          createUsersRecordData(
+                                                    widgetMode: 'favorites',
+                                                  ));
+                                                  await actions
+                                                      .syncWidgetContent();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'changement ok !',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                } else if (_model
+                                                        .radioButtonValue ==
+                                                    'Affirmations des catégories premiums') {
+                                                  await currentUserReference!
+                                                      .update(
+                                                          createUsersRecordData(
+                                                    widgetMode: 'categories',
+                                                  ));
+                                                  await actions
+                                                      .syncWidgetContent();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'changement ok !',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                } else if (_model
+                                                        .radioButtonValue ==
+                                                    'Mes manifestions perso') {
+                                                  await currentUserReference!
+                                                      .update(
+                                                          createUsersRecordData(
+                                                    widgetMode:
+                                                        'myAffirmations',
+                                                  ));
+                                                  await actions
+                                                      .syncWidgetContent();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'changement ok !',
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              controller: _model
+                                                      .radioButtonValueController ??=
+                                                  FormFieldController<String>(
+                                                      () {
+                                                if (valueOrDefault(
+                                                        currentUserDocument
+                                                            ?.widgetMode,
+                                                        '') ==
+                                                    'general') {
+                                                  return 'Affirmations générales';
+                                                } else if (valueOrDefault(
+                                                        currentUserDocument
+                                                            ?.widgetMode,
+                                                        '') ==
+                                                    'myAffirmations') {
+                                                  return 'Mes manifestations';
+                                                } else if (valueOrDefault(
+                                                        currentUserDocument
+                                                            ?.widgetMode,
+                                                        '') ==
+                                                    'favorites') {
+                                                  return 'Affirmations favorites';
+                                                } else {
+                                                  return 'Affirmations des catégories premiums';
+                                                }
+                                              }()),
+                                              optionHeight: 40.0,
+                                              textStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                      selectedTextStyle: FlutterFlowTheme.of(
-                                              context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.poppins(
-                                              fontWeight:
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .fontStyle,
+                                                      ),
+                                              selectedTextStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                              buttonPosition:
+                                                  RadioButtonPosition.left,
+                                              direction: Axis.vertical,
+                                              radioButtonColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
+                                                      .secondary,
+                                              inactiveRadioButtonColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              toggleable: false,
+                                              horizontalAlignment:
+                                                  WrapAlignment.start,
+                                              verticalAlignment:
+                                                  WrapCrossAlignment.start,
                                             ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
                                           ),
-                                      buttonPosition: RadioButtonPosition.left,
-                                      direction: Axis.vertical,
-                                      radioButtonColor:
-                                          FlutterFlowTheme.of(context).primary,
-                                      inactiveRadioButtonColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondaryText,
-                                      toggleable: false,
-                                      horizontalAlignment: WrapAlignment.start,
-                                      verticalAlignment:
-                                          WrapCrossAlignment.start,
+                                        ],
+                                      ),
                                     ),
                                   ]
                                       .divide(SizedBox(height: 12.0))

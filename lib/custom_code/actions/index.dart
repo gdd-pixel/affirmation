@@ -7,3 +7,4 @@ export 'handle_push_navigation.dart' show handlePushNavigation;
 export 'sync_favorite_affirmations_to_widget.dart'
     show syncFavoriteAffirmationsToWidget;
 export 'sync_widget_content.dart' show syncWidgetContent;
+export 'change_widget_affirmation.dart' show changeWidgetAffirmation;

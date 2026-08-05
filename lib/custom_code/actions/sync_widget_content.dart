@@ -17,8 +17,11 @@ import 'package:home_widget/home_widget.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
 Future<String> syncWidgetContent() async {
+  // IMPORTANT :
+  // Remplace cette valeur par ton App Group iOS exact.
   const String appGroupId = 'group.com.mycompany.affirmation';
 
+  // Cette clé doit être identique dans le code Swift.
   const String storageKey = 'widget_content_json';
 
   const List<String> generalAffirmations = <String>[
@@ -72,6 +75,10 @@ Future<String> syncWidgetContent() async {
     String effectiveMode = 'general';
     List<String> texts = List<String>.from(generalAffirmations);
 
+    // ------------------------------------------------------------
+    // 1. Lecture du mode choisi par l'utilisateur
+    // ------------------------------------------------------------
+
     if (userReference != null) {
       final DocumentSnapshot userSnapshot = await userReference.get();
 
@@ -83,6 +90,11 @@ Future<String> syncWidgetContent() async {
           : 'general';
 
       switch (requestedMode) {
+        // --------------------------------------------------------
+        // Mes affirmations personnelles
+        // users/{uid}/myaffirmation
+        // --------------------------------------------------------
+
         case 'myAffirmations':
           final List<String> personalTexts = await _loadSubcollectionTexts(
             userReference: userReference,
@@ -92,8 +104,17 @@ Future<String> syncWidgetContent() async {
           if (personalTexts.isNotEmpty) {
             effectiveMode = 'myAffirmations';
             texts = personalTexts;
+          } else {
+            effectiveMode = 'general';
+            texts = List<String>.from(generalAffirmations);
           }
+
           break;
+
+        // --------------------------------------------------------
+        // Favoris
+        // users/{uid}/favorites
+        // --------------------------------------------------------
 
         case 'favorites':
           final List<String> favoriteTexts = await _loadSubcollectionTexts(
@@ -104,8 +125,17 @@ Future<String> syncWidgetContent() async {
           if (favoriteTexts.isNotEmpty) {
             effectiveMode = 'favorites';
             texts = favoriteTexts;
+          } else {
+            effectiveMode = 'general';
+            texts = List<String>.from(generalAffirmations);
           }
+
           break;
+
+        // --------------------------------------------------------
+        // Catégories choisies
+        // user.widgetCategoryRefs
+        // --------------------------------------------------------
 
         case 'categories':
           final List<dynamic> rawReferences =
@@ -123,44 +153,108 @@ Future<String> syncWidgetContent() async {
           if (categoryTexts.isNotEmpty) {
             effectiveMode = 'categories';
             texts = categoryTexts;
+          } else {
+            effectiveMode = 'general';
+            texts = List<String>.from(generalAffirmations);
           }
+
           break;
+
+        // --------------------------------------------------------
+        // Mode général
+        // --------------------------------------------------------
 
         case 'general':
         default:
           effectiveMode = 'general';
-          texts = List<String>.from(
-            generalAffirmations,
-          );
+          texts = List<String>.from(generalAffirmations);
           break;
       }
     }
+
+    // ------------------------------------------------------------
+    // 2. Nettoyage de la liste
+    // ------------------------------------------------------------
 
     final List<String> cleanedTexts = _cleanTexts(texts);
 
     final List<String> finalTexts = cleanedTexts.isNotEmpty
         ? cleanedTexts
-        : List<String>.from(
-            generalAffirmations,
-          );
+        : List<String>.from(generalAffirmations);
+
+    // ------------------------------------------------------------
+    // 3. Lecture de l'ancien JSON
+    // afin de conserver l'affirmation actuellement affichée
+    // ------------------------------------------------------------
+
+    int currentIndex = 0;
+
+    final String? previousJson = await HomeWidget.getWidgetData<String>(
+      storageKey,
+    );
+
+    if (previousJson != null && previousJson.trim().isNotEmpty) {
+      try {
+        final dynamic decodedPreviousJson = jsonDecode(previousJson);
+
+        if (decodedPreviousJson is Map<String, dynamic>) {
+          final dynamic previousIndex = decodedPreviousJson['currentIndex'];
+
+          if (previousIndex is int) {
+            currentIndex = previousIndex;
+          } else if (previousIndex is num) {
+            currentIndex = previousIndex.toInt();
+          }
+        }
+      } catch (error) {
+        print(
+          'Impossible de lire l’ancien currentIndex : $error',
+        );
+
+        currentIndex = 0;
+      }
+    }
+
+    // Empêche un index invalide si la liste a changé.
+    if (finalTexts.isNotEmpty) {
+      currentIndex = currentIndex % finalTexts.length;
+    } else {
+      currentIndex = 0;
+    }
+
+    // ------------------------------------------------------------
+    // 4. Création du JSON partagé avec le widget
+    // ------------------------------------------------------------
 
     final Map<String, dynamic> payload = <String, dynamic>{
       'mode': effectiveMode,
       'affirmations': finalTexts,
+      'currentIndex': currentIndex,
       'updatedAt': DateTime.now().toUtc().toIso8601String(),
     };
+
+    // ------------------------------------------------------------
+    // 5. Enregistrement dans l'App Group
+    // ------------------------------------------------------------
 
     await HomeWidget.saveWidgetData<String>(
       storageKey,
       jsonEncode(payload),
     );
 
+    // ------------------------------------------------------------
+    // 6. Demande de rafraîchissement du widget iOS
+    // ------------------------------------------------------------
+
     await HomeWidget.updateWidget(
       name: 'AffirmationWidget',
       iOSName: 'AffirmationWidget',
     );
 
-    return '$effectiveMode:${finalTexts.length}';
+    // Exemple de résultat :
+    // favorites:8:2
+    // mode:nombre d'affirmations:index actuel
+    return '$effectiveMode:${finalTexts.length}:$currentIndex';
   } catch (error, stackTrace) {
     print(
       'Erreur syncWidgetContent : $error',
@@ -170,6 +264,14 @@ Future<String> syncWidgetContent() async {
     return 'error:$error';
   }
 }
+
+// ----------------------------------------------------------------
+// Lecture d'une sous-collection du document utilisateur
+//
+// Utilisée pour :
+// - users/{uid}/favorites
+// - users/{uid}/myaffirmation
+// ----------------------------------------------------------------
 
 Future<List<String>> _loadSubcollectionTexts({
   required DocumentReference userReference,
@@ -181,8 +283,16 @@ Future<List<String>> _loadSubcollectionTexts({
   final List<String> texts = <String>[];
 
   for (final QueryDocumentSnapshot document in snapshot.docs) {
-    final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+    final dynamic rawData = document.data();
 
+    if (rawData is! Map<String, dynamic>) {
+      continue;
+    }
+
+    final Map<String, dynamic> data = rawData;
+
+    // Première possibilité :
+    // le texte est directement enregistré dans le document.
     final dynamic textValue = data['text'];
 
     if (textValue is String && textValue.trim().isNotEmpty) {
@@ -190,28 +300,40 @@ Future<List<String>> _loadSubcollectionTexts({
       continue;
     }
 
-    // Repli si le texte n'est pas copié
-    // mais qu'une référence existe.
+    // Deuxième possibilité :
+    // le document contient seulement une référence vers
+    // l'affirmation originale.
     final dynamic affirmationReference =
         data['affirmationRef'] ?? data['affirmationref'];
 
     if (affirmationReference is DocumentReference) {
-      final DocumentSnapshot affirmationSnapshot =
-          await affirmationReference.get();
+      try {
+        final DocumentSnapshot affirmationSnapshot =
+            await affirmationReference.get();
 
-      final Map<String, dynamic>? affirmationData =
-          affirmationSnapshot.data() as Map<String, dynamic>?;
+        final dynamic rawAffirmationData = affirmationSnapshot.data();
 
-      final dynamic referencedText = affirmationData?['text'];
+        if (rawAffirmationData is Map<String, dynamic>) {
+          final dynamic referencedText = rawAffirmationData['text'];
 
-      if (referencedText is String && referencedText.trim().isNotEmpty) {
-        texts.add(referencedText.trim());
+          if (referencedText is String && referencedText.trim().isNotEmpty) {
+            texts.add(referencedText.trim());
+          }
+        }
+      } catch (error) {
+        print(
+          'Impossible de lire une affirmation référencée : $error',
+        );
       }
     }
   }
 
   return _cleanTexts(texts);
 }
+
+// ----------------------------------------------------------------
+// Lecture des affirmations correspondant aux catégories choisies
+// ----------------------------------------------------------------
 
 Future<List<String>> _loadCategoryAffirmations(
   List<DocumentReference> categoryReferences,
@@ -222,30 +344,48 @@ Future<List<String>> _loadCategoryAffirmations(
 
   final List<String> texts = <String>[];
 
-  // Une requête par catégorie :
-  // simple et adaptée aux premiers tests.
+  // Pour les premiers tests, on effectue une requête par catégorie.
   for (final DocumentReference categoryReference in categoryReferences) {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('affirmation')
-        .where(
-          'categoryRef',
-          isEqualTo: categoryReference,
-        )
-        .get();
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('affirmation')
+          .where(
+            'categoryRef',
+            isEqualTo: categoryReference,
+          )
+          .get();
 
-    for (final QueryDocumentSnapshot document in snapshot.docs) {
-      final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      for (final QueryDocumentSnapshot document in snapshot.docs) {
+        final dynamic rawData = document.data();
 
-      final dynamic textValue = data['text'];
+        if (rawData is! Map<String, dynamic>) {
+          continue;
+        }
 
-      if (textValue is String && textValue.trim().isNotEmpty) {
-        texts.add(textValue.trim());
+        final dynamic textValue = rawData['text'];
+
+        if (textValue is String && textValue.trim().isNotEmpty) {
+          texts.add(textValue.trim());
+        }
       }
+    } catch (error) {
+      print(
+        'Impossible de charger la catégorie '
+        '${categoryReference.path} : $error',
+      );
     }
   }
 
   return _cleanTexts(texts);
 }
+
+// ----------------------------------------------------------------
+// Nettoyage des textes
+// - retire les espaces inutiles
+// - retire les textes vides
+// - retire les doublons
+// - conserve l'ordre initial
+// ----------------------------------------------------------------
 
 List<String> _cleanTexts(
   Iterable<String> values,
@@ -263,5 +403,3 @@ List<String> _cleanTexts(
 
   return result;
 }
-// Set your action name, define your arguments and return parameter,
-// and then add the boilerplate code using the `</>` button on the right!

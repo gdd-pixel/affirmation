@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class WidgetconfiguModel extends FlutterFlowModel<WidgetconfiguWidget> {
   ///  State fields for stateful widgets in this component.
 
+  // Stores action output result for [Custom Action - changeWidgetAffirmation] action in Text widget.
+  String? changeWidgetAffirmation;
   // State field(s) for RadioButton widget.
   FormFieldController<String>? radioButtonValueController;
 

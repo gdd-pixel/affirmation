@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/nolikeyet_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -169,6 +170,11 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
                           }
                           List<FavoritesRecord> columnFavoritesRecordList =
                               snapshot.data!;
+                          if (columnFavoritesRecordList.isEmpty) {
+                            return Center(
+                              child: NolikeyetWidget(),
+                            );
+                          }
 
                           return SingleChildScrollView(
                             primary: false,
@@ -286,9 +292,7 @@ class _SwipePageFavWidgetState extends State<SwipePageFavWidget> {
                                                   },
                                                   child: Icon(
                                                     Icons.favorite_rounded,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondary,
+                                                    color: Color(0xFFE32A40),
                                                     size: 24.0,
                                                   ),
                                                 ),
