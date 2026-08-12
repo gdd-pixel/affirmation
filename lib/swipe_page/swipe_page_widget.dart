@@ -13,6 +13,7 @@ import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/flutter_flow/revenue_cat_util.dart' as revenue_cat;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -103,7 +104,7 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
           lastOpenAt: getCurrentTimestamp,
         ));
       } else {
-        context.pushNamed(InscriptionWidget.routeName);
+        context.goNamed(InscriptionWidget.routeName);
       }
     });
   }
@@ -200,19 +201,19 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                           if (valueOrDefault(
                                   currentUserDocument?.currentheme, '') ==
                               'soir') {
-                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/9k34ijytrnlw/Retrouve_la_sourire_et_prends_du_recule_(3).png';
+                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/u64ygbvp4md0/Untitled_design_(10).jpg';
                           } else if (valueOrDefault(
                                   currentUserDocument?.currentheme, '') ==
                               'beach') {
-                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/t5ipo9hpr390/Retrouve_la_sourire_et_prends_du_recule_(4).png';
+                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/1k09rg39eviq/Untitled_design_(6).jpg';
                           } else if (valueOrDefault(
                                   currentUserDocument?.currentheme, '') ==
                               'canyon') {
-                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/u8p30k57b13b/Retrouve_la_sourire_et_prends_du_recule_(6).png';
+                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/sso0g5hmioob/Untitled_design_(9).jpg';
                           } else if (valueOrDefault(
                                   currentUserDocument?.currentheme, '') ==
                               'fall') {
-                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/d8gm7c3hamx0/Retrouve_la_sourire_et_prends_du_recule_(5).png';
+                            return 'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/affirmation-lguktd/assets/j7aar5j6zh0j/Untitled_design_(7).jpg';
                           } else if (valueOrDefault(
                                   currentUserDocument?.currentheme, '') ==
                               'base2') {
@@ -405,77 +406,81 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                   ),
                                 ),
                               ),
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  HapticFeedback.heavyImpact();
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    enableDrag: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          FocusScope.of(context).unfocus();
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        child: Padding(
-                                          padding:
-                                              MediaQuery.viewInsetsOf(context),
-                                          child: Container(
-                                            height: double.infinity,
-                                            child: PaypaycompoWidget(),
+                              if (!revenue_cat.activeEntitlementIds
+                                  .contains('accespremium'))
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    HapticFeedback.heavyImpact();
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            FocusScope.of(context).unfocus();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          child: Padding(
+                                            padding: MediaQuery.viewInsetsOf(
+                                                context),
+                                            child: Container(
+                                              height: double.infinity,
+                                              child: PaypaycompoWidget(),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) => safeSetState(() {}));
-                                },
-                                child: Material(
-                                  color: Colors.transparent,
-                                  elevation: 2.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                  ),
-                                  child: Container(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondary,
-                                          offset: Offset(
-                                            3.0,
-                                            3.0,
-                                          ),
-                                        )
-                                      ],
+                                        );
+                                      },
+                                    ).then((value) => safeSetState(() {}));
+                                  },
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    elevation: 2.0,
+                                    shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(100.0),
-                                      border: Border.all(
-                                        width: 1.0,
-                                      ),
                                     ),
-                                    child: Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: FaIcon(
-                                        FontAwesomeIcons.crown,
+                                    child: Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      decoration: BoxDecoration(
                                         color: FlutterFlowTheme.of(context)
-                                            .secondary,
-                                        size: 20.0,
+                                            .secondaryBackground,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                            offset: Offset(
+                                              3.0,
+                                              3.0,
+                                            ),
+                                          )
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                        border: Border.all(
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: FaIcon(
+                                          FontAwesomeIcons.crown,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondary,
+                                          size: 20.0,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -1340,10 +1345,8 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                       ),
                                     ),
                                   if (_model.showanimation &&
-                                      (valueOrDefault(
-                                              currentUserDocument?.currentheme,
-                                              '') ==
-                                          'base1'))
+                                      !valueOrDefault<bool>(
+                                          currentUserDocument?.darkmode, false))
                                     Align(
                                       alignment:
                                           AlignmentDirectional(0.0, -1.0),
@@ -1357,10 +1360,8 @@ class _SwipePageWidgetState extends State<SwipePageWidget> {
                                       ),
                                     ),
                                   if (_model.showanimation &&
-                                      (valueOrDefault(
-                                              currentUserDocument?.currentheme,
-                                              '') ==
-                                          'base2'))
+                                      valueOrDefault<bool>(
+                                          currentUserDocument?.darkmode, false))
                                     Align(
                                       alignment:
                                           AlignmentDirectional(0.0, -1.0),

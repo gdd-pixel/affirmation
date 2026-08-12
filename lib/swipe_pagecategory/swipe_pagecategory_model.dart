@@ -8,6 +8,8 @@ class SwipePagecategoryModel extends FlutterFlowModel<SwipePagecategoryWidget> {
 
   bool isliked = false;
 
+  bool? showanim = false;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for SwipeableStack widget.

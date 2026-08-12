@@ -142,6 +142,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                               await currentUserReference!
                                   .update(createUsersRecordData(
                                 currentheme: _model.themeselec,
+                                darkmode: false,
                               ));
                             },
                             child: Container(
@@ -200,6 +201,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                             await currentUserReference!
                                 .update(createUsersRecordData(
                               currentheme: _model.themeselec,
+                              darkmode: true,
                             ));
                           },
                           child: Container(
@@ -257,20 +259,17 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaypaycompoWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'soir';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                            darkmode: true,
+                          ));
                         }
                       },
                       child: Stack(
@@ -365,6 +364,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -477,6 +477,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -576,6 +577,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -684,6 +686,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -783,6 +786,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: false,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -890,6 +894,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -998,6 +1003,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: false,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -1109,6 +1115,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -1217,6 +1224,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: true,
                           ));
                         } else {
                           await showModalBottomSheet(
@@ -1316,20 +1324,17 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: false,
                           ));
                         } else {
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: PaypaycompoWidget(),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
+                          _model.themeselec = 'abstrait1';
+                          safeSetState(() {});
+
+                          await currentUserReference!
+                              .update(createUsersRecordData(
+                            currentheme: _model.themeselec,
+                            darkmode: false,
+                          ));
                         }
                       },
                       child: Stack(
@@ -1427,6 +1432,7 @@ class _ThemepopWidgetState extends State<ThemepopWidget> {
                           await currentUserReference!
                               .update(createUsersRecordData(
                             currentheme: _model.themeselec,
+                            darkmode: false,
                           ));
                         } else {
                           await showModalBottomSheet(

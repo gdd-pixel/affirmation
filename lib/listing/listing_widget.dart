@@ -295,22 +295,6 @@ class _ListingWidgetState extends State<ListingWidget>
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 120.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xFFF3F4F6),
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: Image.asset(
-                                                        'assets/images/pexels-souvenirpixels-1486974.jpg',
-                                                      ).image,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                  ),
-                                                ),
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(

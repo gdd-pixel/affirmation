@@ -332,7 +332,7 @@ class _SwipePageOwnWidgetState extends State<SwipePageOwnWidget> {
                                                                               context)
                                                                           .secondaryText,
                                                                       size:
-                                                                          10.0,
+                                                                          12.0,
                                                                     ),
                                                                     Text(
                                                                       dateTimeFormat(
@@ -354,7 +354,7 @@ class _SwipePageOwnWidgetState extends State<SwipePageOwnWidget> {
                                                                             color:
                                                                                 FlutterFlowTheme.of(context).secondaryText,
                                                                             fontSize:
-                                                                                10.0,
+                                                                                12.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:

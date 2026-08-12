@@ -8,3 +8,4 @@ export 'sync_favorite_affirmations_to_widget.dart'
     show syncFavoriteAffirmationsToWidget;
 export 'sync_widget_content.dart' show syncWidgetContent;
 export 'change_widget_affirmation.dart' show changeWidgetAffirmation;
+export 'show_in_app_review.dart' show showInAppReview;

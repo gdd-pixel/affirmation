@@ -66,6 +66,8 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
 
   double? planevol = 0.0;
 
+  bool? darkmodel = false;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for Paywally widget.
@@ -93,6 +95,8 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   double? sliderValue;
   // State field(s) for Signature widget.
   SignatureController? signatureController;
+  // State field(s) for RatingBar widget.
+  double? ratingBarValue2;
   // State field(s) for Switch widget.
   bool? switchValue1;
   // State field(s) for Switch widget.

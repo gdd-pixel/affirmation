@@ -27,8 +27,8 @@ class AvantsettingsModel extends FlutterFlowModel<AvantsettingsWidget> {
   CheckinsRecord? today;
   // Stores action output result for [Firestore Query - Query a collection] action in avantsettings widget.
   CheckinsRecord? hier;
-  // Stores action output result for [Firestore Query - Query a collection] action in avantsettings widget.
-  List<CategoryRecord>? catete;
+  // Stores action output result for [Custom Action - changeWidgetAffirmation] action in avantsettings widget.
+  String? changeWidgetAffirmation2;
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -39,6 +39,12 @@ class AvantsettingsModel extends FlutterFlowModel<AvantsettingsWidget> {
       : 0;
   // Stores action output result for [Custom Action - changeWidgetAffirmation] action in Text widget.
   String? changeWidgetAffirmation;
+  // Stores action output result for [Custom Action - changeWidgetAffirmation] action in Container widget.
+  String? change1;
+  // Stores action output result for [Custom Action - changeWidgetAffirmation] action in Container widget.
+  String? change2;
+  // Stores action output result for [Custom Action - changeWidgetAffirmation] action in Container widget.
+  String? change3;
 
   @override
   void initState(BuildContext context) {}

@@ -131,6 +131,11 @@ class UsersRecord extends FirestoreRecord {
   List<DocumentReference> get widgetCategories => _widgetCategories ?? const [];
   bool hasWidgetCategories() => _widgetCategories != null;
 
+  // "darkmode" field.
+  bool? _darkmode;
+  bool get darkmode => _darkmode ?? false;
+  bool hasDarkmode() => _darkmode != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
@@ -155,6 +160,7 @@ class UsersRecord extends FirestoreRecord {
     _determin = castToType<double>(snapshotData['determin']);
     _widgetMode = snapshotData['widgetMode'] as String?;
     _widgetCategories = getDataList(snapshotData['widgetCategories']);
+    _darkmode = snapshotData['darkmode'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -212,6 +218,7 @@ Map<String, dynamic> createUsersRecordData({
   String? objectifss,
   double? determin,
   String? widgetMode,
+  bool? darkmode,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -236,6 +243,7 @@ Map<String, dynamic> createUsersRecordData({
       'objectifss': objectifss,
       'determin': determin,
       'widgetMode': widgetMode,
+      'darkmode': darkmode,
     }.withoutNulls,
   );
 
@@ -270,7 +278,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.objectifss == e2?.objectifss &&
         e1?.determin == e2?.determin &&
         e1?.widgetMode == e2?.widgetMode &&
-        listEquality.equals(e1?.widgetCategories, e2?.widgetCategories);
+        listEquality.equals(e1?.widgetCategories, e2?.widgetCategories) &&
+        e1?.darkmode == e2?.darkmode;
   }
 
   @override
@@ -297,7 +306,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.objectifss,
         e?.determin,
         e?.widgetMode,
-        e?.widgetCategories
+        e?.widgetCategories,
+        e?.darkmode
       ]);
 
   @override

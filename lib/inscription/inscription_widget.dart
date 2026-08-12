@@ -527,6 +527,71 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
           ),
         ],
       ),
+      'textOnPageLoadAnimation22': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 3200.0.ms,
+            duration: 600.0.ms,
+            begin: 1.0,
+            end: 0.0,
+          ),
+        ],
+      ),
+      'textOnPageLoadAnimation23': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 3800.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 3800.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 5400.0.ms,
+            duration: 600.0.ms,
+            begin: 1.0,
+            end: 0.0,
+          ),
+        ],
+      ),
+      'textOnPageLoadAnimation24': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 6000.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 6000.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 7600.0.ms,
+            duration: 600.0.ms,
+            begin: 1.0,
+            end: 0.0,
+          ),
+        ],
+      ),
+      'textOnPageLoadAnimation25': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 8200.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 8200.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+        ],
+      ),
       'containerOnPageLoadAnimation9': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
@@ -11141,6 +11206,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                       'base2') {
                                                     _model.themeselected =
                                                         'base2';
+                                                    _model.darkmodel = true;
                                                     safeSetState(() {});
                                                   }
                                                 },
@@ -13962,7 +14028,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '\"Selon des études, 92% des personnes qui pratiquent des affirmations régulièrement ressentent une diminution du stress et une résilience émotionnelle accrue\"',
+                                      '\"Selon des études, 92% des personnes qui pratiquent des affirmations régulièrement ressentent une diminution du stress et une résilience émotionnelle accrue.\"',
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -14745,7 +14811,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                     .width *
                                                 0.8,
                                             decoration: BoxDecoration(
-                                              color: Color(0xFFF2F895),
+                                              color: Color(0xFFFFEDAD),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
@@ -14832,7 +14898,37 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                 ),
                                                           ),
                                                           Text(
-                                                            '✍️ Créer ta première affirmation',
+                                                            '✍️ Créer ta première manifestation',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .poppins(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondary,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                          ),
+                                                          Text(
+                                                            '📲 Installer le widget sur ton écran verrouillé',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -14863,36 +14959,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                           ),
                                                           Text(
                                                             '🧘‍♂️ 2 séances d\'affirmations personnalisées pour réussir tes objectifs',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            '📲 Installer le widget lockscreen',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium
@@ -15070,7 +15136,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                           borderRadius:
                                               BorderRadius.circular(0.0),
                                           child: Image.asset(
-                                            'assets/images/Copy_of_Retrouve_la_sourire_et_prends_du_recule_(4).png',
+                                            'assets/images/je_suis_digne_damour_et_de_de_respect._(1).png',
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -15492,6 +15558,328 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                     ),
                                   ],
                                 ),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 0.0, 16.0, 0.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Material(
+                                              color: Colors.transparent,
+                                              elevation: 2.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(24.0),
+                                              ),
+                                              child: Container(
+                                                width: 100.0,
+                                                height: 100.0,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: Image.asset(
+                                                      'assets/images/Untitled_design_(71).png',
+                                                    ).image,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          24.0),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                    '+ 87% des utilisateurs',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .poppins(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .tertiary,
+                                                          fontSize: 24.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                  Text(
+                                                    'disent avoir repris confiance en eux grâce à Phil\'O',
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .poppins(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondary,
+                                                          fontSize: 18.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ].divide(SizedBox(height: 24.0)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        RatingBar.builder(
+                                          onRatingUpdate: (newValue) =>
+                                              safeSetState(() => _model
+                                                  .ratingBarValue2 = newValue),
+                                          itemBuilder: (context, index) => Icon(
+                                            Icons.star_rounded,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                          ),
+                                          direction: Axis.horizontal,
+                                          initialRating:
+                                              _model.ratingBarValue2 ??= 5.0,
+                                          unratedColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .accent1,
+                                          itemCount: 5,
+                                          itemSize: 30.0,
+                                          glowColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
+                                        ),
+                                        Text(
+                                          'Notée 4,8/5',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                                fontSize: 16.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ].divide(SizedBox(height: 6.0)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        30.0, 0.0, 30.0, 0.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            12.0, 12.0, 12.0, 12.0),
+                                        child: Stack(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          children: [
+                                            Text(
+                                              '\"Cette app a changé mon quotidien !\"\nAdèle',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                            ).animateOnPageLoad(animationsMap[
+                                                'textOnPageLoadAnimation22']!),
+                                            Text(
+                                              '\"Les affirmations que je reçois m\'aide à surmonter les journées difficiles\"\nThomas',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                            ).animateOnPageLoad(animationsMap[
+                                                'textOnPageLoadAnimation23']!),
+                                            Text(
+                                              '\"J\'ai gagné en sérennité  tous les jours !\"\nEmma',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                            ).animateOnPageLoad(animationsMap[
+                                                'textOnPageLoadAnimation24']!),
+                                            Text(
+                                              '\"Un changement durable de ma pensée\"\nLucie',
+                                              textAlign: TextAlign.center,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.poppins(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                            ).animateOnPageLoad(animationsMap[
+                                                'textOnPageLoadAnimation25']!),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               Column(
                                 mainAxisSize: MainAxisSize.max,
@@ -17500,6 +17888,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             await currentUserReference!
                                                 .update(createUsersRecordData(
                                               onboardstep: 1,
+                                              widgetMode: 'general',
                                             ));
                                           }(),
                                         );
@@ -17996,6 +18385,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                           createdTime: getCurrentTimestamp,
                                           accountfinished: true,
                                           currentheme: _model.themeselected,
+                                          darkmode: _model.darkmodel,
                                         ));
                                         unawaited(
                                           () async {
@@ -18325,7 +18715,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             ));
                                           }(),
                                         );
-                                      } else if (_model.etape == 35) {
+                                      } else if (_model.etape == 36) {
                                         _model.etape = _model.etape! + 1;
                                         _model.isclick = true;
                                         safeSetState(() {});
@@ -18342,7 +18732,30 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             ));
                                           }(),
                                         );
-                                      } else if (_model.etape == 36) {
+                                      } else if (_model.etape == 35) {
+                                        await actions.showInAppReview();
+                                        await Future.delayed(
+                                          Duration(
+                                            milliseconds: 4000,
+                                          ),
+                                        );
+                                        _model.etape = _model.etape! + 1;
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                        await _model.paywallyController
+                                            ?.nextPage(
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.ease,
+                                        );
+                                        unawaited(
+                                          () async {
+                                            await currentUserReference!
+                                                .update(createUsersRecordData(
+                                              onboardstep: 35,
+                                            ));
+                                          }(),
+                                        );
+                                      } else if (_model.etape == 37) {
                                         _model.etape = _model.etape! + 1;
                                         _model.isclick = true;
                                         safeSetState(() {});
@@ -18359,7 +18772,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             ));
                                           }(),
                                         );
-                                      } else if (_model.etape == 37) {
+                                      } else if (_model.etape == 38) {
                                         _model.dadpurchase = await revenue_cat
                                             .purchasePackage('\$rc_annual');
                                         if (_model.dadpurchase!) {
@@ -18384,7 +18797,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                           _model.isclick = true;
                                           safeSetState(() {});
                                         }
-                                      } else if (_model.etape == 38) {
+                                      } else if (_model.etape == 39) {
                                         unawaited(
                                           () async {
                                             await actions
@@ -18434,14 +18847,14 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             (_model.textController2.text ==
                                                 'Je souhaite ')) {
                                           return Color(0xFFD5C9C9);
-                                        } else if ((_model.etape != 37) &&
+                                        } else if ((_model.etape != 38) &&
                                             _model.isclick!) {
                                           return FlutterFlowTheme.of(context)
                                               .secondary;
-                                        } else if ((_model.etape == 37) &&
+                                        } else if ((_model.etape == 38) &&
                                             _model.isclick!) {
                                           return FlutterFlowTheme.of(context)
-                                              .tertiary;
+                                              .success;
                                         } else {
                                           return Color(0x004B39EF);
                                         }
@@ -18453,8 +18866,8 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Text(
                                         () {
-                                          if (_model.etape == 37) {
-                                            return 'Démarrer l\'essai';
+                                          if (_model.etape == 38) {
+                                            return 'Démarrer l\'essai gratuit';
                                           } else if (_model.etape == 25) {
                                             return 'Autoriser les notifications';
                                           } else if (_model.etape == 26) {
@@ -18469,6 +18882,8 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             return 'Compris !';
                                           } else if (_model.etape == 34) {
                                             return 'Je m\'engage';
+                                          } else if (_model.etape == 35) {
+                                            return 'Moi aussi, je le veux ! ';
                                           } else {
                                             return 'Continuer';
                                           }
@@ -18539,8 +18954,8 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Text(
                               () {
-                                if (_model.etape == 37) {
-                                  return 'Démarrer l\'essai';
+                                if (_model.etape == 39) {
+                                  return 'Démarrer l\'essai gratuit';
                                 } else if (_model.etape == 25) {
                                   return 'Autoriser les notifications';
                                 } else if (_model.etape == 26) {
