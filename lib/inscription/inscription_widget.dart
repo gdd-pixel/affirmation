@@ -16219,97 +16219,101 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          focusColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          onTap: () async {
-                                                            var confirmDialogResponse =
-                                                                await showDialog<
-                                                                        bool>(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (alertDialogContext) {
-                                                                        return AlertDialog(
-                                                                          title:
-                                                                              Text('Es tu sûr(e) ?'),
-                                                                          content:
-                                                                              Text('Tes préférences seront ignorées si tu continues en accès limité gratuit.'),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                              child: Text('Retour'),
-                                                                            ),
-                                                                            TextButton(
-                                                                              onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                              child: Text('Oui'),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    ) ??
+                                                        if (currentUserEmail ==
+                                                            'antoine')
+                                                          InkWell(
+                                                            splashColor: Colors
+                                                                .transparent,
+                                                            focusColor: Colors
+                                                                .transparent,
+                                                            hoverColor: Colors
+                                                                .transparent,
+                                                            highlightColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            onTap: () async {
+                                                              var confirmDialogResponse =
+                                                                  await showDialog<
+                                                                          bool>(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (alertDialogContext) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text('Es tu sûr(e) ?'),
+                                                                            content:
+                                                                                Text('Tes préférences seront ignorées si tu continues en accès limité gratuit.'),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () => Navigator.pop(alertDialogContext, false),
+                                                                                child: Text('Retour'),
+                                                                              ),
+                                                                              TextButton(
+                                                                                onPressed: () => Navigator.pop(alertDialogContext, true),
+                                                                                child: Text('Oui'),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      ) ??
+                                                                      false;
+                                                              if (confirmDialogResponse) {
+                                                                _model.etape =
+                                                                    _model.etape! +
+                                                                        1;
+                                                                _model.isclick =
                                                                     false;
-                                                            if (confirmDialogResponse) {
-                                                              _model.etape =
-                                                                  _model.etape! +
-                                                                      1;
-                                                              _model.isclick =
-                                                                  false;
-                                                              safeSetState(
-                                                                  () {});
-                                                              await _model
-                                                                  .paywallyController
-                                                                  ?.nextPage(
-                                                                duration: Duration(
+                                                                safeSetState(
+                                                                    () {});
+                                                                await _model
+                                                                    .paywallyController
+                                                                    ?.nextPage(
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                                  curve: Curves
+                                                                      .ease,
+                                                                );
+                                                                unawaited(
+                                                                  () async {
+                                                                    await currentUserReference!
+                                                                        .update(
+                                                                            createUsersRecordData(
+                                                                      onboardstep:
+                                                                          33,
+                                                                    ));
+                                                                  }(),
+                                                                );
+                                                                await Future
+                                                                    .delayed(
+                                                                  Duration(
                                                                     milliseconds:
-                                                                        300),
-                                                                curve:
-                                                                    Curves.ease,
-                                                              );
-                                                              unawaited(
-                                                                () async {
-                                                                  await currentUserReference!
-                                                                      .update(
-                                                                          createUsersRecordData(
-                                                                    onboardstep:
-                                                                        33,
-                                                                  ));
-                                                                }(),
-                                                              );
-                                                              await Future
-                                                                  .delayed(
-                                                                Duration(
-                                                                  milliseconds:
-                                                                      3000,
-                                                                ),
-                                                              );
-                                                              _model.isclick =
-                                                                  true;
-                                                              safeSetState(
-                                                                  () {});
-                                                              logFirebaseEvent(
-                                                                'onboarding_step',
-                                                                parameters: {
-                                                                  'step': '25',
-                                                                  'step_name':
-                                                                      'paywall',
-                                                                },
-                                                              );
-                                                            }
-                                                          },
-                                                          child: Icon(
-                                                            Icons.close,
-                                                            color: Color(
-                                                                0xFF9F9287),
-                                                            size: 23.0,
+                                                                        3000,
+                                                                  ),
+                                                                );
+                                                                _model.isclick =
+                                                                    true;
+                                                                safeSetState(
+                                                                    () {});
+                                                                logFirebaseEvent(
+                                                                  'onboarding_step',
+                                                                  parameters: {
+                                                                    'step':
+                                                                        '25',
+                                                                    'step_name':
+                                                                        'paywall',
+                                                                  },
+                                                                );
+                                                              }
+                                                            },
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color: Color(
+                                                                  0xFF9F9287),
+                                                              size: 23.0,
+                                                            ),
                                                           ),
-                                                        ),
                                                       ],
                                                     ),
                                                     Text(
@@ -16508,25 +16512,66 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                               .max,
                                                                       children:
                                                                           [
-                                                                        Container(
-                                                                          width:
-                                                                              35.0,
-                                                                          height:
-                                                                              35.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).success,
-                                                                            shape:
-                                                                                BoxShape.circle,
-                                                                          ),
+                                                                        InkWell(
+                                                                          splashColor:
+                                                                              Colors.transparent,
+                                                                          focusColor:
+                                                                              Colors.transparent,
+                                                                          hoverColor:
+                                                                              Colors.transparent,
+                                                                          highlightColor:
+                                                                              Colors.transparent,
+                                                                          onDoubleTap:
+                                                                              () async {
+                                                                            _model.etape =
+                                                                                _model.etape! + 1;
+                                                                            _model.isclick =
+                                                                                false;
+                                                                            safeSetState(() {});
+                                                                            await _model.paywallyController?.nextPage(
+                                                                              duration: Duration(milliseconds: 300),
+                                                                              curve: Curves.ease,
+                                                                            );
+                                                                            unawaited(
+                                                                              () async {
+                                                                                await currentUserReference!.update(createUsersRecordData(
+                                                                                  onboardstep: 33,
+                                                                                ));
+                                                                              }(),
+                                                                            );
+                                                                            await Future.delayed(
+                                                                              Duration(
+                                                                                milliseconds: 3000,
+                                                                              ),
+                                                                            );
+                                                                            _model.isclick =
+                                                                                true;
+                                                                            safeSetState(() {});
+                                                                            logFirebaseEvent(
+                                                                              'onboarding_step',
+                                                                              parameters: {
+                                                                                'step': '25',
+                                                                                'step_name': 'paywall',
+                                                                              },
+                                                                            );
+                                                                          },
                                                                           child:
-                                                                              Icon(
-                                                                            Icons.lock_open,
-                                                                            color:
-                                                                                Color(0xFFFFF9F9),
-                                                                            size:
-                                                                                20.0,
+                                                                              Container(
+                                                                            width:
+                                                                                35.0,
+                                                                            height:
+                                                                                35.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: FlutterFlowTheme.of(context).success,
+                                                                              shape: BoxShape.circle,
+                                                                            ),
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.lock_open,
+                                                                              color: Color(0xFFFFF9F9),
+                                                                              size: 20.0,
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                         Column(
@@ -18715,23 +18760,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             ));
                                           }(),
                                         );
-                                      } else if (_model.etape == 36) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 35,
-                                            ));
-                                          }(),
-                                        );
                                       } else if (_model.etape == 35) {
                                         await actions.showInAppReview();
                                         await Future.delayed(
@@ -18755,7 +18783,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             ));
                                           }(),
                                         );
-                                      } else if (_model.etape == 37) {
+                                      } else if (_model.etape == 36) {
                                         _model.etape = _model.etape! + 1;
                                         _model.isclick = true;
                                         safeSetState(() {});
@@ -18769,6 +18797,23 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             await currentUserReference!
                                                 .update(createUsersRecordData(
                                               onboardstep: 36,
+                                            ));
+                                          }(),
+                                        );
+                                      } else if (_model.etape == 37) {
+                                        _model.etape = _model.etape! + 1;
+                                        _model.isclick = true;
+                                        safeSetState(() {});
+                                        await _model.paywallyController
+                                            ?.nextPage(
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.ease,
+                                        );
+                                        unawaited(
+                                          () async {
+                                            await currentUserReference!
+                                                .update(createUsersRecordData(
+                                              onboardstep: 37,
                                             ));
                                           }(),
                                         );
@@ -18815,7 +18860,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         await currentUserReference!
                                             .update(createUsersRecordData(
                                           comptefini: true,
-                                          onboardstep: 38,
+                                          onboardstep: 39,
                                         ));
 
                                         context.pushNamedAuth(
