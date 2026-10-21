@@ -131,6 +131,12 @@ class UsersRecord extends FirestoreRecord {
   List<DocumentReference> get widgetCategories => _widgetCategories ?? const [];
   bool hasWidgetCategories() => _widgetCategories != null;
 
+  // "selectedCategories" field : catégories (Category.serialize()) qui
+  // alimentent le fil « Pour toi ».
+  List<String>? _selectedCategories;
+  List<String> get selectedCategories => _selectedCategories ?? const [];
+  bool hasSelectedCategories() => _selectedCategories != null;
+
   // "darkmode" field.
   bool? _darkmode;
   bool get darkmode => _darkmode ?? false;
@@ -160,6 +166,7 @@ class UsersRecord extends FirestoreRecord {
     _determin = castToType<double>(snapshotData['determin']);
     _widgetMode = snapshotData['widgetMode'] as String?;
     _widgetCategories = getDataList(snapshotData['widgetCategories']);
+    _selectedCategories = getDataList(snapshotData['selectedCategories']);
     _darkmode = snapshotData['darkmode'] as bool?;
   }
 
@@ -279,6 +286,7 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.determin == e2?.determin &&
         e1?.widgetMode == e2?.widgetMode &&
         listEquality.equals(e1?.widgetCategories, e2?.widgetCategories) &&
+        listEquality.equals(e1?.selectedCategories, e2?.selectedCategories) &&
         e1?.darkmode == e2?.darkmode;
   }
 
@@ -307,6 +315,7 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.determin,
         e?.widgetMode,
         e?.widgetCategories,
+        e?.selectedCategories,
         e?.darkmode
       ]);
 

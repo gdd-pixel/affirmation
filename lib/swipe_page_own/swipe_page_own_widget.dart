@@ -1,3 +1,4 @@
+import 'dart:async';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/nomanif_widget.dart';
@@ -293,6 +294,9 @@ class _SwipePageOwnWidgetState extends State<SwipePageOwnWidget> {
                                                                     await columnMyaffirmationRecord
                                                                         .reference
                                                                         .delete();
+                                                                    unawaited(
+                                                                        actions
+                                                                            .syncWidgetContent());
                                                                   },
                                                                   child: Icon(
                                                                     Icons.close,
@@ -724,6 +728,7 @@ class _SwipePageOwnWidgetState extends State<SwipePageOwnWidget> {
                                         createdAt: getCurrentTimestamp,
                                         text: _model.textController.text,
                                       ));
+                                      unawaited(actions.syncWidgetContent());
                                       safeSetState(() {
                                         _model.textController?.clear();
                                       });

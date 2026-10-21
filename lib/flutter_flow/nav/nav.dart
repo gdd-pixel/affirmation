@@ -114,6 +114,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SettingsWidget(),
         ),
         FFRoute(
+          name: WidgetsPageWidget.routeName,
+          path: WidgetsPageWidget.routePath,
+          builder: (context, params) => WidgetsPageWidget(),
+        ),
+        FFRoute(
+          name: WidgetTutorialWidget.routeName,
+          path: WidgetTutorialWidget.routePath,
+          builder: (context, params) => WidgetTutorialWidget(),
+        ),
+        FFRoute(
           name: LolWidget.routeName,
           path: LolWidget.routePath,
           builder: (context, params) => LolWidget(),

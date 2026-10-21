@@ -1,0 +1,60 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PhilO (debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "PhilO – première visite (introduction)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=FIRST_VISIT=true"]
+    },
+    {
+      "name": "PhilO (debug, non abonné)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=FREE_USER=true"]
+    },
+    {
+      "name": "PhilO – onboarding : fin de la respiration (17)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=ONBOARDING_STEP=17"]
+    },
+    {
+      "name": "PhilO – onboarding : étude 87 % (30)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=ONBOARDING_STEP=30"]
+    },
+    {
+      "name": "PhilO – onboarding : préparation du plan (31)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=ONBOARDING_STEP=31"]
+    },
+    {
+      "name": "PhilO – onboarding : paywall (38)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define=ONBOARDING_STEP=38"]
+    },
+    {
+      "name": "PhilO (profile)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "profile"
+    }
+  ]
+}

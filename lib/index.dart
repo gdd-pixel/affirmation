@@ -19,3 +19,6 @@ export '/paywallpromo/paywallpromo_widget.dart' show PaywallpromoWidget;
 export '/inscription_copy/inscription_copy_widget.dart'
     show InscriptionCopyWidget;
 export '/swipe_page_own/swipe_page_own_widget.dart' show SwipePageOwnWidget;
+export '/pages/widgets_page/widgets_page_widget.dart' show WidgetsPageWidget;
+export '/pages/widget_tutorial/widget_tutorial_widget.dart'
+    show WidgetTutorialWidget;

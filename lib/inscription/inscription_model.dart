@@ -40,6 +40,11 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
 
   bool? isclick = true;
 
+  // Empêche qu'un même tap soit traité plusieurs fois pendant qu'une étape
+  // attend (animation, délai, achat) : sinon les taps s'accumulent et font
+  // sauter plusieurs écrans d'un coup, jusqu'à passer le paywall.
+  bool isNavigating = false;
+
   int? etapereach = 0;
 
   List<Soujets> q19 = [];
@@ -63,6 +68,9 @@ class InscriptionModel extends FlutterFlowModel<InscriptionWidget> {
   int? q44 = 0;
 
   bool? canclickas = false;
+
+  // Carte « Bravo » affichée à la fin de l'exercice de respiration.
+  bool showBreathingCelebration = false;
 
   double? planevol = 0.0;
 

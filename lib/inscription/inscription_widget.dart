@@ -1,6 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
+import '/components/app_themes.dart';
+import '/components/breathing_celebration_widget.dart';
+import '/components/plan_preparation_widget.dart';
+import '/components/study_stat_widget.dart';
+import '/components/theme_grid.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_count_controller.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -13,6 +18,7 @@ import '/flutter_flow/revenue_cat_util.dart' as revenue_cat;
 import '/index.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -20,10 +26,30 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signature/signature.dart';
 import 'inscription_model.dart';
 export 'inscription_model.dart';
+
+/// Index de la page du paywall (« Comment fonctionne l'essai gratuit ? »).
+/// Chaque étape correspond à une page du PageView.
+const int kPaywallStep = 38;
+
+const String kPremiumEntitlement = 'accespremium';
+
+/// Debug uniquement : ouvre l'onboarding directement sur une étape, pour
+/// tester un écran sans refaire tout le parcours.
+/// Ex. : flutter run --dart-define=ONBOARDING_STEP=17
+const int kDebugOnboardingStep = int.fromEnvironment('ONBOARDING_STEP');
+
+/// Index de la page de l'exercice de respiration.
+const int kBreathingStep = 17;
+
+/// Index de la page « On prépare ton plan ».
+const int kPlanStep = 31;
+
+/// Index de la dernière page du PageView de l'onboarding.
+const int kLastOnboardingStep = 40;
 
 class InscriptionWidget extends StatefulWidget {
   const InscriptionWidget({super.key});
@@ -36,8 +62,12 @@ class InscriptionWidget extends StatefulWidget {
 }
 
 class _InscriptionWidgetState extends State<InscriptionWidget>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late InscriptionModel _model;
+
+  /// Faux tant qu'on ne sait pas sur quel écran ouvrir l'onboarding
+  /// (reprise d'une progression) : on affiche l'écran de démarrage.
+  bool _ready = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,10 +77,20 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => InscriptionModel());
+    WidgetsBinding.instance.addObserver(this);
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'inscription'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (kDebugMode && kDebugOnboardingStep > 0) {
+        // Lancement direct sur l'étape 17 : on montre la fin de l'exercice.
+        unawaited(_debugJumpToStep(kDebugOnboardingStep, skipBreathing: true));
+      } else if (!await _restoreProgress()) {
+        await _resumeAtPaywallIfNeeded();
+      }
+      // L'écran de départ est connu : on affiche l'onboarding directement
+      // dessus, sans passer par le premier écran.
+      safeSetState(() => _ready = true);
       await actions.initAppsFlyer();
     });
 
@@ -513,20 +553,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
           ),
         ],
       ),
-      'containerOnActionTriggerAnimation1': AnimationInfo(
-        trigger: AnimationTrigger.onActionTrigger,
-        applyInitialState: true,
-        effectsBuilder: () => [
-          VisibilityEffect(duration: 1.ms),
-          FadeEffect(
-            curve: Curves.easeInOut,
-            delay: 0.0.ms,
-            duration: 1000.0.ms,
-            begin: 0.0,
-            end: 1.0,
-          ),
-        ],
-      ),
       'textOnPageLoadAnimation22': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
@@ -605,20 +631,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
           ),
         ],
       ),
-      'containerOnActionTriggerAnimation2': AnimationInfo(
-        trigger: AnimationTrigger.onActionTrigger,
-        applyInitialState: true,
-        effectsBuilder: () => [
-          VisibilityEffect(duration: 1.ms),
-          FadeEffect(
-            curve: Curves.easeInOut,
-            delay: 0.0.ms,
-            duration: 1000.0.ms,
-            begin: 0.0,
-            end: 1.0,
-          ),
-        ],
-      ),
     });
     setupAnimations(
       animationsMap.values.where((anim) =>
@@ -634,13 +646,461 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _model.dispose();
 
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // L'app passe en arrière-plan ou va être fermée : on enregistre aussi
+    // les réponses de l'écran en cours.
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      _saveProgress();
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Sauvegarde de la progression
+  //
+  // Si l'utilisateur quitte l'app pendant l'onboarding, il revient exactement
+  // sur l'écran qu'il a quitté, avec toutes ses réponses. La progression est
+  // enregistrée sur le téléphone, liée au compte (anonyme) de l'utilisateur.
+
+  static const _progressKey = 'onboarding_progress_v1';
+
+  /// Écrans dont le bouton « Continuer » s'active après un délai.
+  static const _timedSteps = {9, 12, 15, 16};
+
+  Map<String, dynamic> _progressSnapshot() => {
+        'uid': currentUserUid,
+        'etape': _model.etape,
+        'isclick': _model.isclick,
+        'etapereach': _model.etapereach,
+        'prenom': _model.prenom,
+        'prenomField': _model.textFieldprenomTextController?.text,
+        'themeselected': _model.themeselected,
+        'darkmodel': _model.darkmodel,
+        'respifini': _model.respifini,
+        'q2': _model.q2,
+        'q3': _model.q3,
+        'q4': _model.q4,
+        'q6': _model.q6,
+        'q7': _model.q7,
+        'q9': _model.q9,
+        'q10': _model.q10,
+        'q14': _model.q14,
+        'q15': _model.q15,
+        'q16': _model.q16,
+        'q17': _model.q17,
+        'q18': _model.q18,
+        'q19': _model.q19.map((s) => s.name).toList(),
+        'q40': _model.q40,
+        'q41': _model.q41,
+        'q42': _model.q42,
+        'q43': _model.q43,
+        'q44': _model.q44,
+        'count': _model.countControllerValue,
+        'start': _model.datePicked1?.millisecondsSinceEpoch,
+        'end': _model.datePicked2?.millisecondsSinceEpoch,
+        'objectifs': _model.textController2?.text,
+        'slider': _model.sliderValue,
+        'rating': _model.ratingBarValue2,
+        'switch1': _model.switchValue1,
+        'switch2': _model.switchValue2,
+      };
+
+  Future<void> _saveProgress() async {
+    // Rien à reprendre avant la création du compte (écran 0).
+    if (!loggedIn || (_model.etape ?? 0) == 0) {
+      return;
+    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_progressKey, jsonEncode(_progressSnapshot()));
+    } catch (e) {}
+  }
+
+  Future<void> _clearProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_progressKey);
+    } catch (_) {}
+  }
+
+  /// Reprend l'onboarding là où il a été quitté. Retourne `false` s'il n'y a
+  /// rien à reprendre pour ce compte.
+  Future<bool> _restoreProgress() async {
+    if (!loggedIn) {
+      return false;
+    }
+    final Map<String, dynamic> data;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(_progressKey);
+      if (json == null) {
+        return false;
+      }
+      data = jsonDecode(json) as Map<String, dynamic>;
+    } catch (e) {
+      return false;
+    }
+    final step = (data['etape'] as num?)?.toInt() ?? 0;
+    if (data['uid'] != currentUserUid || step <= 0 || !mounted) {
+      return false;
+    }
+
+    int? asInt(String key) => (data[key] as num?)?.toInt();
+    double? asDouble(String key) => (data[key] as num?)?.toDouble();
+    DateTime? asDate(String key) => data[key] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(asInt(key)!);
+
+    _model.etapereach = asInt('etapereach') ?? _model.etapereach;
+    _model.prenom = data['prenom'] as String? ?? _model.prenom;
+    _model.textFieldprenomTextController?.text =
+        data['prenomField'] as String? ?? '';
+    _model.themeselected = data['themeselected'] as String? ?? 'base1';
+    _model.darkmodel = data['darkmodel'] as bool? ?? false;
+    _model.respifini = data['respifini'] as bool? ?? false;
+    _model.q2 = asInt('q2') ?? 0;
+    _model.q3 = asInt('q3') ?? 0;
+    _model.q4 = asInt('q4') ?? 0;
+    _model.q6 = asInt('q6') ?? 0;
+    _model.q7 = asInt('q7') ?? 0;
+    _model.q9 = asInt('q9') ?? 0;
+    _model.q10 = asInt('q10') ?? 0;
+    _model.q14 = asInt('q14') ?? 0;
+    _model.q15 = asInt('q15') ?? 0;
+    _model.q16 = asInt('q16') ?? 0;
+    _model.q17 = asInt('q17') ?? 0;
+    _model.q18 = asInt('q18') ?? 0;
+    _model.q19 = ((data['q19'] as List?) ?? const [])
+        .whereType<String>()
+        .map((name) => Soujets.values.asNameMap()[name])
+        .whereType<Soujets>()
+        .toList();
+    _model.q40 = asInt('q40') ?? 0;
+    _model.q41 = asInt('q41') ?? 0;
+    _model.q42 = asInt('q42') ?? 0;
+    _model.q43 = asInt('q43') ?? 0;
+    _model.q44 = asInt('q44') ?? 0;
+    _model.countControllerValue = asInt('count');
+    _model.datePicked1 = asDate('start');
+    _model.datePicked2 = asDate('end');
+    final objectifs = data['objectifs'] as String?;
+    if (objectifs != null && objectifs.isNotEmpty) {
+      _model.textController2?.text = objectifs;
+    }
+    _model.sliderValue = asDouble('slider');
+    _model.ratingBarValue2 = asDouble('rating');
+    _model.switchValue1 = data['switch1'] as bool? ?? false;
+    _model.switchValue2 = data['switch2'] as bool? ?? false;
+
+    _model.etape = step;
+    // Écrans de question : le bouton reste désactivé tant que l'utilisateur
+    // n'a pas répondu. Écrans de transition (bouton activé après quelques
+    // secondes) : on le réactive directement.
+    _model.isclick =
+        _timedSteps.contains(step) ? true : data['isclick'] as bool? ?? true;
+    safeSetState(() {});
+    _goToStep(step);
+
+    // Écrans animés : on rejoue leur déroulé depuis le début.
+    if (step == kBreathingStep) {
+      unawaited(_runBreathingExercise());
+    } else if (step == kPlanStep) {
+      unawaited(_runPlanPreparation());
+    }
+    return true;
+  }
+
+  /// Ligne du « Plan pour … » : coche dans un cercle puis le texte, qui
+  /// passe à la ligne sous l'icône.
+  Widget _planItem(String text) {
+    final color = FlutterFlowTheme.of(context).secondary;
+    return Text.rich(
+      TextSpan(
+        children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 6.0),
+              child: Icon(Icons.task_alt_rounded, color: color, size: 22.0),
+            ),
+          ),
+          TextSpan(text: text),
+        ],
+      ),
+      style: GoogleFonts.poppins(
+        color: color,
+        fontSize: 15.0,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+      ),
+    );
+  }
+
+  /// Affiche l'écran [step]. Avant le premier affichage du PageView, on crée
+  /// directement le contrôleur sur cette page.
+  void _goToStep(int step) {
+    final controller = _model.paywallyController;
+    if (controller != null && controller.hasClients) {
+      controller.jumpToPage(step);
+    } else {
+      _model.paywallyController = PageController(initialPage: step);
+    }
+  }
+
+  /// Si l'utilisateur a déjà atteint le paywall lors d'une session
+  /// précédente sans s'abonner, on le ramène directement dessus au lieu de
+  /// recommencer tout l'onboarding. S'il a déjà terminé, on l'envoie dans
+  /// l'app.
+  Future<void> _resumeAtPaywallIfNeeded() async {
+    if (!loggedIn || currentUserReference == null) {
+      return;
+    }
+    final UsersRecord userDoc;
+    try {
+      userDoc = await UsersRecord.getDocumentOnce(currentUserReference!)
+          .timeout(const Duration(seconds: 4));
+    } catch (_) {
+      return;
+    }
+    if (userDoc.comptefini) {
+      // Compte déjà terminé (abonnement pris) : on ne refait pas
+      // l'onboarding, on entre dans l'app.
+      if (mounted) {
+        context.goNamed(SwipePageWidget.routeName);
+      }
+      return;
+    }
+    if (userDoc.onboardstep < kPaywallStep - 1) {
+      return;
+    }
+    if (userDoc.displayName.isNotEmpty) {
+      _model.prenom = userDoc.displayName;
+    }
+    // Abonné mais l'app a été fermée avant la fin : on passe à l'écran suivant.
+    final step = userDoc.hasPurchased || _hasPremiumAccess()
+        ? kPaywallStep + 1
+        : kPaywallStep;
+    _model.etape = step;
+    _model.isclick = true;
+    safeSetState(() {});
+    _goToStep(step);
+  }
+
+  Future<void> _debugJumpToStep(int step, {bool skipBreathing = false}) async {
+    // Les étapes écrivent dans le document utilisateur : il faut un compte.
+    if (!loggedIn) {
+      await authManager.signInAnonymously(context);
+    }
+    if (_model.prenom == null || _model.prenom == 'prenom') {
+      _model.prenom = 'Antoine';
+    }
+    _model.etape = step;
+    _model.isclick = true;
+    safeSetState(() {});
+    _goToStep(step);
+    if (step == kBreathingStep) {
+      await _runBreathingExercise(skipExercise: skipBreathing);
+    } else if (step == kPlanStep) {
+      await _runPlanPreparation();
+    }
+  }
+
+  int _planRun = 0;
+
+  /// Préparation du plan : le cercle avance par paliers (environ 28 s),
+  /// puis la carte « Ton plan est prêt ! » s'affiche et le bouton
+  /// « Continuer » s'active 3 s plus tard.
+  Future<void> _runPlanPreparation() async {
+    final run = ++_planRun;
+    bool stillOnPlan() =>
+        mounted && run == _planRun && _model.etape == kPlanStep;
+
+    const steps = <(int, double)>[
+      (1000, 0.1),
+      (3000, 0.2),
+      (4000, 0.4),
+      (5000, 0.6),
+      (5000, 0.8),
+      (4000, 0.9),
+      (3000, 0.95),
+      (3000, 1.0),
+    ];
+    _model.isclick = false;
+    _model.planevol = 0.0;
+    safeSetState(() {});
+    for (final (delayMs, value) in steps) {
+      await Future.delayed(Duration(milliseconds: delayMs));
+      if (!stillOnPlan()) {
+        return;
+      }
+      _model.planevol = value;
+      safeSetState(() {});
+    }
+    await Future.delayed(const Duration(milliseconds: 3000));
+    if (!stillOnPlan()) {
+      return;
+    }
+    _model.isclick = true;
+    safeSetState(() {});
+  }
+
+  /// Objectif choisi à la question « Que voudrais-tu améliorer en priorité ? ».
+  String _planObjective() {
+    switch (_model.q10) {
+      case 2:
+        return 'Améliorer ton dialogue intérieur';
+      case 3:
+        return 'Améliorer ta relation aux autres';
+      case 4:
+        return 'Retrouver ta motivation';
+      default:
+        return 'Prendre confiance en toi';
+    }
+  }
+
+  // Incrémenté à chaque lancement de l'exercice, pour qu'un ancien minuteur
+  // n'affiche pas la fin d'un exercice relancé entre-temps.
+  int _breathingRun = 0;
+
+  /// Exercice de respiration : les textes défilent pendant 59 s sans bouton.
+  /// Puis la carte « Bravo » apparaît, les feux d'artifice 1 s plus tard
+  /// (géré par la carte) et le bouton « Continuer » 2 s après eux.
+  Future<void> _runBreathingExercise({bool skipExercise = false}) async {
+    final run = ++_breathingRun;
+    bool stillOnExercise() =>
+        mounted && run == _breathingRun && _model.etape == kBreathingStep;
+
+    _model.canclickas = false;
+    _model.showBreathingCelebration = false;
+    safeSetState(() {});
+
+    if (!skipExercise) {
+      unawaited(_breathingHaptics(stillOnExercise));
+      await Future.delayed(const Duration(milliseconds: 59000));
+      if (!stillOnExercise()) {
+        return;
+      }
+    }
+    _model.showBreathingCelebration = true;
+    HapticFeedback.mediumImpact();
+    safeSetState(() {});
+
+    await Future.delayed(const Duration(milliseconds: 3000));
+    if (!stillOnExercise()) {
+      return;
+    }
+    _model.canclickas = true;
+    safeSetState(() {});
+  }
+
+  /// Vibrations calées sur le cercle de l'exercice de respiration
+  /// (`containerOnPageLoadAnimation5`) : cycles de 10 s, 4 s d'inspiration
+  /// puis 6 s d'expiration.
+  ///
+  /// - Inspiration : vibrations légères et rapprochées, puis une vibration
+  ///   plus marquée quand les poumons sont pleins.
+  /// - Expiration : vibrations très douces et espacées.
+  Future<void> _breathingHaptics(bool Function() stillOnExercise) async {
+    const inhaleTicks = 12; // toutes les ~333 ms pendant 4 s
+    const exhaleTicks = 8; // toutes les 750 ms pendant 6 s
+    final stopwatch = Stopwatch()..start();
+    bool active() =>
+        stillOnExercise() &&
+        !_model.showBreathingCelebration &&
+        stopwatch.elapsed < const Duration(seconds: 58);
+
+    while (active()) {
+      for (var i = 0; i < inhaleTicks && active(); i++) {
+        if (i == inhaleTicks - 1) {
+          HapticFeedback.mediumImpact();
+        } else {
+          HapticFeedback.lightImpact();
+        }
+        await Future.delayed(const Duration(milliseconds: 333));
+      }
+      for (var i = 0; i < exhaleTicks && active(); i++) {
+        HapticFeedback.selectionClick();
+        await Future.delayed(const Duration(milliseconds: 750));
+      }
+    }
+  }
+
+  /// Debug uniquement : flèches « ‹ › » pour passer d'un écran à l'autre.
+  Widget _buildDebugStepNavigator() {
+    final step = _model.etape ?? 0;
+    Widget arrow(IconData icon, int target) => InkWell(
+          onTap: target < 0 || target > kLastOnboardingStep
+              ? null
+              : () => _debugJumpToStep(target),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Icon(icon, color: Colors.white, size: 26.0),
+          ),
+        );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(100.0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          arrow(Icons.chevron_left, step - 1),
+          Text(
+            '$step',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
+          arrow(Icons.chevron_right, step + 1),
+        ],
+      ),
+    );
+  }
+
+  bool _hasPremiumAccess() =>
+      _model.dadpurchase == true ||
+      valueOrDefault<bool>(currentUserDocument?.hasPurchased, false) ||
+      revenue_cat.activeEntitlementIds.contains(kPremiumEntitlement);
+
+  /// « jeremy » -> « Jeremy », « marie-claire » -> « Marie-Claire ».
+  static String _capitalizeFirstName(String input) => input
+      .trim()
+      .split(' ')
+      .where((word) => word.isNotEmpty)
+      .map((word) => word
+          .split('-')
+          .map((part) =>
+              part.isEmpty ? part : part[0].toUpperCase() + part.substring(1))
+          .join('-'))
+      .join(' ');
+
+  @override
   Widget build(BuildContext context) {
+    if (!_ready) {
+      // Même image que l'écran de démarrage (voir FFRoute dans nav.dart).
+      return Container(
+        color: FlutterFlowTheme.of(context).primary,
+        child: Image.asset(
+          'assets/images/#fff1ef_(1).gif',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+      );
+    }
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -779,6 +1239,9 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                             physics: const NeverScrollableScrollPhysics(),
                             controller: _model.paywallyController ??=
                                 PageController(initialPage: 0),
+                            // Chaque changement d'écran enregistre la
+                            // progression.
+                            onPageChanged: (_) => _saveProgress(),
                             scrollDirection: Axis.horizontal,
                             children: [
                               Container(
@@ -1490,7 +1953,9 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'Google Play Store',
+                                                          isiOS
+                                                              ? 'App Store'
+                                                              : 'Google Play Store',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -3245,7 +3710,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                             AlignmentDirectional(
                                                                 0.0, 0.0),
                                                         child: Text(
-                                                          'Hereux célibataire',
+                                                          'Célibataire',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -8799,7 +9264,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Quelle méthode as-tu déjà utilisé ?',
+                                              'Quelle méthode as-tu déjà utilisée ?',
                                               textAlign: TextAlign.center,
                                               style: FlutterFlowTheme.of(
                                                       context)
@@ -8889,7 +9354,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Affirmations/ visualisation',
+                                                      'Affirmations / visualisation',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -8983,7 +9448,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Méditation/ yoga',
+                                                      'Méditation / yoga',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -9077,7 +9542,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                         AlignmentDirectional(
                                                             0.0, 0.0),
                                                     child: Text(
-                                                      'Journaling/ écriture',
+                                                      'Journaling / écriture',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -11109,438 +11574,22 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         child: Container(
                                           height: 500.0,
                                           decoration: BoxDecoration(),
-                                          child: GridView(
-                                            padding: EdgeInsets.zero,
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              crossAxisSpacing: 10.0,
-                                              mainAxisSpacing: 10.0,
-                                              childAspectRatio: 0.7,
-                                            ),
-                                            scrollDirection: Axis.vertical,
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      if (_model
-                                                              .themeselected !=
-                                                          'base1') {
-                                                        _model.themeselected =
-                                                            'base1';
-                                                        safeSetState(() {});
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: Image.asset(
-                                                            'assets/images/11.png',
-                                                          ).image,
-                                                        ),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            blurRadius: 4.0,
-                                                            color: Color(
-                                                                0x33000000),
-                                                            offset: Offset(
-                                                              0.0,
-                                                              4.0,
-                                                            ),
-                                                          )
-                                                        ],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(24.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (_model.themeselected ==
-                                                      'base1')
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              1.0, -1.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    10.0,
-                                                                    10.0,
-                                                                    0.0),
-                                                        child: Icon(
-                                                          Icons.check_circle,
-                                                          color:
-                                                              Color(0xFF4ED821),
-                                                          size: 24.0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                              InkWell(
-                                                splashColor: Colors.transparent,
-                                                focusColor: Colors.transparent,
-                                                hoverColor: Colors.transparent,
-                                                highlightColor:
-                                                    Colors.transparent,
-                                                onTap: () async {
-                                                  if (_model.themeselected !=
-                                                      'base2') {
-                                                    _model.themeselected =
-                                                        'base2';
-                                                    _model.darkmodel = true;
-                                                    safeSetState(() {});
-                                                  }
-                                                },
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: Image.asset(
-                                                            'assets/images/12.png',
-                                                          ).image,
-                                                        ),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            blurRadius: 4.0,
-                                                            color: Color(
-                                                                0x33000000),
-                                                            offset: Offset(
-                                                              2.0,
-                                                              2.0,
-                                                            ),
-                                                          )
-                                                        ],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(24.0),
-                                                      ),
-                                                    ),
-                                                    if (_model.themeselected ==
-                                                        'base2')
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                1.0, -1.0),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      10.0,
-                                                                      10.0,
-                                                                      0.0),
-                                                          child: Icon(
-                                                            Icons.check_circle,
-                                                            color: Color(
-                                                                0xFF4ED821),
-                                                            size: 24.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: Image.asset(
-                                                          'assets/images/Retrouve_la_sourire_et_prends_du_recule_(3).png',
-                                                        ).image,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Text(
-                                                        'Phil\'O',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Motter Corpus',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryBackground,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(10.0,
-                                                                10.0, 0.0, 0.0),
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons.crown,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 20.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: Image.asset(
-                                                          'assets/images/Retrouve_la_sourire_et_prends_du_recule_(5).png',
-                                                        ).image,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          blurRadius: 4.0,
-                                                          color:
-                                                              Color(0x33000000),
-                                                          offset: Offset(
-                                                            2.0,
-                                                            2.0,
-                                                          ),
-                                                        )
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Text(
-                                                        'Phil\'O',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Motter Corpus',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryBackground,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(10.0,
-                                                                10.0, 0.0, 0.0),
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons.crown,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 20.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: Image.asset(
-                                                          'assets/images/Retrouve_la_sourire_et_prends_du_recule_(4).png',
-                                                        ).image,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          blurRadius: 4.0,
-                                                          color:
-                                                              Color(0x33000000),
-                                                          offset: Offset(
-                                                            2.0,
-                                                            2.0,
-                                                          ),
-                                                        )
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Text(
-                                                        'Phil\'O',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Motter Corpus',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryBackground,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(10.0,
-                                                                10.0, 0.0, 0.0),
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons.crown,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 20.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: Image.asset(
-                                                          'assets/images/Retrouve_la_sourire_et_prends_du_recule_(6).png',
-                                                        ).image,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          blurRadius: 4.0,
-                                                          color:
-                                                              Color(0x33000000),
-                                                          offset: Offset(
-                                                            2.0,
-                                                            2.0,
-                                                          ),
-                                                        )
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Text(
-                                                        'Phil\'O',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Motter Corpus',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryBackground,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(10.0,
-                                                                10.0, 0.0, 0.0),
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons.crown,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 20.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                          child: ThemeGrid(
+                                            themes: kPhilThemes,
+                                            selectedId:
+                                                _model.themeselected ?? 'base1',
+                                            // Couronne sur les thèmes premium,
+                                            // mais le choix reste possible : ils
+                                            // sont inclus dans l'essai.
+                                            isPremium: revenue_cat
+                                                .activeEntitlementIds
+                                                .contains(kPremiumEntitlement),
+                                            onSelect: (theme) {
+                                              HapticFeedback.selectionClick();
+                                              _model.themeselected = theme.id;
+                                              _model.darkmodel = theme.isDark;
+                                              safeSetState(() {});
+                                            },
                                           ),
                                         ),
                                       ),
@@ -14020,714 +14069,14 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    30.0, 0.0, 30.0, 0.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '\"Selon des études, 92% des personnes qui pratiquent des affirmations régulièrement ressentent une diminution du stress et une résilience émotionnelle accrue.\"',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            font: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
-                                            fontSize: 20.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w600,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
-                                            lineHeight: 2.0,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Création de ton plan personnalisé',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondary,
-                                                fontSize: 20.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                        Stack(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          children: [
-                                            CircularPercentIndicator(
-                                              percent: _model.planevol!,
-                                              radius: 100.0,
-                                              lineWidth: 12.0,
-                                              animation: true,
-                                              animateFromLastPercent: true,
-                                              progressColor:
-                                                  valueOrDefault<Color>(
-                                                _model.planevol == 1.0
-                                                    ? Color(0xFF67B547)
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .tertiary,
-                                                FlutterFlowTheme.of(context)
-                                                    .secondary,
-                                              ),
-                                              backgroundColor:
-                                                  Color(0xFFEBDAD3),
-                                            ),
-                                            if (_model.planevol! < 0.5)
-                                              Container(
-                                                width: 100.0,
-                                                height: 100.0,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: Image.asset(
-                                                      'assets/images/Untitled_design_(91).png',
-                                                    ).image,
-                                                  ),
-                                                ),
-                                              ),
-                                            if ((_model.planevol! > 0.5) &&
-                                                (_model.planevol! < 1.0))
-                                              Container(
-                                                width: 100.0,
-                                                height: 100.0,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: Image.asset(
-                                                      'assets/images/Untitled_design_(90).png',
-                                                    ).image,
-                                                  ),
-                                                ),
-                                              ),
-                                            if (_model.planevol == 1.0)
-                                              Container(
-                                                width: 110.0,
-                                                height: 110.0,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: Image.asset(
-                                                      'assets/images/Untitled_design_(86).png',
-                                                    ).image,
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        if (_model.planevol != 1.0)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 12.0, 0.0, 0.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        45.0, 0.0, 45.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Stack(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, -1.0),
-                                                      children: [
-                                                        Text(
-                                                          'On analyse tes réponses, ce qui compte vraiment pour toi ...',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .poppins(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .tertiary,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ).animateOnPageLoad(
-                                                            animationsMap[
-                                                                'textOnPageLoadAnimation19']!),
-                                                        Text(
-                                                          'On identifie ce dont tu as besoin en ce moment ...',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .poppins(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .tertiary,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ).animateOnPageLoad(
-                                                            animationsMap[
-                                                                'textOnPageLoadAnimation20']!),
-                                                        Text(
-                                                          'On crée des affirmations adaptées à toi ...',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .poppins(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .tertiary,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ).animateOnPageLoad(
-                                                            animationsMap[
-                                                                'textOnPageLoadAnimation21']!),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                      'Cela ne prends que quelques secondes',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .poppins(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            fontSize: 10.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ].divide(SizedBox(height: 6.0)),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12.0, 0.0, 12.0, 5.0),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        elevation: 2.0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(32.0),
-                                        ),
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            borderRadius:
-                                                BorderRadius.circular(32.0),
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    8.0, 0.0, 8.0, 0.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Container(
-                                                        width: 35.0,
-                                                        height: 35.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              Color(0xFFE7F0E7),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          border: Border.all(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .success,
-                                                          ),
-                                                        ),
-                                                        child: Icon(
-                                                          Icons.check,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .success,
-                                                          size: 24.0,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        'Ton plan est prêt !',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                      ),
-                                                    ].divide(
-                                                        SizedBox(height: 6.0)),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width:
-                                                      MediaQuery.sizeOf(context)
-                                                              .width *
-                                                          0.8,
-                                                  decoration: BoxDecoration(),
-                                                  child: Text(
-                                                    'On a pris en compte ce que tu traverses et ce que tu veux changer.',
-                                                    textAlign: TextAlign.center,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .poppins(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondary,
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(6.0, 12.0,
-                                                                6.0, 0.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Text(
-                                                          'Tu vas recevoir des affirmations qui t\'aideront à :',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .poppins(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .tertiary,
-                                                                fontSize: 12.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Container(
-                                                                width: MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .width *
-                                                                    0.3,
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          5.0,
-                                                                          0.0),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      Container(
-                                                                        width:
-                                                                            45.0,
-                                                                        height:
-                                                                            45.0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Color(0xFFF9F0EC),
-                                                                          shape:
-                                                                              BoxShape.circle,
-                                                                        ),
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .task_alt_sharp,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).tertiary,
-                                                                          size:
-                                                                              24.0,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        'Avancer avec plus de clareté',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .override(
-                                                                              font: GoogleFonts.poppins(
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                              ),
-                                                                              color: FlutterFlowTheme.of(context).tertiary,
-                                                                              fontSize: 10.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                      ),
-                                                                    ].divide(SizedBox(
-                                                                        height:
-                                                                            6.0)),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                width: MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .width *
-                                                                    0.3,
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          5.0,
-                                                                          0.0),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      Container(
-                                                                        width:
-                                                                            45.0,
-                                                                        height:
-                                                                            45.0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Color(0xFFF9F0EC),
-                                                                          shape:
-                                                                              BoxShape.circle,
-                                                                        ),
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .favorite,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).tertiary,
-                                                                          size:
-                                                                              24.0,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        'Te sentir plus alignés au quotidien',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .override(
-                                                                              font: GoogleFonts.poppins(
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                              ),
-                                                                              color: FlutterFlowTheme.of(context).tertiary,
-                                                                              fontSize: 10.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                      ),
-                                                                    ].divide(SizedBox(
-                                                                        height:
-                                                                            6.0)),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                width: MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .width *
-                                                                    0.3,
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Container(
-                                                                      width:
-                                                                          45.0,
-                                                                      height:
-                                                                          45.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Color(
-                                                                            0xFFF9F0EC),
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                      ),
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .auto_awesome_rounded,
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .tertiary,
-                                                                        size:
-                                                                            24.0,
-                                                                      ),
-                                                                    ),
-                                                                    Text(
-                                                                      'Passer à l\'action ',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      maxLines:
-                                                                          1,
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.poppins(
-                                                                              fontWeight: FontWeight.w500,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).tertiary,
-                                                                            fontSize:
-                                                                                10.0,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                  ].divide(SizedBox(
-                                                                      height:
-                                                                          6.0)),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ].divide(SizedBox(
-                                                          height: 24.0)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ].divide(SizedBox(height: 12.0)),
-                                            ),
-                                          ),
-                                        ),
-                                      ).animateOnActionTrigger(
-                                        animationsMap[
-                                            'containerOnActionTriggerAnimation1']!,
-                                      ),
-                                    ),
-                                  ),
-                                ].divide(SizedBox(height: 12.0)),
+                              StudyStatWidget(),
+                              PlanPreparationWidget(
+                                progress: _model.planevol ?? 0.0,
+                                prenom: _model.prenom ?? '',
+                                objective: _planObjective(),
+                                dailyCount: _model.countControllerValue ?? 5,
+                                startHour: _model.datePicked1?.hour ?? 8,
+                                endHour: _model.datePicked2?.hour ?? 21,
                               ),
                               Column(
                                 mainAxisSize: MainAxisSize.max,
@@ -14867,156 +14216,15 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(
-                                                            '🤎 Liker 10 affirmations dans ton feed',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            '✍️ Créer ta première manifestation',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            '📲 Installer le widget sur ton écran verrouillé',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            '🧘‍♂️ 2 séances d\'affirmations personnalisées pour réussir tes objectifs',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            '🌱 Des changement réels et durables',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  font: GoogleFonts
-                                                                      .poppins(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondary,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
+                                                          for (final item
+                                                              in const [
+                                                            'Liker 10 affirmations dans ton feed',
+                                                            'Créer ta première manifestation',
+                                                            'Installer le widget sur ton écran verrouillé',
+                                                            '2 séances d\'affirmations personnalisées pour réussir tes objectifs',
+                                                            'Des changements réels et durables',
+                                                          ])
+                                                            _planItem(item),
                                                         ].divide(SizedBox(
                                                             height: 24.0)),
                                                       ),
@@ -15044,7 +14252,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Text(
-                                            'Tu receveras des affirmations',
+                                            'Tu recevras des affirmations',
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -15136,7 +14344,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                           borderRadius:
                                               BorderRadius.circular(0.0),
                                           child: Image.asset(
-                                            'assets/images/je_suis_digne_damour_et_de_de_respect._(1).png',
+                                            'assets/images/widget_lockscreen_preview.png',
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -15294,7 +14502,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                         size: 20.0,
                                                       ),
                                                       Text(
-                                                        'Reprendre le contôle sur mes émotions négatives',
+                                                        'Reprendre le contrôle sur mes émotions négatives',
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -15342,7 +14550,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                         size: 20.0,
                                                       ),
                                                       Text(
-                                                        'Me sentir moins inquiet.ète',
+                                                        'Me sentir moins inquiet(e)',
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -16521,40 +15729,6 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                                                               Colors.transparent,
                                                                           highlightColor:
                                                                               Colors.transparent,
-                                                                          onDoubleTap:
-                                                                              () async {
-                                                                            _model.etape =
-                                                                                _model.etape! + 1;
-                                                                            _model.isclick =
-                                                                                false;
-                                                                            safeSetState(() {});
-                                                                            await _model.paywallyController?.nextPage(
-                                                                              duration: Duration(milliseconds: 300),
-                                                                              curve: Curves.ease,
-                                                                            );
-                                                                            unawaited(
-                                                                              () async {
-                                                                                await currentUserReference!.update(createUsersRecordData(
-                                                                                  onboardstep: 33,
-                                                                                ));
-                                                                              }(),
-                                                                            );
-                                                                            await Future.delayed(
-                                                                              Duration(
-                                                                                milliseconds: 3000,
-                                                                              ),
-                                                                            );
-                                                                            _model.isclick =
-                                                                                true;
-                                                                            safeSetState(() {});
-                                                                            logFirebaseEvent(
-                                                                              'onboarding_step',
-                                                                              parameters: {
-                                                                                'step': '25',
-                                                                                'step_name': 'paywall',
-                                                                              },
-                                                                            );
-                                                                          },
                                                                           child:
                                                                               Container(
                                                                             width:
@@ -17882,676 +17056,254 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
-                                    if (_model.isclick!) {
-                                      HapticFeedback.heavyImpact();
-                                      if (_model.etape == 0) {
-                                        GoRouter.of(context).prepareAuthEvent();
-                                        final user = await authManager
-                                            .signInAnonymously(context);
-                                        if (user == null) {
-                                          return;
-                                        }
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 0,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '1',
-                                            'step_name': 'welcome',
-                                          },
-                                        );
-                                        logFirebaseEvent('firstep');
-                                      } else if (_model.etape == 1) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 1,
-                                              widgetMode: 'general',
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '1',
-                                            'step_name': 'media',
-                                          },
-                                        );
-                                      } else if (_model.etape == 2) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 2;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 2,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '3',
-                                            'step_name': 'genre',
-                                          },
-                                        );
-                                      } else if (_model.etape == 3) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 3;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 3,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 4) {
-                                        await actions.hideKeyboard();
-                                        _model.etape = _model.etape! + 1;
-                                        _model.prenom = _model
-                                            .textFieldprenomTextController.text;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 4;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 4,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '2',
-                                            'step_name': 'prenom',
-                                          },
-                                        );
-                                      } else if (_model.etape == 5) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 3;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 5,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 6) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 3;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 6,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 7) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 3;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 7,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 8) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        _model.isclick = false;
-                                        _model.etapereach = 3;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 8,
-                                            ));
-                                          }(),
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 2000,
-                                          ),
-                                        );
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      } else if (_model.etape == 9) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 9,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '5',
-                                            'step_name': 'bienvenu',
-                                          },
-                                        );
-                                      } else if (_model.etape == 10) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 10,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '6',
-                                            'step_name': 'avancer',
-                                          },
-                                        );
-                                      } else if (_model.etape == 11) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 11,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 12) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 12,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '8',
-                                            'step_name': 'vision',
-                                          },
-                                        );
-                                      } else if (_model.etape == 13) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 13,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '9',
-                                            'step_name': 'sentir',
-                                          },
-                                        );
-                                      } else if (_model.etape == 14) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 14,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 15) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 6000,
-                                          ),
-                                        );
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 15,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 16) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 59000,
-                                          ),
-                                        );
-                                        _model.canclickas = true;
-                                        safeSetState(() {});
-                                        if (animationsMap[
-                                                'containerOnActionTriggerAnimation2'] !=
-                                            null) {
-                                          await animationsMap[
-                                                  'containerOnActionTriggerAnimation2']!
-                                              .controller
-                                              .forward(from: 0.0);
-                                        }
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 16,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '12',
-                                            'step_name': 'consigne',
-                                          },
-                                        );
-                                      } else if (_model.etape == 17) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 17,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 18) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 18,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '14',
-                                            'step_name': 'senstu',
-                                          },
-                                        );
-                                      } else if (_model.etape == 19) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 19,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 20) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 20,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 21) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 21,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 22) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 22,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 23) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-
-                                        await currentUserReference!
-                                            .update(createUsersRecordData(
-                                          createdTime: getCurrentTimestamp,
-                                          accountfinished: true,
-                                          currentheme: _model.themeselected,
-                                          darkmode: _model.darkmodel,
-                                        ));
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 23,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '20',
-                                            'step_name': 'theme',
-                                          },
-                                        );
-                                      } else if (_model.etape == 24) {
-                                        await NotifpreferenceRecord.createDoc(
-                                                currentUserReference!)
-                                            .set(
-                                                createNotifpreferenceRecordData(
-                                          dailycount:
-                                              _model.countControllerValue,
-                                          startHour: _model.datePicked1,
-                                          endHour: _model.datePicked2,
-                                          timezone: 'Europe/Paris',
-                                          notifenable: true,
-                                        ));
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 24,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '21',
-                                            'step_name': 'notifs',
-                                          },
-                                        );
-                                      } else if (_model.etape == 25) {
-                                        await requestPermission(
-                                            notificationsPermission);
-                                        if (await getPermissionStatus(
-                                            notificationsPermission)) {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            notificationsEnabled: true,
-                                          ));
-                                        } else {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            notificationsEnabled: false,
-                                          ));
-                                        }
-
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 25,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '22',
-                                            'step_name': 'autorise',
-                                          },
-                                        );
-                                      } else if (_model.etape == 26) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-
-                                        await currentUserReference!
-                                            .update(createUsersRecordData(
-                                          currentstreak: 1,
-                                        ));
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 26,
-                                            ));
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '23',
-                                            'step_name': 'streaky',
-                                          },
-                                        );
-                                      } else if (_model.etape == 27) {
-                                        if (_model.textController2.text !=
-                                            'Je souhaite ') {
+                                    if (_model.isNavigating) {
+                                      return;
+                                    }
+                                    _model.isNavigating = true;
+                                    try {
+                                      if (_model.isclick!) {
+                                        HapticFeedback.heavyImpact();
+                                        if (_model.etape == 0) {
+                                          // On réutilise le compte existant si
+                                          // l'utilisateur revient dans
+                                          // l'onboarding, au lieu d'en créer un
+                                          // nouveau à chaque fois.
+                                          if (!loggedIn) {
+                                            GoRouter.of(context)
+                                                .prepareAuthEvent();
+                                            final user = await authManager
+                                                .signInAnonymously(context);
+                                            if (user == null) {
+                                              return;
+                                            }
+                                          }
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 0,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '1',
+                                              'step_name': 'welcome',
+                                            },
+                                          );
+                                          logFirebaseEvent('firstep');
+                                        } else if (_model.etape == 1) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 1,
+                                                widgetMode: 'general',
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '1',
+                                              'step_name': 'media',
+                                            },
+                                          );
+                                        } else if (_model.etape == 2) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 2;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 2,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '3',
+                                              'step_name': 'genre',
+                                            },
+                                          );
+                                        } else if (_model.etape == 3) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 3;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 3,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 4) {
                                           await actions.hideKeyboard();
+                                          _model.etape = _model.etape! + 1;
+                                          _model.prenom = _capitalizeFirstName(
+                                              _model
+                                                  .textFieldprenomTextController
+                                                  .text);
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 4;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              // Le prénom est enregistré pour
+                                              // pouvoir l'afficher si
+                                              // l'utilisateur revient sur le
+                                              // paywall plus tard.
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 4,
+                                                displayName: _model.prenom,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '2',
+                                              'step_name': 'prenom',
+                                            },
+                                          );
+                                        } else if (_model.etape == 5) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 3;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 5,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 6) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 3;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 6,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 7) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 3;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 7,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 8) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          _model.isclick = false;
+                                          _model.etapereach = 3;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 8,
+                                              ));
+                                            }(),
+                                          );
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 2000,
+                                            ),
+                                          );
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                        } else if (_model.etape == 9) {
                                           _model.etape = _model.etape! + 1;
                                           _model.isclick = false;
                                           safeSetState(() {});
@@ -18565,266 +17317,43 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                             () async {
                                               await currentUserReference!
                                                   .update(createUsersRecordData(
-                                                onboardstep: 27,
-                                                objectifss:
-                                                    _model.textController2.text,
+                                                onboardstep: 9,
                                               ));
                                             }(),
                                           );
-                                        }
-                                      } else if (_model.etape == 28) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 28,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 29) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 29,
-                                              determin: _model.sliderValue,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 30) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = false;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 30,
-                                            ));
-                                          }(),
-                                        );
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 1000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.0;
-                                        safeSetState(() {});
-                                        _model.planevol = 0.1;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.2;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 4000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.4;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 5000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.6;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 5000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.8;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 4000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.9;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.planevol = 0.95;
-                                        safeSetState(() {});
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.planevol = 1.0;
-                                        safeSetState(() {});
-                                        if (animationsMap[
-                                                'containerOnActionTriggerAnimation1'] !=
-                                            null) {
-                                          await animationsMap[
-                                                  'containerOnActionTriggerAnimation1']!
-                                              .controller
-                                              .forward(from: 0.0);
-                                        }
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 3000,
-                                          ),
-                                        );
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                      } else if (_model.etape == 31) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 32,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 32) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 32,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 33) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 33,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 34) {
-                                        _model.etape = _model.etape! + 1;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 34,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 35) {
-                                        await actions.showInAppReview();
-                                        await Future.delayed(
-                                          Duration(
-                                            milliseconds: 4000,
-                                          ),
-                                        );
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 35,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 36) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 36,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 37) {
-                                        _model.etape = _model.etape! + 1;
-                                        _model.isclick = true;
-                                        safeSetState(() {});
-                                        await _model.paywallyController
-                                            ?.nextPage(
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.ease,
-                                        );
-                                        unawaited(
-                                          () async {
-                                            await currentUserReference!
-                                                .update(createUsersRecordData(
-                                              onboardstep: 37,
-                                            ));
-                                          }(),
-                                        );
-                                      } else if (_model.etape == 38) {
-                                        _model.dadpurchase = await revenue_cat
-                                            .purchasePackage('\$rc_annual');
-                                        if (_model.dadpurchase!) {
-                                          await currentUserReference!
-                                              .update(createUsersRecordData(
-                                            hasPurchased: true,
-                                          ));
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '5',
+                                              'step_name': 'bienvenu',
+                                            },
+                                          );
+                                        } else if (_model.etape == 10) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 10,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '6',
+                                              'step_name': 'avancer',
+                                            },
+                                          );
+                                        } else if (_model.etape == 11) {
                                           _model.etape = _model.etape! + 1;
                                           _model.isclick = false;
                                           safeSetState(() {});
@@ -18836,48 +17365,685 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                                           );
                                           await Future.delayed(
                                             Duration(
-                                              milliseconds: 2000,
+                                              milliseconds: 3000,
                                             ),
                                           );
                                           _model.isclick = true;
                                           safeSetState(() {});
-                                        }
-                                      } else if (_model.etape == 39) {
-                                        unawaited(
-                                          () async {
-                                            await actions
-                                                .trackOnboardingCompleted();
-                                          }(),
-                                        );
-                                        logFirebaseEvent(
-                                          'onboarding_step',
-                                          parameters: {
-                                            'step': '26',
-                                            'step_name': 'last',
-                                          },
-                                        );
-
-                                        await currentUserReference!
-                                            .update(createUsersRecordData(
-                                          comptefini: true,
-                                          onboardstep: 39,
-                                        ));
-
-                                        context.pushNamedAuth(
-                                          SwipePageWidget.routeName,
-                                          context.mounted,
-                                          extra: <String, dynamic>{
-                                            '__transition_info__':
-                                                TransitionInfo(
-                                              hasTransition: true,
-                                              transitionType:
-                                                  PageTransitionType.fade,
-                                              duration:
-                                                  Duration(milliseconds: 0),
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 11,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 12) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 12,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '8',
+                                              'step_name': 'vision',
+                                            },
+                                          );
+                                        } else if (_model.etape == 13) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 13,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '9',
+                                              'step_name': 'sentir',
+                                            },
+                                          );
+                                        } else if (_model.etape == 14) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 3000,
                                             ),
-                                          },
-                                        );
+                                          );
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 14,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 15) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 6000,
+                                            ),
+                                          );
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 15,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 16) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          await _runBreathingExercise();
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 16,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '12',
+                                              'step_name': 'consigne',
+                                            },
+                                          );
+                                        } else if (_model.etape == 17) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 17,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 18) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 18,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '14',
+                                              'step_name': 'senstu',
+                                            },
+                                          );
+                                        } else if (_model.etape == 19) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 19,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 20) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 20,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 21) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 21,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 22) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 22,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 23) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+
+                                          await currentUserReference!
+                                              .update(createUsersRecordData(
+                                            createdTime: getCurrentTimestamp,
+                                            accountfinished: true,
+                                            currentheme: _model.themeselected,
+                                            darkmode: _model.darkmodel,
+                                          ));
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 23,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '20',
+                                              'step_name': 'theme',
+                                            },
+                                          );
+                                        } else if (_model.etape == 24) {
+                                          await NotifpreferenceRecord.createDoc(
+                                                  currentUserReference!)
+                                              .set(
+                                                  createNotifpreferenceRecordData(
+                                            dailycount:
+                                                _model.countControllerValue,
+                                            startHour: _model.datePicked1,
+                                            endHour: _model.datePicked2,
+                                            timezone: 'Europe/Paris',
+                                            notifenable: true,
+                                          ));
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 24,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '21',
+                                              'step_name': 'notifs',
+                                            },
+                                          );
+                                        } else if (_model.etape == 25) {
+                                          await requestPermission(
+                                              notificationsPermission);
+                                          if (await getPermissionStatus(
+                                              notificationsPermission)) {
+                                            await currentUserReference!
+                                                .update(createUsersRecordData(
+                                              notificationsEnabled: true,
+                                            ));
+                                          } else {
+                                            await currentUserReference!
+                                                .update(createUsersRecordData(
+                                              notificationsEnabled: false,
+                                            ));
+                                          }
+
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 25,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '22',
+                                              'step_name': 'autorise',
+                                            },
+                                          );
+                                        } else if (_model.etape == 26) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+
+                                          await currentUserReference!
+                                              .update(createUsersRecordData(
+                                            currentstreak: 1,
+                                          ));
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 26,
+                                              ));
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '23',
+                                              'step_name': 'streaky',
+                                            },
+                                          );
+                                        } else if (_model.etape == 27) {
+                                          if (_model.textController2.text !=
+                                              'Je souhaite ') {
+                                            await actions.hideKeyboard();
+                                            _model.etape = _model.etape! + 1;
+                                            _model.isclick = false;
+                                            safeSetState(() {});
+                                            await _model.paywallyController
+                                                ?.nextPage(
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              curve: Curves.ease,
+                                            );
+                                            unawaited(
+                                              () async {
+                                                await currentUserReference!
+                                                    .update(
+                                                        createUsersRecordData(
+                                                  onboardstep: 27,
+                                                  objectifss: _model
+                                                      .textController2.text,
+                                                ));
+                                              }(),
+                                            );
+                                          }
+                                        } else if (_model.etape == 28) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 28,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 29) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 29,
+                                                determin: _model.sliderValue,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 30) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 30,
+                                              ));
+                                            }(),
+                                          );
+                                          await _runPlanPreparation();
+                                        } else if (_model.etape == 31) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 32,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 32) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 32,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 33) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 33,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 34) {
+                                          _model.etape = _model.etape! + 1;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 34,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 35) {
+                                          // Bouton grisé pendant l'attente de la
+                                          // demande d'avis, pour que
+                                          // l'utilisateur voie qu'il faut
+                                          // patienter.
+                                          _model.isclick = false;
+                                          safeSetState(() {});
+                                          await actions.showInAppReview();
+                                          await Future.delayed(
+                                            Duration(
+                                              milliseconds: 4000,
+                                            ),
+                                          );
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 35,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 36) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 36,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 37) {
+                                          _model.etape = _model.etape! + 1;
+                                          _model.isclick = true;
+                                          safeSetState(() {});
+                                          await _model.paywallyController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                          unawaited(
+                                            () async {
+                                              await currentUserReference!
+                                                  .update(createUsersRecordData(
+                                                onboardstep: 37,
+                                              ));
+                                            }(),
+                                          );
+                                        } else if (_model.etape == 38) {
+                                          _model.dadpurchase = await revenue_cat
+                                              .purchasePackage('\$rc_annual');
+                                          if (_model.dadpurchase!) {
+                                            await currentUserReference!
+                                                .update(createUsersRecordData(
+                                              hasPurchased: true,
+                                            ));
+                                            _model.etape = _model.etape! + 1;
+                                            _model.isclick = false;
+                                            safeSetState(() {});
+                                            await _model.paywallyController
+                                                ?.nextPage(
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              curve: Curves.ease,
+                                            );
+                                            await Future.delayed(
+                                              Duration(
+                                                milliseconds: 2000,
+                                              ),
+                                            );
+                                            _model.isclick = true;
+                                            safeSetState(() {});
+                                          }
+                                        } else if (_model.etape == 39) {
+                                          // Hard paywall : on n'entre dans
+                                          // l'app qu'après avoir démarré l'essai
+                                          // ou acheté l'abonnement.
+                                          if (!_hasPremiumAccess()) {
+                                            _model.etape = kPaywallStep;
+                                            _model.isclick = true;
+                                            safeSetState(() {});
+                                            _model.paywallyController
+                                                ?.jumpToPage(kPaywallStep);
+                                            return;
+                                          }
+                                          unawaited(
+                                            () async {
+                                              await actions
+                                                  .trackOnboardingCompleted();
+                                            }(),
+                                          );
+                                          logFirebaseEvent(
+                                            'onboarding_step',
+                                            parameters: {
+                                              'step': '26',
+                                              'step_name': 'last',
+                                            },
+                                          );
+
+                                          await currentUserReference!
+                                              .update(createUsersRecordData(
+                                            comptefini: true,
+                                            onboardstep: 39,
+                                          ));
+                                          await _clearProgress();
+
+                                          context.pushNamedAuth(
+                                            SwipePageWidget.routeName,
+                                            context.mounted,
+                                            extra: <String, dynamic>{
+                                              '__transition_info__':
+                                                  TransitionInfo(
+                                                hasTransition: true,
+                                                transitionType:
+                                                    PageTransitionType.fade,
+                                                duration:
+                                                    Duration(milliseconds: 0),
+                                              ),
+                                            },
+                                          );
+                                        }
                                       }
+                                    } finally {
+                                      _model.isNavigating = false;
                                     }
 
                                     safeSetState(() {});
@@ -18966,7 +18132,25 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                     ],
                   ),
                 ),
-                if (_model.etape == 17)
+                if (kDebugMode)
+                  Positioned(
+                    top: MediaQuery.paddingOf(context).top + 4.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Center(child: _buildDebugStepNavigator()),
+                  ),
+                // Hors du PageView pour que les feux d'artifice puissent
+                // dépasser au-dessus de la carte sans être coupés.
+                if (_model.etape == 17 && _model.showBreathingCelebration)
+                  Positioned(
+                    top: MediaQuery.paddingOf(context).top + 63.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: BreathingCelebrationWidget(
+                      prenom: _model.prenom ?? '',
+                    ),
+                  ),
+                if (_model.etape == kBreathingStep && _model.canclickas!)
                   Align(
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: Padding(
@@ -18979,6 +18163,9 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                         highlightColor: Colors.transparent,
                         onTap: () async {
                           if (_model.canclickas!) {
+                            // Un seul passage : un double tap sautait sinon
+                            // l'écran suivant.
+                            _model.canclickas = false;
                             _model.etape = _model.etape! + 1;
                             _model.isclick = false;
                             safeSetState(() {});
@@ -18992,7 +18179,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                           width: MediaQuery.sizeOf(context).width * 0.7,
                           height: 50.0,
                           decoration: BoxDecoration(
-                            color: Color(0xFFE48C46),
+                            color: FlutterFlowTheme.of(context).secondary,
                             borderRadius: BorderRadius.circular(100.0),
                           ),
                           child: Align(
@@ -19018,7 +18205,7 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    font: GoogleFonts.raleway(
+                                    font: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w600,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -19035,9 +18222,14 @@ class _InscriptionWidgetState extends State<InscriptionWidget>
                             ),
                           ),
                         ),
-                      ).animateOnActionTrigger(
-                        animationsMap['containerOnActionTriggerAnimation2']!,
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(duration: 600.ms, curve: Curves.easeOut)
+                          .slideY(
+                              begin: 0.4,
+                              end: 0.0,
+                              duration: 600.ms,
+                              curve: Curves.easeOutCubic),
                     ),
                   ),
               ],

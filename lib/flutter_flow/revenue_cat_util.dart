@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/services.dart';
 
 export 'package:purchases_flutter/purchases_flutter.dart'
@@ -89,11 +89,25 @@ Future<bool> purchasePackage(String package) async {
   }
 }
 
-List<String> get activeEntitlementIds => _customerInfo != null
-    ? _customerInfo!.entitlements.active.values
-        .map((e) => e.identifier)
-        .toList()
-    : [];
+/// Debug uniquement : l'app se comporte comme si l'utilisateur était abonné,
+/// pour tester les fonctionnalités premium sans acheter.
+/// Pour tester en non-abonné (paywalls) : --dart-define=FREE_USER=true
+const bool kDebugForcePremium =
+    kDebugMode && !bool.fromEnvironment('FREE_USER');
+
+const _debugPremiumEntitlement = 'accespremium';
+
+List<String> get activeEntitlementIds {
+  final ids = _customerInfo != null
+      ? _customerInfo!.entitlements.active.values
+          .map((e) => e.identifier)
+          .toList()
+      : <String>[];
+  if (kDebugForcePremium && !ids.contains(_debugPremiumEntitlement)) {
+    ids.add(_debugPremiumEntitlement);
+  }
+  return ids;
+}
 
 Future loadOfferings() async {
   if (!_isConfigured) {
@@ -121,6 +135,9 @@ Future loadCustomerInfo() async {
 // Return null on errors.
 // Returns false if RevenueCat is not configured (e.g., no web billing key in Test Mode).
 Future<bool?> isEntitled(String entitlementId) async {
+  if (kDebugForcePremium && entitlementId == _debugPremiumEntitlement) {
+    return true;
+  }
   if (!_isConfigured) {
     // Return false instead of null to indicate no entitlement when unconfigured.
     // This allows Test Mode to work without a web billing key.

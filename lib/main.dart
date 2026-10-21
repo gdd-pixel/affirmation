@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,8 @@ void main() async {
   await revenue_cat.initialize(
     "appl_ZzckqbQkRIOcxNIBJSJfGeLSczu",
     "goog_xZvgVHeqWZRXWbEGQaQqRZUeXEI",
-    debugLogEnabled: true,
+    // Journaux détaillés de RevenueCat uniquement en développement.
+    debugLogEnabled: kDebugMode,
     loadDataAfterLaunch: true,
   );
 
